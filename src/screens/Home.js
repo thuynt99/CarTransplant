@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {MAP_VIEW} from '../constants';
 import {useNavigation} from '@react-navigation/native';
+import {Icon} from 'native-base';
 
 // posts = [
 //   {
@@ -132,6 +133,7 @@ export default function HomeScreen() {
         <Text style={styles.headerTitle}>Home</Text>
       </View>
       <TouchableOpacity onPress={goToMapsView}>
+        <Icon name="map" />
         <Text>Go to Maps</Text>
       </TouchableOpacity>
       <FlatList

@@ -29,6 +29,7 @@ export default class MapViewScreen extends Component {
     this.setState({region});
   };
   render() {
+    console.log(this.props);
     return (
       <View style={styles.container}>
         <MapView
