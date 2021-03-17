@@ -87,8 +87,8 @@ export default function HomeScreen() {
           console.log(`Encountered error: ${err.code}`);
         },
       );
-    checkPermission();
-    getLocation();
+    requestPermission();
+    // getLocation();
     return () => {
       unsubscribe();
     };
@@ -133,7 +133,6 @@ export default function HomeScreen() {
     );
   };
   function goToMapsView() {
-    console.log('he he he');
     navigation.navigate(MAP_VIEW);
   }
   return (

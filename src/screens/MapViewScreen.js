@@ -1,52 +1,83 @@
-import React, {Component} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import React from 'react';
+import {StyleSheet, View, Dimensions} from 'react-native';
 
-export default class MapViewScreen extends Component {
+import MapView, {Marker, ProviderPropType} from 'react-native-maps';
+// import PriceMarker from './PriceMarker';
+
+const {width, height} = Dimensions.get('window');
+
+const ASPECT_RATIO = width / height;
+const LATITUDE = 21.032139;
+const LONGITUDE = 105.782222;
+const LATITUDE_DELTA = 0.04;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const SPACE = 0.01;
+
+function log(eventName, e) {
+  console.log(eventName, e.nativeEvent);
+}
+
+class MapViewScreen extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+      myLocation: {
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
       },
-    };
-  }
-  getInitialState() {
-    return {
-      region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+      b: {
+        latitude: LATITUDE - SPACE,
+        longitude: LONGITUDE - SPACE,
       },
     };
   }
 
-  onRegionChange = region => {
-    this.setState({region});
-  };
   render() {
     return (
       <View style={styles.container}>
         <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          provider={this.props.provider}
           style={styles.map}
-          region={this.state.region}
-          onRegionChange={this.onRegionChange}
-        />
+          initialRegion={{
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}>
+          <Marker
+            coordinate={this.state.myLocation}
+            onSelect={e => log('onSelect', e)}
+            onDrag={e => log('onDrag', e)}
+            onDragStart={e => log('onDragStart', e)}
+            onDragEnd={e => log('onDragEnd', e)}
+            onPress={e => log('onPress', e)}
+            draggable
+            title="Your location">
+            {/* <PriceMarker amount={99} /> */}
+          </Marker>
+          {/* <Marker
+            coordinate={this.state.b}
+            onSelect={e => log('onSelect', e)}
+            onDrag={e => log('onDrag', e)}
+            onDragStart={e => log('onDragStart', e)}
+            onDragEnd={e => log('onDragEnd', e)}
+            onPress={e => log('onPress', e)}
+            draggable
+          /> */}
+        </MapView>
       </View>
     );
   }
 }
 
+MapViewScreen.propTypes = {
+  provider: ProviderPropType,
+};
+
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    height: '100%',
-    width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
@@ -54,3 +85,5 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
 });
+
+export default MapViewScreen;

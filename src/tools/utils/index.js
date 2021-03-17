@@ -8,17 +8,27 @@ const getCurrentPermission = () => {
   });
 };
 const requestPermission = () => {
-  RNLocation.requestPermission({
+  RNLocation.checkPermission({
     ios: 'whenInUse', // or 'always'
     android: {
-      detail: 'coarse', // or 'fine'
-      rationale: {
-        title: 'We need to access your location',
-        message: 'We use your location to show where you are on the map',
-        buttonPositive: 'OK',
-        buttonNegative: 'Cancel',
-      },
+      detail: 'fine', // or 'fine'
     },
+  }).then(granted => {
+    if (!granted) {
+      console.log('request');
+      RNLocation.requestPermission({
+        ios: 'whenInUse', // or 'always'
+        android: {
+          detail: 'fine', // or 'fine'
+          rationale: {
+            title: 'We need to access your location',
+            message: 'We use your location to show where you are on the map',
+            buttonPositive: 'OK',
+            buttonNegative: 'Cancel',
+          },
+        },
+      });
+    }
   });
 };
 const checkPermission = () => {
@@ -41,13 +51,15 @@ const getLocation = () => {
       detail: 'fine', // or 'fine'
     },
   }).then(granted => {
+    console.log('granted', granted);
     if (granted) {
       GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
-        timeout: 10000,
+        timeout: 60000,
       })
         .then(location => {
           console.log('location -----', location);
+          return location;
         })
         .catch(error => {
           const {code, message} = error;
