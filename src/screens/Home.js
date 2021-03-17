@@ -7,6 +7,12 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {MAP_VIEW} from '../constants';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from 'native-base';
+import {
+  getCurrentPermission,
+  requestPermission,
+  checkPermission,
+  getLocation,
+} from '../tools/utils';
 
 // posts = [
 //   {
@@ -81,8 +87,11 @@ export default function HomeScreen() {
           console.log(`Encountered error: ${err.code}`);
         },
       );
-
-    return () => unsubscribe();
+    checkPermission();
+    getLocation();
+    return () => {
+      unsubscribe();
+    };
   });
   renderPost = post => {
     return (
@@ -137,6 +146,7 @@ export default function HomeScreen() {
         <Text>Go to Maps</Text>
       </TouchableOpacity>
       <FlatList
+        horizontal
         style={styles.feed}
         data={posts}
         renderItem={({item}) => renderPost(item)}
