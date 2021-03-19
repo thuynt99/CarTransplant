@@ -3,16 +3,17 @@ import {Text, StyleSheet, View, FlatList, Image} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 import firebase from 'firebase';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {MAP_VIEW} from '../constants';
 import {useNavigation} from '@react-navigation/native';
-import {Icon} from 'native-base';
+import {Body, Header, Icon, Left, Right, Subtitle, Title} from 'native-base';
 import {
   getCurrentPermission,
   requestPermission,
   checkPermission,
   getLocation,
 } from '../tools/utils';
+import TitleCustom from '../components/common/TitleCustom';
 
 // posts = [
 //   {
@@ -56,7 +57,44 @@ import {
 export default function HomeScreen() {
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
-
+  const data = [
+    {
+      id: 1,
+      title: 'You',
+      color: '#FF4500',
+      image: 'https://img.icons8.com/color/70/000000/name.png',
+    },
+    {
+      id: 2,
+      title: 'Home',
+      color: '#87CEEB',
+      image: 'https://img.icons8.com/office/70/000000/home-page.png',
+    },
+    {
+      id: 3,
+      title: 'Love',
+      color: '#4682B4',
+      image: 'https://img.icons8.com/color/70/000000/two-hearts.png',
+    },
+    {
+      id: 4,
+      title: 'Family',
+      color: '#6A5ACD',
+      image: 'https://img.icons8.com/color/70/000000/family.png',
+    },
+    {
+      id: 5,
+      title: 'Friends',
+      color: '#FF69B4',
+      image: 'https://img.icons8.com/color/70/000000/groups.png',
+    },
+    {
+      id: 6,
+      title: 'School',
+      color: '#00BFFF',
+      image: 'https://img.icons8.com/color/70/000000/classroom.png',
+    },
+  ];
   let unsubscribe = null;
 
   useEffect(() => {
@@ -136,14 +174,49 @@ export default function HomeScreen() {
     navigation.navigate(MAP_VIEW);
   }
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Home</Text>
-      </View>
-      <TouchableOpacity onPress={goToMapsView}>
-        <Icon name="map" />
-        <Text>Go to Maps</Text>
-      </TouchableOpacity>
+    <ScrollView style={styles.container}>
+      <Header>
+        <Left />
+        <Body>
+          <Title>Home</Title>
+        </Body>
+        <Right />
+      </Header>
+      <FlatList
+        style={styles.list}
+        contentContainerStyle={styles.listContainer}
+        data={data}
+        horizontal={false}
+        numColumns={2}
+        keyExtractor={item => {
+          return item.id;
+        }}
+        renderItem={({item}) => {
+          return (
+            <View>
+              <TouchableOpacity
+                style={[styles.card, {backgroundColor: item.color}]}
+                onPress={() => {
+                  this.clickEventListener(item);
+                }}>
+                <Image style={styles.cardImage} source={{uri: item.image}} />
+              </TouchableOpacity>
+
+              <View style={styles.cardHeader}>
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={[styles.title, {color: item.color}]}>
+                    {item.title}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          );
+        }}
+      />
+      <TitleCustom
+        title="Ưu đãi nổi bật từ Car Transplant"
+        subTitle="Nội dung mới nhất"
+      />
       <FlatList
         horizontal
         style={styles.feed}
@@ -152,7 +225,7 @@ export default function HomeScreen() {
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -215,5 +288,66 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 5,
     marginVertical: 16,
+  },
+  list: {
+    paddingHorizontal: 5,
+    backgroundColor: '#fff',
+  },
+  listContainer: {
+    alignItems: 'center',
+  },
+  /******** card **************/
+  card: {
+    shadowColor: '#474747',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 12,
+    marginVertical: 20,
+    marginHorizontal: 40,
+    backgroundColor: '#e2e2e2',
+    //flexBasis: '42%',
+    width: 80,
+    height: 80,
+    borderRadius: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardHeader: {
+    paddingVertical: 17,
+    paddingHorizontal: 16,
+    borderTopLeftRadius: 1,
+    borderTopRightRadius: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardContent: {
+    paddingVertical: 12.5,
+    paddingHorizontal: 16,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 12.5,
+    paddingBottom: 25,
+    paddingHorizontal: 16,
+    borderBottomLeftRadius: 1,
+    borderBottomRightRadius: 1,
+  },
+  cardImage: {
+    height: 50,
+    width: 50,
+    alignSelf: 'center',
+  },
+  title: {
+    fontSize: 24,
+    flex: 1,
+    alignSelf: 'center',
+    fontWeight: 'bold',
   },
 });
