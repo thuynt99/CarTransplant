@@ -38,6 +38,8 @@ target 'chnirtnavigation5' do
 
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
 
+  pod 'react-native-location', :path => '../node_modules/react-native-location'
+
   target 'chnirtnavigation5Tests' do
     inherit! :search_paths
     # Pods for testing

@@ -3,6 +3,16 @@ import {Text, StyleSheet, View, FlatList, Image} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 import firebase from 'firebase';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {MAP_VIEW} from '../constants';
+import {useNavigation} from '@react-navigation/native';
+import {Icon} from 'native-base';
+import {
+  getCurrentPermission,
+  requestPermission,
+  checkPermission,
+  getLocation,
+} from '../tools/utils';
 
 // posts = [
 //   {
@@ -45,6 +55,7 @@ import firebase from 'firebase';
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState([]);
+  const navigation = useNavigation();
 
   let unsubscribe = null;
 
@@ -76,10 +87,12 @@ export default function HomeScreen() {
           console.log(`Encountered error: ${err.code}`);
         },
       );
-
-    return () => unsubscribe();
+    requestPermission();
+    // getLocation();
+    return () => {
+      unsubscribe();
+    };
   });
-
   renderPost = post => {
     return (
       <View key={post.id} style={styles.feedItem}>
@@ -119,19 +132,26 @@ export default function HomeScreen() {
       </View>
     );
   };
-
+  function goToMapsView() {
+    navigation.navigate(MAP_VIEW);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Home</Text>
       </View>
-
+      <TouchableOpacity onPress={goToMapsView}>
+        <Icon name="map" />
+        <Text>Go to Maps</Text>
+      </TouchableOpacity>
       <FlatList
+        horizontal
         style={styles.feed}
         data={posts}
         renderItem={({item}) => renderPost(item)}
         keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}></FlatList>
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 }

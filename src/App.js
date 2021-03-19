@@ -9,6 +9,7 @@
 import React from 'react';
 import {NavigationNativeContainer} from '@react-navigation/native';
 import {ApolloProvider} from '@apollo/react-hooks';
+import {LogBox} from 'react-native';
 
 import AppNavigator from './navigation/AppNavigator';
 import ContextProvider from './tools/context';

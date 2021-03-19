@@ -13,6 +13,7 @@ const APP_NAME = {
   POST: 'Post',
   NOTIFICATION: 'Notification',
   PROFILE: 'Profile',
+  MAP_VIEW: 'MapViewScreen',
 };
 
 module.exports = APP_NAME;
