@@ -7,6 +7,8 @@ const theme = {
   pinky_light: '#ffb3b3',
   blue_medium: '#87CEEB',
   blue_dark: '#4682B4',
+  grey_light: '#cccccc',
+  grey_dark: '#8c8c8c',
 };
 
 module.exports = theme;

@@ -20,6 +20,7 @@ import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
+import MyCarousel from '../components/ListPromo/MyCarousel';
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState([]);
@@ -174,14 +175,12 @@ export default function HomeScreen() {
         title="Ưu đãi nổi bật từ Car Transplant"
         subTitle="Nội dung mới nhất"
       />
-      <FlatList
-        horizontal
-        style={styles.feed}
-        data={posts}
-        renderItem={({item}) => renderPost(item)}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}
+      <MyCarousel />
+      <TitleCustom
+        title="Tin tức nổi bật từ Car Transplant"
+        subTitle="Nội dung mới nhất"
       />
+      <MyCarousel />
     </ScrollView>
   );
 }
