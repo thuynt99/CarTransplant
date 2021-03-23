@@ -14,45 +14,12 @@ import {
   getLocation,
 } from '../tools/utils';
 import TitleCustom from '../components/common/TitleCustom';
-
-// posts = [
-//   {
-//     id: '1',
-//     name: 'Joe McKay',
-//     text:
-//       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-//     timestamp: 1569109273726,
-//     avatar: require('../assets/avatar/image1.png'),
-//     image: require('../assets/onboarding/image1.gif'),
-//   },
-//   {
-//     id: '2',
-//     name: 'Karyn Kim',
-//     text:
-//       'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-//     timestamp: 1569109273726,
-//     avatar: require('../assets/avatar/image1.png'),
-//     image: require('../assets/onboarding/image2.gif'),
-//   },
-//   {
-//     id: '3',
-//     name: 'Emerson Parsons',
-//     text:
-//       'Amet mattis vulputate enim nulla aliquet porttitor lacus luctus. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant.',
-//     timestamp: 1569109273726,
-//     avatar: require('../assets/avatar/image1.png'),
-//     image: require('../assets/onboarding/image3.gif'),
-//   },
-//   {
-//     id: '4',
-//     name: 'Kathie Malone',
-//     text:
-//       'At varius vel pharetra vel turpis nunc eget lorem. Lorem mollis aliquam ut porttitor leo a diam sollicitudin tempor. Adipiscing tristique risus nec feugiat in fermentum.',
-//     timestamp: 1569109273726,
-//     avatar: require('../assets/avatar/image1.png'),
-//     image: require('../assets/onboarding/image1.gif'),
-//   },
-// ];
+import theme from '../theme';
+import {
+  responsiveFontSize,
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+} from 'react-native-responsive-dimensions';
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState([]);
@@ -60,39 +27,27 @@ export default function HomeScreen() {
   const data = [
     {
       id: 1,
-      title: 'You',
-      color: '#FF4500',
-      image: 'https://img.icons8.com/color/70/000000/name.png',
+      title: 'Đi riêng',
+      color: theme.underlayColor,
+      image: 'https://img.icons8.com/bubbles/100/000000/car.png',
     },
     {
       id: 2,
-      title: 'Home',
-      color: '#87CEEB',
-      image: 'https://img.icons8.com/office/70/000000/home-page.png',
+      title: 'Đi ghép',
+      color: theme.blue_medium,
+      image: 'https://img.icons8.com/clouds/100/000000/car.png',
     },
     {
       id: 3,
-      title: 'Love',
-      color: '#4682B4',
-      image: 'https://img.icons8.com/color/70/000000/two-hearts.png',
+      title: 'Đi ngay',
+      color: theme.blue_dark,
+      image: 'https://img.icons8.com/plasticine/100/000000/car-theft.png',
     },
     {
       id: 4,
-      title: 'Family',
-      color: '#6A5ACD',
-      image: 'https://img.icons8.com/color/70/000000/family.png',
-    },
-    {
-      id: 5,
-      title: 'Friends',
-      color: '#FF69B4',
-      image: 'https://img.icons8.com/color/70/000000/groups.png',
-    },
-    {
-      id: 6,
-      title: 'School',
-      color: '#00BFFF',
-      image: 'https://img.icons8.com/color/70/000000/classroom.png',
+      title: 'Ưu đãi',
+      color: theme.pinky_light,
+      image: 'https://img.icons8.com/bubbles/100/000000/discount.png',
     },
   ];
   let unsubscribe = null;
@@ -175,12 +130,14 @@ export default function HomeScreen() {
   }
   return (
     <ScrollView style={styles.container}>
-      <Header>
+      <Header
+        androidStatusBarColor={theme.primaryColor}
+        style={{backgroundColor: theme.primaryColor}}>
         <Left />
-        <Body>
-          <Title>Home</Title>
-        </Body>
-        <Right />
+        <Body />
+        <Right>
+          <Title style={styles.appName}>Car Transplant</Title>
+        </Right>
       </Header>
       <FlatList
         style={styles.list}
@@ -318,7 +275,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardHeader: {
-    paddingVertical: 17,
+    // paddingVertical: responsiveScreenHeight(2),
     paddingHorizontal: 16,
     borderTopLeftRadius: 1,
     borderTopRightRadius: 1,
@@ -345,9 +302,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: responsiveFontSize(2),
     flex: 1,
     alignSelf: 'center',
     fontWeight: 'bold',
+  },
+
+  appName: {
+    fontStyle: 'italic',
   },
 });
