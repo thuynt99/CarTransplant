@@ -126,6 +126,9 @@ export default function HomeScreen() {
       </View>
     );
   };
+  clickEventListener = () => {
+    navigation.navigate(MAP_VIEW);
+  };
   function goToMapsView() {
     navigation.navigate(MAP_VIEW);
   }
@@ -155,7 +158,7 @@ export default function HomeScreen() {
               <TouchableOpacity
                 style={[styles.card, {backgroundColor: item.color}]}
                 onPress={() => {
-                  this.clickEventListener(item);
+                  clickEventListener(item);
                 }}>
                 <Image style={styles.cardImage} source={{uri: item.image}} />
               </TouchableOpacity>
