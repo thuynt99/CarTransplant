@@ -39,7 +39,7 @@ export default function TabNavigator(props) {
         name={MESSAGE}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome5 name={'comments'} color={color} size={size} />
+            <FontAwesome5 name={'car-alt'} color={color} size={size} />
           ),
         }}
         children={() => <MessageScreen {...props} />}

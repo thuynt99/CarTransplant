@@ -3,7 +3,7 @@ import {Animated, TouchableHighlight, View} from 'react-native';
 // import Icon from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-import {primaryColor, underlayColor} from '../theme';
+import {primaryColor, underlayColor} from '../../theme';
 
 const SIZE = 80;
 class AddButton extends Component {
