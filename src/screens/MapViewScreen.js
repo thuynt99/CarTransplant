@@ -1,10 +1,25 @@
-import {Form, Icon, Input, Item, Label} from 'native-base';
 import React from 'react';
-import {StyleSheet, View, Dimensions, Text, TextInput} from 'react-native';
-
+import {StyleSheet, View, Dimensions} from 'react-native';
+import {
+  Body,
+  Button,
+  Form,
+  Header,
+  Icon,
+  Input,
+  Item,
+  Left,
+  Right,
+  Text,
+  Title,
+} from 'native-base';
 import MapView, {Marker, ProviderPropType} from 'react-native-maps';
-import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 import theme from '../theme';
+import Geocoder from 'react-native-geocoding';
 // import PriceMarker from './PriceMarker';
 
 const {width, height} = Dimensions.get('window');
@@ -37,9 +52,18 @@ class MapViewScreen extends React.Component {
       endLocation: '',
     };
   }
+  componentDidMount() {
+    Geocoder.from(LATITUDE, LONGITUDE)
+      .then(json => {
+        var addressComponent = json.results[0].address_components[0];
+        console.log('addressComponent', addressComponent);
+      })
+      .catch(error => console.warn(error));
+  }
   onChangeText = text => {
     this.setState({startLocation: text});
   };
+
   render() {
     const {startLocation} = this.state;
     return (
@@ -77,20 +101,8 @@ class MapViewScreen extends React.Component {
           </MapView>
         </View>
         <View style={styles.viewInput}>
-          {/* <TextInput
-            style={styles.input}
-            onChangeText={this.onChangeText}
-            value={startLocation}
-            placeholder="Xin vui lòng nhập điểm đi"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={this.onChangeText}
-            value={startLocation}
-            placeholder="Xin vui lòng nhập điểm đến"
-          /> */}
           <Form>
-            <Item fixedLabel>
+            <Item fixedLabel style={styles.textInput}>
               <Icon
                 active
                 name="location"
@@ -99,7 +111,7 @@ class MapViewScreen extends React.Component {
               />
               <Input rounded placeholder="Xin vui lòng nhập điểm đi" />
             </Item>
-            <Item fixedLabel last>
+            <Item fixedLabel style={styles.textInput}>
               <Icon
                 active
                 name="md-add"
@@ -109,6 +121,9 @@ class MapViewScreen extends React.Component {
               <Input rounded placeholder="Xin vui lòng nhập điểm đến" />
             </Item>
           </Form>
+          <Button block danger style={styles.btnNext}>
+            <Text>Tiếp theo</Text>
+          </Button>
         </View>
       </View>
     );
@@ -132,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
-    height: responsiveHeight(70),
+    height: responsiveHeight(75),
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -144,9 +159,14 @@ const styles = StyleSheet.create({
   },
   viewInput: {
     width: '100%',
-    height: responsiveHeight(30),
+    height: responsiveHeight(25),
     backgroundColor: 'white',
     borderRadius: 20,
+    paddingHorizontal: responsiveWidth(2),
+    justifyContent: 'space-evenly',
+  },
+  btnNext: {
+    borderRadius: 5,
   },
 });
 
