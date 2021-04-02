@@ -63,9 +63,7 @@ class MapViewScreen extends React.Component {
     //     .catch(error => console.warn(error));
     this.getCurrentLocation();
   }
-  getCurrentLocation = () => {
-    getLocation();
-  };
+  getCurrentLocation = () => {};
   onChangeText = text => {
     this.setState({startLocation: text});
   };
