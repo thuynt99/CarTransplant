@@ -13,7 +13,7 @@ export const ENTRIES_PROMO_HOME = [
     
     Cũng đừng để dự báo về những cơn mưa cản trở chuyến đi của bạn. Ngay cả thời tiết khắc nghiệt và sương mù nhất cũng không thể làm dịu đi vẻ đẹp của Vịnh Hạ Long; thậm chí, mưa còn tạo nên một bầu không khí bí ẩn, hoài niệm không khí xưa...`,
     illustration:
-      'https://lh3.googleusercontent.com/proxy/pbCPVulFnLgNLOPS_NQKYV5QuKIqw8vZTqdQXEfv0QgXK8EBg4nZwcizKo67PwtvMMcsSw8yaLtkDx3n6QNkfN0ubhYOFOAvD4IMeFjn-6rK2HZBIpr6o1stqrfUtnkYng',
+      'https://vtv1.mediacdn.vn/thumb_w/650/2019/5/30/tam-dao-2-1559217859996220891053.jpg',
   },
   {
     title: 'TAM ĐẢO',
