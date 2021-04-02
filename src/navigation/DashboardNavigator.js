@@ -53,6 +53,7 @@ export default function DashboardStackNavigator() {
         name={MAP_VIEW}
         options={{
           headerShown: false,
+          title: '',
         }}
         component={MapViewScreen}
       />
