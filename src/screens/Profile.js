@@ -1,9 +1,29 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Text, StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import React, {useContext, useEffect, useState, Component} from 'react';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import firebase from 'firebase';
 import ImagePicker from 'react-native-image-picker';
-
+import theme from '../theme';
+import {
+  Container,
+  Header,
+  Content,
+  Button,
+  ListItem,
+  Icon,
+  Left,
+  Body,
+  Right,
+  Switch,
+} from 'native-base';
 import {CTX} from '../tools/context';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
@@ -17,6 +37,44 @@ const options = {
 };
 
 export default function ProfileScreen() {
+  const data = [
+    {
+      id: 1,
+      title: 'Nam',
+      image: 'https://reactnative.dev/img/tiny_logo.png',
+    },
+    {
+      id: 2,
+      title: 'Tuan',
+      image: 'https://reactnative.dev/img/tiny_logo.png',
+    },
+    {
+      id: 3,
+      title: 'Trung',
+      image: 'https://reactnative.dev/img/tiny_logo.png',
+    },
+    {
+      id: 4,
+      title: 'Thu',
+      image: 'https://reactnative.dev/img/tiny_logo.png',
+    },
+    {
+      id: 5,
+      title: 'Xuan',
+      image: 'https://reactnative.dev/img/tiny_logo.png',
+    },
+    {
+      id: 6,
+      title: 'Thuy',
+      image: 'https://reactnative.dev/img/tiny_logo.png',
+    },
+    {
+      id: 7,
+      title: 'Linh',
+      image: 'https://reactnative.dev/img/tiny_logo.png',
+    },
+  ];
+
   const [user, setUser] = useState(null);
 
   const authContext = useContext(CTX);
@@ -157,76 +215,140 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={{marginTop: 64, alignItems: 'center'}}>
-        <View
-          style={{
-            // position: 'absolute',
-            // top: 64,
-            alignItems: 'center',
-            width: '100%',
-          }}>
-          <TouchableOpacity
-            style={styles.avatarPlaceholder}
-            onPress={_pickImage}>
-            <Image
-              source={
-                user && user.avatar
-                  ? {uri: user.avatar}
-                  : require('../assets/avatar/image1.png')
-              }
-              style={styles.avatar}
-              blurRadius={user && user.avatar && 0}
-            />
-            <FontAwesome5 name={'plus'} size={24} color="#fff" />
-          </TouchableOpacity>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.headerView}>
+          <View style={styles.avatarHeader}>
+            <View>
+              <TouchableOpacity
+                style={styles.avatarPlaceholder}
+                onPress={_pickImage}>
+                <Image
+                  source={
+                    user && user.avatar
+                      ? {uri: user.avatar}
+                      : require('../assets/avatar/image1.png')
+                  }
+                  style={styles.avatar}
+                  blurRadius={user && user.avatar && 0}
+                />
+                <FontAwesome5 name={'plus'} size={24} color="#fff" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.namePosition}>
+              <Text style={styles.nameAvatar}>Ha Duc Tuan</Text>
+            </View>
+          </View>
+
+          <View style={styles.followInfos}>
+            <Text style={styles.followMe}>FOLLOW ME</Text>
+            <View style={styles.viewFollow}>
+              <View>
+                <Text style={styles.textFollow}>233</Text>
+                <Text style={styles.textFollow}>Follows</Text>
+              </View>
+              <View>
+                <Text style={styles.textFollow}>123</Text>
+                <Text style={styles.textFollow}>Following</Text>
+              </View>
+            </View>
+          </View>
         </View>
 
-        <Text style={styles.name}>{user && user.fullName}</Text>
+        <View style={styles.extraInfos}>
+          <Text style={styles.textExtraInfos}>Contact me: 0123456789</Text>
+          <Text style={styles.textExtraInfos}>Address: Hanoi, Vietnam</Text>
+          <Text style={styles.textExtraInfos}>
+            Email: hatuank97lhp@gmail.com
+          </Text>
+        </View>
       </View>
 
-      <View style={styles.statsContainer}>
-        <View style={styles.stat}>
-          <Text style={styles.statAmount}>21</Text>
-          <Text style={styles.statTitle}>Posts</Text>
+      <View style={styles.cart}>
+        <View style={styles.cartInfos}>
+          <Text style={{textAlign: 'center', fontSize: 20}}>$2004</Text>
+          <Text style={{textAlign: 'center', fontSize: 20}}>Balance</Text>
         </View>
-        <View style={styles.stat}>
-          <Text style={styles.statAmount}>981</Text>
-          <Text style={styles.statTitle}>Followers</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statAmount}>63</Text>
-          <Text style={styles.statTitle}>Following</Text>
+
+        <View style={styles.cartInfos}>
+          <Text style={{textAlign: 'center', fontSize: 20}}>14</Text>
+          <Text style={{textAlign: 'center', fontSize: 20}}>Order</Text>
         </View>
       </View>
 
-      <TouchableOpacity onPress={_onLogout}>
-        <Text>Log out</Text>
-      </TouchableOpacity>
-    </View>
+      <FlatList
+        style={styles.flatListStyles}
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        horizontal={true}
+        renderItem={({item}) => {
+          return (
+            <View style={{paddingLeft: 30}}>
+              <Image style={styles.imageStyle} source={{uri: item.image}} />
+              <View>
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={styles.textExtraInfos}>{item.title}</Text>
+                </View>
+              </View>
+            </View>
+          );
+        }}
+      />
+
+      <View style={styles.menu}>
+        <Button transparent>
+          <Icon name="heart" style={styles.iconStyles} />
+          <Text style={styles.menuText}>Your Favorites</Text>
+        </Button>
+
+        <Button transparent>
+          <Icon name="award" style={styles.iconStyles} type="Feather" />
+          <Text style={styles.menuText}>Your Achievement</Text>
+        </Button>
+
+        <Button transparent>
+          <Icon name="payment" style={styles.iconStyles} type="MaterialIcons" />
+          <Text style={styles.menuText}>Payment</Text>
+        </Button>
+
+        <Button transparent>
+          <Icon
+            name="share-variant"
+            style={styles.iconStyles}
+            type="MaterialCommunityIcons"
+          />
+          <Text style={styles.menuText}>Referral Code</Text>
+        </Button>
+
+        <Button transparent>
+          <Icon name="setting" style={styles.iconStyles} type="AntDesign" />
+          <Text style={styles.menuText}>Setting</Text>
+        </Button>
+
+        <Button transparent>
+          <Icon
+            name="logout"
+            style={styles.iconStyles}
+            type="MaterialCommunityIcons"
+          />
+          <Text style={styles.menuText}>Logout</Text>
+        </Button>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  avatarContainer: {
-    shadowColor: '#151734',
-    shadowRadius: 30,
-    shadowOpacity: 0.4,
+    backgroundColor: '#FFFFCC',
   },
   avatarPlaceholder: {
-    width: 100,
-    height: 100,
+    flex: 1,
+    width: 150,
+    height: 150,
     backgroundColor: '#E1E2E6',
-    borderRadius: 50,
-    marginTop: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 20,
   },
   avatar: {
     position: 'absolute',
@@ -234,29 +356,106 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
   },
-  name: {
-    marginTop: 24,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  statsContainer: {
+  viewFollow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 32,
+    paddingTop: 40,
   },
-  stat: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  statAmount: {
-    color: '#4F566D',
+  textFollow: {
+    textAlign: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: 10,
+    paddingRight: 20,
     fontSize: 18,
-    fontWeight: '300',
   },
-  statTitle: {
-    color: '#C3C5CD',
-    fontSize: 12,
-    fontWeight: '500',
-    marginTop: 4,
+  headerView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  avatarHeader: {
+    justifyContent: 'space-between',
+  },
+  namePosition: {
+    position: 'absolute',
+    paddingLeft: 25,
+    paddingTop: 130,
+  },
+  nameAvatar: {
+    backgroundColor: '#99FFFF',
+    fontSize: 18,
+    fontWeight: '600',
+    borderRadius: 10,
+  },
+
+  followMeButton: {
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
+
+  followMe: {
+    backgroundColor: 'red',
+    fontSize: 16,
+    fontWeight: '600',
+    borderRadius: 10,
+    textAlign: 'center',
+  },
+
+  extraInfos: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+  },
+
+  textExtraInfos: {
+    fontSize: 15,
+    fontStyle: 'italic',
+  },
+
+  cart: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+  },
+  cartInfos: {
+    flex: 1,
+    justifyContent: 'space-between',
+    borderWidth: 1,
+  },
+
+  followInfos: {
+    flex: 1,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+  },
+
+  menuText: {
+    fontSize: 17,
+  },
+
+  iconStyles: {
+    fontSize: 30,
+  },
+
+  menu: {
+    paddingTop: 20,
+
+    // justifyContent: 'space-between',
+    // backgroundColor: 'red',
+  },
+
+  imageStyle: {
+    height: 60,
+    width: 60,
+    alignSelf: 'center',
+    borderRadius: 20,
+  },
+
+  flatListStyles: {
+    paddingTop: 20,
   },
 });
