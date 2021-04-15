@@ -10,96 +10,8 @@ import {
 } from 'react-native';
 
 import {Icon} from 'native-base';
-
-const NotificationDetail = props => {
-  const [isShowFullInformation, setIsShowFullInformation] = useState(true);
-  const [currentDate, setCurrentDate] = useState();
-  const [isDeleted, setIsDeleted] = useState(false);
-
-  useEffect(() => {
-    var seconds = Math.floor((new Date() - new Date(props.date)) / 1000);
-    var interval = seconds / 31536000;
-    var time;
-    if (interval > 1) {
-      time = Math.floor(interval) + ' years';
-    } else {
-      interval = seconds / 2592000;
-      if (interval > 1) {
-        time = Math.floor(interval) + ' months';
-      } else {
-        interval = seconds / 86400;
-        if (interval > 1) {
-          time = Math.floor(interval) + ' days';
-        } else {
-          interval = seconds / 3600;
-          if (interval > 1) {
-            time = Math.floor(interval) + ' hours';
-          } else {
-            interval = seconds / 60;
-            if (interval > 1) {
-              time = Math.floor(interval) + ' minutes';
-            } else time = Math.floor(seconds) + ' seconds';
-          }
-        }
-      }
-    }
-    time = 'about ' + time + ' ago';
-
-    setCurrentDate(time);
-  }, []);
-
-  const menu = () => setIsShowFullInformation(!isShowFullInformation);
-
-  const deleted = () => setIsDeleted(true);
-
-  const showFullInformation = () => {
-    if (isShowFullInformation) {
-      return (
-        <View style={styles.extraInformation}>
-          <Text style={styles.buttonExtraInfor}>Show Detail</Text>
-          <Text style={styles.buttonExtraInfor} onPress={deleted}>
-            Delete
-          </Text>
-        </View>
-      );
-    } else {
-      return null;
-    }
-  };
-
-  if (!isDeleted) {
-    return (
-      <View style={styles.containerNotiDetail}>
-        <TouchableHighlight underlayColor={'COLOR'} onPress={menu}>
-          <View style={styles.notificationView}>
-            <Image style={styles.avatar} source={{uri: props.image}} />
-            <View style={styles.notiContent}>
-              <View style={styles.titleStyles}>
-                <Text numberOfLines={1} style={styles.title}>
-                  {props.title}
-                </Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Icon
-                    style={{fontSize: 14}}
-                    name="back-in-time"
-                    type="Entypo"
-                  />
-                  <Text style={styles.dateStyles}> {currentDate}</Text>
-                </View>
-              </View>
-              <Text numberOfLines={2} style={styles.content}>
-                {props.content}
-              </Text>
-            </View>
-          </View>
-        </TouchableHighlight>
-        <View>{showFullInformation()}</View>
-      </View>
-    );
-  } else {
-    return null;
-  }
-};
+import {useNavigation} from '@react-navigation/native';
+import NotificationDetail from '../components/Notification/ItemNotification';
 
 export default function NotificationScreen() {
   const data = [
@@ -201,14 +113,7 @@ export default function NotificationScreen() {
             data={data}
             horizontal={false}
             renderItem={({item}) => {
-              return (
-                <NotificationDetail
-                  title={item.title}
-                  content={item.content}
-                  date={item.date}
-                  image={item.image}
-                />
-              );
+              return <NotificationDetail item={item} />;
             }}
           />
         </View>
