@@ -38,34 +38,37 @@ const checkPermission = () => {
   }
 };
 const getLocation = () => {
-  RNLocation.configure({
-    distanceFilter: 5.0,
-    androidProvider: 'auto',
-    interval: 5000, // Milliseconds
-    fastestInterval: 10000, // Milliseconds
-    maxWaitTime: 5000, // Milliseconds
-  });
-  RNLocation.checkPermission({
-    ios: 'whenInUse', // or 'always'
-    android: {
-      detail: 'fine', // or 'fine'
-    },
-  }).then(granted => {
-    console.log('granted', granted);
-    if (granted) {
-      GetLocation.getCurrentPosition({
-        enableHighAccuracy: true,
-        timeout: 60000,
-      })
-        .then(location => {
-          console.log('location -----', location);
-          return location;
+  return new Promise(async function(resolve, reject) {
+    RNLocation.configure({
+      distanceFilter: 5.0,
+      androidProvider: 'auto',
+      interval: 5000, // Milliseconds
+      fastestInterval: 10000, // Milliseconds
+      maxWaitTime: 5000, // Milliseconds
+    });
+    RNLocation.checkPermission({
+      ios: 'whenInUse', // or 'always'
+      android: {
+        detail: 'coarse', // or 'fine'
+      },
+    }).then(granted => {
+      if (granted) {
+        GetLocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 60000,
         })
-        .catch(error => {
-          const {code, message} = error;
-          console.warn(code, message);
-        });
-    }
+          .then(location => {
+            console.log('location', location);
+            resolve(location);
+          })
+          .catch(error => {
+            const {code, message} = error;
+            console.warn(code, message);
+            reject(error);
+          });
+      }
+    });
   });
 };
+
 export {getCurrentPermission, requestPermission, checkPermission, getLocation};
