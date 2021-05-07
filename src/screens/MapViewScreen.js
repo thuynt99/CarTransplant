@@ -20,7 +20,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import theme from '../theme';
 import Geocoder from 'react-native-geocoding';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import GetLocation from 'react-native-get-location';
 import {getLocation} from '../tools/utils';
 import DateTimeSelect from '../components/MapView/DateTimeSelect/DateTimeSelect';
@@ -184,7 +184,7 @@ class MapViewScreen extends React.Component {
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={styles.date}>
+            <ScrollView style={styles.date}>
               <View style={styles.inLine}>
                 <TouchableOpacity>
                   <Icon
@@ -197,7 +197,7 @@ class MapViewScreen extends React.Component {
                 <Text style={styles.textTitle}>Chọn khoảng thời gian đón</Text>
               </View>
               <DateTimeSelect />
-            </View>
+            </ScrollView>
           )}
           <Button
             block
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
-    height: responsiveHeight(75),
+    height: responsiveHeight(70),
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -241,14 +241,14 @@ const styles = StyleSheet.create({
   },
   viewInput: {
     width: '100%',
-    height: responsiveHeight(25),
+    height: responsiveHeight(30),
     backgroundColor: 'white',
     borderRadius: 20,
     paddingHorizontal: responsiveWidth(2),
     justifyContent: 'space-evenly',
   },
   btnNext: {
-    borderRadius: 5,
+    borderRadius: 8,
   },
   btnBack: {
     backgroundColor: 'transparent',
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   date: {
-    justifyContent: 'space-evenly',
+    // justifyContent: 'space-evenly',
   },
   textDate: {
     color: theme.primaryColor,
