@@ -41,7 +41,7 @@ target 'chnirtnavigation5' do
   pod 'react-native-location', :path => '../node_modules/react-native-location'
 
   # Point to the installed version
-  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker/RNDateTimePicker.podspec'
   
   # React Native Maps dependencies
   rn_maps_path = '../node_modules/react-native-maps'

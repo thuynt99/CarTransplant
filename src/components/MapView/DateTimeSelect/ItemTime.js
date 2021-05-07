@@ -4,6 +4,7 @@ import {View, Platform, BackHandler} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import moment from 'moment';
 import theme from '../../../theme';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 class ItemTime extends Component {
   render() {
