@@ -24,6 +24,7 @@ import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import GetLocation from 'react-native-get-location';
 import {getLocation} from '../tools/utils';
 import DateTimeSelect from '../components/MapView/DateTimeSelect/DateTimeSelect';
+import MapViewDirections from 'react-native-maps-directions';
 // import PriceMarker from './PriceMarker';
 
 const {width, height} = Dimensions.get('window');
@@ -33,6 +34,7 @@ const LATITUDE = 21.032139;
 const LONGITUDE = 105.782222;
 const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const GOOGLE_MAPS_APIKEY = 'AIzaSyDyDhYNrrak9PXgIJRS6FAhLccCfJ2YgUI';
 
 const STEP = {
   ENTER_ADDRESS: 0,
@@ -54,11 +56,24 @@ class MapViewScreen extends React.Component {
           },
         },
       ],
+      coordinates: [
+        {
+          key: 1,
+          latitude: LATITUDE,
+          longitude: LONGITUDE,
+        },
+        {
+          key: 2,
+          latitude: 37.771707,
+          longitude: -122.4053769,
+        },
+      ],
       startLocation: '',
       endLocation: '',
-      step: STEP.DATE_TIME_SELECT,
+      step: STEP.ENTER_ADDRESS,
       chosenDate: new Date(),
     };
+    this.mapView = null;
   }
   componentDidMount() {
     this.getCurrentLocation();
@@ -91,10 +106,13 @@ class MapViewScreen extends React.Component {
   showViewSelectDate = () => {
     this.setState({step: STEP.DATE_TIME_SELECT});
   };
-
+  onMapPress = e => {
+    this.setState({
+      coordinates: [...this.state.coordinates, e.nativeEvent.coordinate],
+    });
+  };
   render() {
-    const {markers, step, chosenDate} = this.state;
-
+    const {markers, step, chosenDate, coordinates} = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.mapView}>
@@ -128,15 +146,58 @@ class MapViewScreen extends React.Component {
               longitudeDelta: LONGITUDE_DELTA,
             }}
             moveOnMarkerPress={false}>
-            {markers.map(marker => {
+            {coordinates.map(marker => {
               return (
                 <Marker
                   key={marker.id}
-                  coordinate={marker.coordinate}
+                  coordinate={{
+                    latitude: marker.latitude,
+                    longitude: marker.longitude,
+                  }}
                   title={marker.title}
                 />
               );
             })}
+            {this.state.coordinates.length >= 2 && (
+              <MapViewDirections
+                origin={this.state.coordinates[0]}
+                waypoints={
+                  this.state.coordinates.length > 2
+                    ? this.state.coordinates.slice(1, -1)
+                    : null
+                }
+                destination={
+                  this.state.coordinates[this.state.coordinates.length - 1]
+                }
+                apikey={GOOGLE_MAPS_APIKEY}
+                strokeWidth={3}
+                strokeColor="hotpink"
+                optimizeWaypoints={true}
+                onStart={params => {
+                  console.log(
+                    `Started routing between "${params.origin}" and "${
+                      params.destination
+                    }"`,
+                  );
+                }}
+                onReady={result => {
+                  console.log(`Distance: ${result.distance} km`);
+                  console.log(`Duration: ${result.duration} min.`);
+
+                  this.mapView.fitToCoordinates(result.coordinates, {
+                    edgePadding: {
+                      right: width / 20,
+                      bottom: height / 20,
+                      left: width / 20,
+                      top: height / 20,
+                    },
+                  });
+                }}
+                onError={errorMessage => {
+                  console.log('GOT AN ERROR', errorMessage);
+                }}
+              />
+            )}
           </MapView>
           <Callout style={styles.buttonMyLocation}>
             <TouchableOpacity
@@ -229,7 +290,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
-    height: responsiveHeight(70),
+    height: responsiveHeight(75),
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -241,7 +302,7 @@ const styles = StyleSheet.create({
   },
   viewInput: {
     width: '100%',
-    height: responsiveHeight(30),
+    height: responsiveHeight(25),
     backgroundColor: 'white',
     borderRadius: 20,
     paddingHorizontal: responsiveWidth(2),
@@ -283,6 +344,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   date: {
+    paddingTop: 8,
     // justifyContent: 'space-evenly',
   },
   textDate: {
