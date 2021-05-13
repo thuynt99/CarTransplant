@@ -8,6 +8,7 @@ const theme = {
   blue_medium: '#87CEEB',
   blue_dark: '#4682B4',
   grey_light: '#cccccc',
+  grey_light_90: '#e6e6e6',
   grey_dark: '#8c8c8c',
 };
 
