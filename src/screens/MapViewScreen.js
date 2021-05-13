@@ -13,6 +13,7 @@ import {
   Text,
   Title,
 } from 'native-base';
+import moment from 'moment';
 import MapView, {Callout, Marker, ProviderPropType} from 'react-native-maps';
 import {
   responsiveHeight,
@@ -25,6 +26,8 @@ import GetLocation from 'react-native-get-location';
 import {getLocation} from '../tools/utils';
 import DateTimeSelect from '../components/MapView/DateTimeSelect/DateTimeSelect';
 import MapViewDirections from 'react-native-maps-directions';
+import {ScaledSheet} from 'react-native-size-matters';
+import {FORMAT} from '../constants/format';
 // import PriceMarker from './PriceMarker';
 
 const {width, height} = Dimensions.get('window');
@@ -72,6 +75,8 @@ class MapViewScreen extends React.Component {
       endLocation: '',
       step: STEP.ENTER_ADDRESS,
       chosenDate: new Date(),
+      dateStart: moment(),
+      dateEnd: moment().add(1, 'hours'),
     };
     this.mapView = null;
   }
@@ -99,7 +104,8 @@ class MapViewScreen extends React.Component {
   };
   onClickBtnNext = () => {
     const {step} = this.state;
-    if (step === STEP.ENTER_ADDRESS) {
+    if (step === STEP.ENTER_DATE) {
+    } else {
       this.setState({step: STEP.ENTER_DATE});
     }
   };
@@ -111,8 +117,29 @@ class MapViewScreen extends React.Component {
       coordinates: [...this.state.coordinates, e.nativeEvent.coordinate],
     });
   };
+  onChangeTimeStart = date => {
+    this.setState({dateStart: date});
+  };
+  onChangeTimeEnd = date => {
+    this.setState({dateEnd: date});
+  };
+  onChangeDate = date => {
+    const {dateStart, dateEnd} = this.state;
+    const daysBetween = date.diff(dateStart, 'days');
+    this.setState({
+      dateStart: moment(dateStart).add(daysBetween, 'days'),
+      dateEnd: moment(dateEnd).add(daysBetween, 'days'),
+    });
+  };
   render() {
-    const {markers, step, chosenDate, coordinates} = this.state;
+    const {
+      markers,
+      step,
+      chosenDate,
+      coordinates,
+      dateStart,
+      dateEnd,
+    } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.mapView}>
@@ -243,11 +270,20 @@ class MapViewScreen extends React.Component {
                 />
                 <Text style={styles.textDate}>Chọn thời gian di chuyển</Text>
               </TouchableOpacity>
+              <Text style={styles.text} numberOfLines={2}>
+                Tài xế sẽ đón bạn vào khoảng thời gian từ{' '}
+                {moment(dateStart).format(FORMAT.TIME)} đến{' '}
+                {moment(dateEnd).format(FORMAT.TIME)} ngày{' '}
+                {moment(dateStart).format(FORMAT.DATE)}
+              </Text>
             </View>
           ) : (
             <ScrollView style={styles.date}>
               <View style={styles.inLine}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({step: STEP.ENTER_DATE});
+                  }}>
                   <Icon
                     active
                     name="close"
@@ -277,7 +313,7 @@ MapViewScreen.propTypes = {
   provider: ProviderPropType,
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
@@ -290,7 +326,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
-    height: responsiveHeight(75),
+    height: responsiveHeight(70),
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -302,7 +338,7 @@ const styles = StyleSheet.create({
   },
   viewInput: {
     width: '100%',
-    height: responsiveHeight(25),
+    height: responsiveHeight(30),
     backgroundColor: 'white',
     borderRadius: 20,
     paddingHorizontal: responsiveWidth(2),
@@ -345,6 +381,7 @@ const styles = StyleSheet.create({
   },
   date: {
     paddingTop: 8,
+    paddingBottom: 20,
     // justifyContent: 'space-evenly',
   },
   textDate: {
@@ -352,6 +389,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     paddingTop: 5,
+  },
+  text: {
+    fontSize: '14@ms',
+    textAlign: 'center',
+    paddingHorizontal: 10,
+    marginTop: 16,
   },
 });
 

@@ -21,25 +21,36 @@ class DateTimeSelect extends Component {
     }
     this.setState({listDate: this.state.listDate});
   }
+
   render() {
     const {listDate} = this.state;
+    const {
+      dateStart,
+      dateEnd,
+      onChangeDate,
+      onChangeTimeStart,
+      onChangeTimeEnd,
+    } = this.props;
     return (
       <View>
         <FlatList
           horizontal
           style={styles.container}
           data={listDate}
-          renderItem={({item}) => <ItemDate item={item} />}
+          renderItem={({item}) => (
+            <ItemDate item={item} onChangeDate={onChangeDate} />
+          )}
           keyExtractor={item => item.id}
         />
         <Text style={styles.text} numberOfLines={2}>
           Hãy chọn khoảng thời gian để tài xế có thể đón bạn dễ dàng nhất
         </Text>
-        <ItemTime />
-        <Text style={styles.text} numberOfLines={2}>
-          Tài xế sẽ đón bạn vào khoảng thời gian từ 15:11 đến 15:43 ngày
-          07/05/2021
-        </Text>
+        <ItemTime
+          dateStart={dateStart}
+          dateEnd={dateEnd}
+          onChangeTimeStart={onChangeTimeStart}
+          onChangeTimeEnd={onChangeTimeEnd}
+        />
       </View>
     );
   }
