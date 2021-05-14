@@ -123,13 +123,22 @@ class MapViewScreen extends React.Component {
   onChangeTimeEnd = date => {
     this.setState({dateEnd: date});
   };
-  onChangeDate = date => {
+  onChangeDate = day => {
     const {dateStart, dateEnd} = this.state;
-    const daysBetween = date.diff(dateStart, 'days');
-    this.setState({
-      dateStart: moment(dateStart).add(daysBetween, 'days'),
-      dateEnd: moment(dateEnd).add(daysBetween, 'days'),
+    const date = day.format(FORMAT.DAY);
+    const month = day.format(FORMAT.MONTH) - 1;
+    const year = day.format(FORMAT.YEAR);
+    const dateNewStart = moment(dateStart).set({
+      date,
+      month,
+      year,
     });
+    const dateNewEnd = moment(dateEnd).set({
+      date,
+      month,
+      year,
+    });
+    this.setState({dateStart: dateNewStart, dateEnd: dateNewEnd});
   };
   render() {
     const {
@@ -293,7 +302,13 @@ class MapViewScreen extends React.Component {
                 </TouchableOpacity>
                 <Text style={styles.textTitle}>Chọn khoảng thời gian đón</Text>
               </View>
-              <DateTimeSelect />
+              <DateTimeSelect
+                dateStart={dateStart}
+                dateEnd={dateEnd}
+                onChangeDate={this.onChangeDate}
+                onChangeTimeStart={this.onChangeTimeStart}
+                onChangeTimeEnd={this.onChangeTimeEnd}
+              />
             </ScrollView>
           )}
           <Button
