@@ -31,7 +31,26 @@ import MapViewDirections from 'react-native-maps-directions';
 import {ScaledSheet} from 'react-native-size-matters';
 import {FORMAT} from '../constants/format';
 import ItemBookingCar from '../components/MapView/ListCar/ItemBookingCar';
+import ListBookingCar from '../components/MapView/ListCar/ListBookingCar';
 // import PriceMarker from './PriceMarker';
+
+const listVehicle = [
+  {
+    id: 1,
+    name: 'Xe 5 chỗ',
+    price: 325.0,
+  },
+  {
+    id: 2,
+    name: 'Xe 7 chỗ',
+    price: 325.0,
+  },
+  {
+    id: 3,
+    name: 'Xe 5 chỗ',
+    price: 325.0,
+  },
+];
 
 const {width, height} = Dimensions.get('window');
 
@@ -316,28 +335,28 @@ class MapViewScreen extends React.Component {
               />
             </ScrollView>
           ) : (
-            <View style={styles.date}>
-              <ItemBookingCar />
-              <CardItem>
-                <Left>
-                  <Icon name="people" type="MaterialIcons" />
-                  <Text style={styles.textKM}>Số người:</Text>
-                </Left>
-                <Right>
-                  <Text>1</Text>
-                </Right>
-              </CardItem>
-              <CardItem>
-                <Left>
-                  <Icon name="tagso" type="AntDesign" fontSize={10} />
-                  <Text style={styles.textKM}>Khuyến mãi:</Text>
-                </Left>
-                <Right>
-                  <Text>HELLOBANMOI</Text>
-                </Right>
-              </CardItem>
-            </View>
+            <ScrollView style={styles.date}>
+              <ListBookingCar listVehicle={listVehicle} />
+            </ScrollView>
           )}
+          <CardItem>
+            <Left>
+              <Icon name="people" type="MaterialIcons" />
+              <Text style={styles.textKM}>Số người:</Text>
+            </Left>
+            <Right>
+              <Text>1</Text>
+            </Right>
+          </CardItem>
+          <CardItem>
+            <Left>
+              <Icon name="tagso" type="AntDesign" fontSize={10} />
+              <Text style={styles.textKM}>Khuyến mãi:</Text>
+            </Left>
+            <Right>
+              <Text>HELLOBANMOI</Text>
+            </Right>
+          </CardItem>
           <Button
             block
             danger
