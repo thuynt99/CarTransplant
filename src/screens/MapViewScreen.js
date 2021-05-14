@@ -3,6 +3,8 @@ import {StyleSheet, View, Dimensions} from 'react-native';
 import {
   Body,
   Button,
+  Card,
+  CardItem,
   Form,
   Header,
   Icon,
@@ -28,6 +30,7 @@ import DateTimeSelect from '../components/MapView/DateTimeSelect/DateTimeSelect'
 import MapViewDirections from 'react-native-maps-directions';
 import {ScaledSheet} from 'react-native-size-matters';
 import {FORMAT} from '../constants/format';
+import ItemBookingCar from '../components/MapView/ListCar/ItemBookingCar';
 // import PriceMarker from './PriceMarker';
 
 const {width, height} = Dimensions.get('window');
@@ -43,6 +46,7 @@ const STEP = {
   ENTER_ADDRESS: 0,
   ENTER_DATE: 1,
   DATE_TIME_SELECT: 2,
+  SELECT_CAR: 3,
 };
 
 class MapViewScreen extends React.Component {
@@ -73,7 +77,7 @@ class MapViewScreen extends React.Component {
       ],
       startLocation: '',
       endLocation: '',
-      step: STEP.ENTER_ADDRESS,
+      step: STEP.SELECT_CAR,
       chosenDate: new Date(),
       dateStart: moment(),
       dateEnd: moment().add(1, 'hours'),
@@ -105,6 +109,7 @@ class MapViewScreen extends React.Component {
   onClickBtnNext = () => {
     const {step} = this.state;
     if (step === STEP.ENTER_DATE) {
+      this.setState({step: STEP.SELECT_CAR});
     } else {
       this.setState({step: STEP.ENTER_DATE});
     }
@@ -286,7 +291,7 @@ class MapViewScreen extends React.Component {
                 {moment(dateStart).format(FORMAT.DATE)}
               </Text>
             </View>
-          ) : (
+          ) : step === STEP.DATE_TIME_SELECT ? (
             <ScrollView style={styles.date}>
               <View style={styles.inLine}>
                 <TouchableOpacity
@@ -310,6 +315,28 @@ class MapViewScreen extends React.Component {
                 onChangeTimeEnd={this.onChangeTimeEnd}
               />
             </ScrollView>
+          ) : (
+            <View style={styles.date}>
+              <ItemBookingCar />
+              <CardItem>
+                <Left>
+                  <Icon name="people" type="MaterialIcons" />
+                  <Text style={styles.textKM}>Số người:</Text>
+                </Left>
+                <Right>
+                  <Text>1</Text>
+                </Right>
+              </CardItem>
+              <CardItem>
+                <Left>
+                  <Icon name="tagso" type="AntDesign" fontSize={10} />
+                  <Text style={styles.textKM}>Khuyến mãi:</Text>
+                </Left>
+                <Right>
+                  <Text>HELLOBANMOI</Text>
+                </Right>
+              </CardItem>
+            </View>
           )}
           <Button
             block
@@ -410,6 +437,10 @@ const styles = ScaledSheet.create({
     textAlign: 'center',
     paddingHorizontal: 10,
     marginTop: 16,
+  },
+  textKM: {
+    paddingLeft: '16@s',
+    fontSize: '14@ms',
   },
 });
 
