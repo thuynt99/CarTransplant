@@ -22,17 +22,13 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import theme from '../theme';
-import Geocoder from 'react-native-geocoding';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import GetLocation from 'react-native-get-location';
 import {getLocation} from '../tools/utils';
 import DateTimeSelect from '../components/MapView/DateTimeSelect/DateTimeSelect';
 import MapViewDirections from 'react-native-maps-directions';
 import {ScaledSheet} from 'react-native-size-matters';
 import {FORMAT} from '../constants/format';
-import ItemBookingCar from '../components/MapView/ListCar/ItemBookingCar';
 import ListBookingCar from '../components/MapView/ListCar/ListBookingCar';
-// import PriceMarker from './PriceMarker';
 
 const listVehicle = [
   {
@@ -96,10 +92,12 @@ class MapViewScreen extends React.Component {
       ],
       startLocation: '',
       endLocation: '',
-      step: STEP.SELECT_CAR,
+      step: STEP.ENTER_ADDRESS,
       chosenDate: new Date(),
       dateStart: moment(),
       dateEnd: moment().add(1, 'hours'),
+      startStation: '',
+      endStation: '',
     };
     this.mapView = null;
   }
@@ -120,7 +118,7 @@ class MapViewScreen extends React.Component {
     });
   };
   onChangeText = text => {
-    this.setState({startLocation: text});
+    this.setState({startStation: text});
   };
   goBack = () => {
     this.props.navigation.goBack();
@@ -172,6 +170,8 @@ class MapViewScreen extends React.Component {
       coordinates,
       dateStart,
       dateEnd,
+      startStation,
+      endLocation,
     } = this.state;
     return (
       <View style={styles.container}>
@@ -277,7 +277,12 @@ class MapViewScreen extends React.Component {
                   type="Entypo"
                   style={{fontSize: 24, color: theme.primaryColor}}
                 />
-                <Input rounded placeholder="Xin vui lòng nhập điểm đi" />
+                <Input
+                  rounded
+                  placeholder="Xin vui lòng nhập điểm đi"
+                  onChangeText={this.onChangeText}
+                  value={startStation}
+                />
               </Item>
               <Item fixedLabel style={styles.textInput}>
                 <Icon
@@ -285,6 +290,8 @@ class MapViewScreen extends React.Component {
                   name="md-add"
                   type="Ionicons"
                   style={{fontSize: 24, color: theme.primaryColor}}
+                  onChangeText={this.onChangeText}
+                  value={endLocation}
                 />
                 <Input rounded placeholder="Xin vui lòng nhập điểm đến" />
               </Item>
@@ -339,7 +346,7 @@ class MapViewScreen extends React.Component {
               <ListBookingCar listVehicle={listVehicle} />
             </ScrollView>
           )}
-          <CardItem>
+          {/* <CardItem>
             <Left>
               <Icon name="people" type="MaterialIcons" />
               <Text style={styles.textKM}>Số người:</Text>
@@ -356,7 +363,7 @@ class MapViewScreen extends React.Component {
             <Right>
               <Text>HELLOBANMOI</Text>
             </Right>
-          </CardItem>
+          </CardItem> */}
           <Button
             block
             danger
