@@ -3,6 +3,8 @@ import {StyleSheet, View, Dimensions} from 'react-native';
 import {
   Body,
   Button,
+  Card,
+  CardItem,
   Form,
   Header,
   Icon,
@@ -20,15 +22,31 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import theme from '../theme';
-import Geocoder from 'react-native-geocoding';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import GetLocation from 'react-native-get-location';
 import {getLocation} from '../tools/utils';
 import DateTimeSelect from '../components/MapView/DateTimeSelect/DateTimeSelect';
 import MapViewDirections from 'react-native-maps-directions';
 import {ScaledSheet} from 'react-native-size-matters';
 import {FORMAT} from '../constants/format';
-// import PriceMarker from './PriceMarker';
+import ListBookingCar from '../components/MapView/ListCar/ListBookingCar';
+
+const listVehicle = [
+  {
+    id: 1,
+    name: 'Xe 5 chỗ',
+    price: 325.0,
+  },
+  {
+    id: 2,
+    name: 'Xe 7 chỗ',
+    price: 325.0,
+  },
+  {
+    id: 3,
+    name: 'Xe 5 chỗ',
+    price: 325.0,
+  },
+];
 
 const {width, height} = Dimensions.get('window');
 
@@ -43,6 +61,7 @@ const STEP = {
   ENTER_ADDRESS: 0,
   ENTER_DATE: 1,
   DATE_TIME_SELECT: 2,
+  SELECT_CAR: 3,
 };
 
 class MapViewScreen extends React.Component {
@@ -77,6 +96,8 @@ class MapViewScreen extends React.Component {
       chosenDate: new Date(),
       dateStart: moment(),
       dateEnd: moment().add(1, 'hours'),
+      startStation: '',
+      endStation: '',
     };
     this.mapView = null;
   }
@@ -97,7 +118,7 @@ class MapViewScreen extends React.Component {
     });
   };
   onChangeText = text => {
-    this.setState({startLocation: text});
+    this.setState({startStation: text});
   };
   goBack = () => {
     this.props.navigation.goBack();
@@ -105,6 +126,7 @@ class MapViewScreen extends React.Component {
   onClickBtnNext = () => {
     const {step} = this.state;
     if (step === STEP.ENTER_DATE) {
+      this.setState({step: STEP.SELECT_CAR});
     } else {
       this.setState({step: STEP.ENTER_DATE});
     }
@@ -123,13 +145,22 @@ class MapViewScreen extends React.Component {
   onChangeTimeEnd = date => {
     this.setState({dateEnd: date});
   };
-  onChangeDate = date => {
+  onChangeDate = day => {
     const {dateStart, dateEnd} = this.state;
-    const daysBetween = date.diff(dateStart, 'days');
-    this.setState({
-      dateStart: moment(dateStart).add(daysBetween, 'days'),
-      dateEnd: moment(dateEnd).add(daysBetween, 'days'),
+    const date = day.format(FORMAT.DAY);
+    const month = day.format(FORMAT.MONTH) - 1;
+    const year = day.format(FORMAT.YEAR);
+    const dateNewStart = moment(dateStart).set({
+      date,
+      month,
+      year,
     });
+    const dateNewEnd = moment(dateEnd).set({
+      date,
+      month,
+      year,
+    });
+    this.setState({dateStart: dateNewStart, dateEnd: dateNewEnd});
   };
   render() {
     const {
@@ -139,6 +170,8 @@ class MapViewScreen extends React.Component {
       coordinates,
       dateStart,
       dateEnd,
+      startStation,
+      endLocation,
     } = this.state;
     return (
       <View style={styles.container}>
@@ -244,7 +277,12 @@ class MapViewScreen extends React.Component {
                   type="Entypo"
                   style={{fontSize: 24, color: theme.primaryColor}}
                 />
-                <Input rounded placeholder="Xin vui lòng nhập điểm đi" />
+                <Input
+                  rounded
+                  placeholder="Xin vui lòng nhập điểm đi"
+                  onChangeText={this.onChangeText}
+                  value={startStation}
+                />
               </Item>
               <Item fixedLabel style={styles.textInput}>
                 <Icon
@@ -252,6 +290,8 @@ class MapViewScreen extends React.Component {
                   name="md-add"
                   type="Ionicons"
                   style={{fontSize: 24, color: theme.primaryColor}}
+                  onChangeText={this.onChangeText}
+                  value={endLocation}
                 />
                 <Input rounded placeholder="Xin vui lòng nhập điểm đến" />
               </Item>
@@ -277,7 +317,7 @@ class MapViewScreen extends React.Component {
                 {moment(dateStart).format(FORMAT.DATE)}
               </Text>
             </View>
-          ) : (
+          ) : step === STEP.DATE_TIME_SELECT ? (
             <ScrollView style={styles.date}>
               <View style={styles.inLine}>
                 <TouchableOpacity
@@ -293,9 +333,37 @@ class MapViewScreen extends React.Component {
                 </TouchableOpacity>
                 <Text style={styles.textTitle}>Chọn khoảng thời gian đón</Text>
               </View>
-              <DateTimeSelect />
+              <DateTimeSelect
+                dateStart={dateStart}
+                dateEnd={dateEnd}
+                onChangeDate={this.onChangeDate}
+                onChangeTimeStart={this.onChangeTimeStart}
+                onChangeTimeEnd={this.onChangeTimeEnd}
+              />
+            </ScrollView>
+          ) : (
+            <ScrollView style={styles.date}>
+              <ListBookingCar listVehicle={listVehicle} />
             </ScrollView>
           )}
+          {/* <CardItem>
+            <Left>
+              <Icon name="people" type="MaterialIcons" />
+              <Text style={styles.textKM}>Số người:</Text>
+            </Left>
+            <Right>
+              <Text>1</Text>
+            </Right>
+          </CardItem>
+          <CardItem>
+            <Left>
+              <Icon name="tagso" type="AntDesign" fontSize={10} />
+              <Text style={styles.textKM}>Khuyến mãi:</Text>
+            </Left>
+            <Right>
+              <Text>HELLOBANMOI</Text>
+            </Right>
+          </CardItem> */}
           <Button
             block
             danger
@@ -395,6 +463,10 @@ const styles = ScaledSheet.create({
     textAlign: 'center',
     paddingHorizontal: 10,
     marginTop: 16,
+  },
+  textKM: {
+    paddingLeft: '16@s',
+    fontSize: '14@ms',
   },
 });
 

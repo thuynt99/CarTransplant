@@ -6,16 +6,21 @@ import moment from 'moment';
 import theme from '../../../theme';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {FORMAT} from '../../../constants/format';
 
 class ItemDate extends Component {
   constructor(props) {
     super(props);
   }
   render() {
-    const {item, onChangeDate} = this.props;
+    const {item, onChangeDate, dateStart} = this.props;
+
+    const selected =
+      moment(item).format(FORMAT.DATE) ===
+      moment(dateStart).format(FORMAT.DATE);
     return (
       <TouchableOpacity onPress={() => onChangeDate(item)}>
-        <View style={styles.card}>
+        <View style={selected ? styles.cardSelect : styles.card}>
           <Text style={styles.text}>{moment(item).format('ddd')}</Text>
           <Text style={styles.date}>{moment(item).format('DD')}</Text>
           <Text style={styles.text}>Tháng {moment(item).format('M')}</Text>

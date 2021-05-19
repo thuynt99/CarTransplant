@@ -37,8 +37,12 @@ class DateTimeSelect extends Component {
           horizontal
           style={styles.container}
           data={listDate}
-          renderItem={({item}) => (
-            <ItemDate item={item} onChangeDate={onChangeDate} />
+          renderItem={({item, index}) => (
+            <ItemDate
+              item={item}
+              onChangeDate={onChangeDate}
+              dateStart={dateStart}
+            />
           )}
           keyExtractor={item => item.id}
         />
