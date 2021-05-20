@@ -29,6 +29,8 @@ import MapViewDirections from 'react-native-maps-directions';
 import {ScaledSheet} from 'react-native-size-matters';
 import {FORMAT} from '../constants/format';
 import ListBookingCar from '../components/MapView/ListCar/ListBookingCar';
+import {getPlaceByLocation} from '../redux-saga/actions/map.action';
+import {connect} from 'react-redux';
 
 const listVehicle = [
   {
@@ -69,15 +71,6 @@ class MapViewScreen extends React.Component {
     super(props);
 
     this.state = {
-      markers: [
-        {
-          key: 1,
-          coordinate: {
-            latitude: LATITUDE,
-            longitude: LONGITUDE,
-          },
-        },
-      ],
       coordinates: [
         {
           key: 1,
@@ -90,6 +83,10 @@ class MapViewScreen extends React.Component {
           longitude: -122.4053769,
         },
       ],
+      myLocation: {
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+      },
       startLocation: '',
       endLocation: '',
       step: STEP.ENTER_ADDRESS,
@@ -104,16 +101,21 @@ class MapViewScreen extends React.Component {
   componentDidMount() {
     this.getCurrentLocation();
   }
-  getCurrentLocation = () => {
-    getLocation().then(res => {
-      this.setState(
-        {
-          myLocation: {
-            latitude: res.latitude,
-            longitude: res.longitude,
-          },
+  getCurrentLocation = async () => {
+    getLocation().then(async res => {
+      this.setState({
+        myLocation: {
+          latitude: res.latitude,
+          longitude: res.longitude,
         },
-        () => console.log('myLocation', this.state.myLocation),
+      });
+      await this.props.getPlaceByLocation({
+        latitude: res.latitude,
+        longitude: res.longitude,
+      });
+      console.log('dmmmm', this.props.map);
+      this.setState({startLocation: this.props.map.startStation}, () =>
+        console.log('startStation', this.state.startStation),
       );
     });
   };
@@ -164,7 +166,6 @@ class MapViewScreen extends React.Component {
   };
   render() {
     const {
-      markers,
       step,
       chosenDate,
       coordinates,
@@ -173,6 +174,8 @@ class MapViewScreen extends React.Component {
       startStation,
       endLocation,
     } = this.state;
+    const {map} = this.props;
+    console.log('startStation', startStation);
     return (
       <View style={styles.container}>
         <View style={styles.mapView}>
@@ -377,10 +380,6 @@ class MapViewScreen extends React.Component {
   }
 }
 
-MapViewScreen.propTypes = {
-  provider: ProviderPropType,
-};
-
 const styles = ScaledSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -469,5 +468,15 @@ const styles = ScaledSheet.create({
     fontSize: '14@ms',
   },
 });
+const mapStateToProps = state => ({
+  map: state.map,
+});
 
-export default MapViewScreen;
+const mapDispatchToProps = dispatch => ({
+  getPlaceByLocation: params => dispatch(getPlaceByLocation(params)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MapViewScreen);
