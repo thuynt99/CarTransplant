@@ -87,7 +87,7 @@ class MapViewScreen extends React.Component {
         latitude: LATITUDE,
         longitude: LONGITUDE,
       },
-      startLocation: '',
+      startStation: props.map.startStation,
       endLocation: '',
       step: STEP.ENTER_ADDRESS,
       chosenDate: new Date(),
@@ -98,8 +98,8 @@ class MapViewScreen extends React.Component {
     };
     this.mapView = null;
   }
-  componentDidMount() {
-    this.getCurrentLocation();
+  async componentDidMount() {
+    await this.getCurrentLocation();
   }
   getCurrentLocation = async () => {
     getLocation().then(async res => {
@@ -114,7 +114,7 @@ class MapViewScreen extends React.Component {
         longitude: res.longitude,
       });
       console.log('dmmmm', this.props.map);
-      this.setState({startLocation: this.props.map.startStation}, () =>
+      this.setState({startStation: this.props.map.startStation}, () =>
         console.log('startStation', this.state.startStation),
       );
     });
@@ -221,7 +221,7 @@ class MapViewScreen extends React.Component {
                 />
               );
             })}
-            {this.state.coordinates.length >= 2 && (
+            {/* {this.state.coordinates.length >= 2 && (
               <MapViewDirections
                 origin={this.state.coordinates[0]}
                 waypoints={
@@ -260,7 +260,7 @@ class MapViewScreen extends React.Component {
                   console.log('GOT AN ERROR', errorMessage);
                 }}
               />
-            )}
+            )} */}
           </MapView>
           <Callout style={styles.buttonMyLocation}>
             <TouchableOpacity
