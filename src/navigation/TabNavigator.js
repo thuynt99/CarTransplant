@@ -4,12 +4,18 @@ import {TouchableOpacity} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 
-import {HOME, MESSAGE, POST, NOTIFICATION, PROFILE} from '../constants';
+import {
+  HOME,
+  LIST_MY_RESERVATION,
+  POST,
+  NOTIFICATION,
+  PROFILE,
+} from '../constants';
 import {primaryColor} from '../theme';
 import HomeScreen from '../screens/Home';
-import MessageScreen from '../screens/Message';
 import NotificationScreen from '../screens/Notification';
 import ProfileScreen from '../screens/Profile';
+import ListMyReservation from '../screens/ListMyReservation';
 
 // import {AddButton} from '../components/AddButton';
 
@@ -36,13 +42,13 @@ export default function TabNavigator(props) {
         children={() => <HomeScreen {...props} />}
       />
       <Tab.Screen
-        name={MESSAGE}
+        name={LIST_MY_RESERVATION}
         options={{
           tabBarIcon: ({color, size}) => (
             <FontAwesome5 name={'car-alt'} color={color} size={size} />
           ),
         }}
-        children={() => <MessageScreen {...props} />}
+        children={() => <ListMyReservation {...props} />}
       />
       <Tab.Screen
         name={POST}

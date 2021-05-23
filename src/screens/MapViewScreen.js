@@ -16,7 +16,12 @@ import {
   Title,
 } from 'native-base';
 import moment from 'moment';
-import MapView, {Callout, Marker, ProviderPropType} from 'react-native-maps';
+import MapView, {
+  Callout,
+  Marker,
+  Polyline,
+  ProviderPropType,
+} from 'react-native-maps';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -79,16 +84,16 @@ class MapViewScreen extends React.Component {
         },
       ],
       coordinates: [
-        {
-          key: 1,
-          latitude: LATITUDE,
-          longitude: LONGITUDE,
-        },
-        {
-          key: 2,
-          latitude: 37.771707,
-          longitude: -122.4053769,
-        },
+        {key: 1, latitude: LATITUDE, longitude: LONGITUDE},
+        {key: 2, latitude: 20.991103600404188, longitude: 105.80253549999999},
+        {key: 3, latitude: 20.990816900404184, longitude: 105.8026274},
+        {key: 4, latitude: 20.990718000404183, longitude: 105.80349369999999},
+        {key: 5, latitude: 20.99100100040419, longitude: 105.80390409999998},
+        {key: 6, latitude: 20.9918261004042, longitude: 105.804057},
+        {key: 7, longitude: 105.8038343, latitude: 20.992127900404217},
+        {key: 8, longitude: 105.8029358, latitude: 20.992263100404212},
+        {key: 9, longitude: 105.80290029999999, latitude: 20.992239500404217},
+        {key: 10, longitude: 105.80253549999999, latitude: 20.99200010040421},
       ],
       startLocation: '',
       endLocation: '',
@@ -206,6 +211,30 @@ class MapViewScreen extends React.Component {
               longitudeDelta: LONGITUDE_DELTA,
             }}
             moveOnMarkerPress={false}>
+            <Polyline
+              coordinates={[
+                {latitude: LATITUDE, longitude: LONGITUDE},
+                {latitude: 20.991103600404188, longitude: 105.80253549999999},
+                {latitude: 20.990816900404184, longitude: 105.8026274},
+                {latitude: 20.990718000404183, longitude: 105.80349369999999},
+                {latitude: 20.99100100040419, longitude: 105.80390409999998},
+                {latitude: 20.9918261004042, longitude: 105.804057},
+                {longitude: 105.8038343, latitude: 20.992127900404217},
+                {longitude: 105.8029358, latitude: 20.992263100404212},
+                {longitude: 105.80290029999999, latitude: 20.992239500404217},
+                {longitude: 105.80253549999999, latitude: 20.99200010040421},
+              ]}
+              strokeColor={theme.primaryColor} // fallback for when `strokeColors` is not supported by the map-provider
+              strokeColors={[
+                '#7F0000',
+                '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+                '#B24112',
+                '#E5845C',
+                '#238C23',
+                '#7F0000',
+              ]}
+              strokeWidth={6}
+            />
             {coordinates.map(marker => {
               return (
                 <Marker
@@ -218,7 +247,7 @@ class MapViewScreen extends React.Component {
                 />
               );
             })}
-            {this.state.coordinates.length >= 2 && (
+            {/* {this.state.coordinates.length >= 2 && (
               <MapViewDirections
                 origin={this.state.coordinates[0]}
                 waypoints={
@@ -257,7 +286,7 @@ class MapViewScreen extends React.Component {
                   console.log('GOT AN ERROR', errorMessage);
                 }}
               />
-            )}
+            )} */}
           </MapView>
           <Callout style={styles.buttonMyLocation}>
             <TouchableOpacity
