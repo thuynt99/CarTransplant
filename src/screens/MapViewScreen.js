@@ -88,19 +88,27 @@ class MapViewScreen extends React.Component {
         longitude: LONGITUDE,
       },
       startStation: props.map.startStation,
-      endLocation: '',
+      endStation: '',
       step: STEP.ENTER_ADDRESS,
       chosenDate: new Date(),
       dateStart: moment(),
       dateEnd: moment().add(1, 'hours'),
-      startStation: '',
-      endStation: '',
     };
     this.mapView = null;
   }
   async componentDidMount() {
     await this.getCurrentLocation();
   }
+  callApi = async () => {
+    this.props.getPlaceByLocation({
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
+    });
+    console.log('dmmmm-----', this.props.map);
+    this.setState({startStation: this.props.map.startStation}, () =>
+      console.log('startStation', this.state.startStation),
+    );
+  };
   getCurrentLocation = async () => {
     getLocation().then(async res => {
       this.setState({
@@ -114,9 +122,7 @@ class MapViewScreen extends React.Component {
         longitude: res.longitude,
       });
       console.log('dmmmm', this.props.map);
-      this.setState({startStation: this.props.map.startStation}, () =>
-        console.log('startStation', this.state.startStation),
-      );
+      this.setState({startStation: this.props.map.startStation});
     });
   };
   onChangeText = text => {
@@ -126,12 +132,14 @@ class MapViewScreen extends React.Component {
     this.props.navigation.goBack();
   };
   onClickBtnNext = () => {
-    const {step} = this.state;
-    if (step === STEP.ENTER_DATE) {
-      this.setState({step: STEP.SELECT_CAR});
-    } else {
-      this.setState({step: STEP.ENTER_DATE});
-    }
+    // const {step} = this.state;
+    // if (step === STEP.ENTER_DATE) {
+    //   this.setState({step: STEP.SELECT_CAR});
+    // } else {
+    //   this.setState({step: STEP.ENTER_DATE});
+    // }
+
+    this.callApi();
   };
   showViewSelectDate = () => {
     this.setState({step: STEP.DATE_TIME_SELECT});
@@ -284,6 +292,7 @@ class MapViewScreen extends React.Component {
                   rounded
                   placeholder="Xin vui lòng nhập điểm đi"
                   onChangeText={this.onChangeText}
+                  defaultValue={map.startStation}
                   value={startStation}
                 />
               </Item>

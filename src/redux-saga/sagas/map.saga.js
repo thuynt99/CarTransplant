@@ -8,38 +8,47 @@ import {
 } from '../type-actions.js/map.type-action';
 const getPlaceByLocationUrl = 'https://nominatim.openstreetmap.org/reverse/';
 
-const getPlaceByLocation = params => {
+async function getPlaceByLocation(params) {
   console.log('----------params-------------', params);
-  return new Promise((resolve, reject) => {
-    return axios
-      .get(getPlaceByLocationUrl, {
-        params: {
-          lat: params?.latitude,
-          lon: params?.longitude,
-          format: 'json',
-        },
-      })
-      .then(response => {
-        console.log('-------GET--------', response);
-        response.status === 200 ? resolve(response) : reject(response);
-        return response;
-      })
-      .catch(error => {
-        console.log(error);
-        reject(error);
-      });
+  // return new Promise((resolve, reject) => {
+  //   return axios
+  //     .get(getPlaceByLocationUrl, {
+  //       params: {
+  //         lat: params?.latitude,
+  //         lon: params?.longitude,
+  //         format: 'json',
+  //       },
+  //     })
+  //     .then(response => {
+  //       console.log('-------GET--------', response);
+  //       response.status === 200 ? resolve(response) : reject(response);
+  //       return response;
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //       reject(error);
+  //     });
+  // });
+  const response = await axios.get(getPlaceByLocationUrl, {
+    params: {lat: params?.latitude, lon: params?.longitude, format: 'json'},
   });
-};
+  console.log('response---------------', response);
+  return response;
+}
 function* processPlaceByLocation(request) {
   try {
     const data = yield call(getPlaceByLocation, request.params);
     console.log('request', request);
     console.log('data', data);
     yield put({
-      type: request.response.success,
+      type: GET_PLACE_BY_LOCATION_SUCCESS,
       data: data.data,
     });
   } catch (error) {
+    yield put({
+      type: GET_PLACE_BY_LOCATION_FAILED,
+      data: data.data,
+    });
     console.log(error);
     Toast.show({
       text: error,
@@ -49,5 +58,5 @@ function* processPlaceByLocation(request) {
 }
 
 export function* watchGetInfoMap() {
-  yield takeEvery(GET_PLACE_BY_LOCATION, processPlaceByLocation);
+  yield takeLatest(GET_PLACE_BY_LOCATION, processPlaceByLocation);
 }
