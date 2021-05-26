@@ -15,19 +15,23 @@ import AppNavigator from './navigation/AppNavigator';
 import ContextProvider from './tools/context';
 import client from './tools/apollo';
 import './tools/firebase';
+import {Provider} from 'react-redux';
+import store from './stores/configureStore';
 
 function App() {
   useEffect(() => {
     Geocoder.init('AIzaSyDyDhYNrrak9PXgIJRS6FAhLccCfJ2YgUI');
   });
   return (
-    <ApolloProvider client={client}>
-      <ContextProvider>
-        <NavigationNativeContainer>
-          <AppNavigator />
-        </NavigationNativeContainer>
-      </ContextProvider>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <ContextProvider>
+          <NavigationNativeContainer>
+            <AppNavigator />
+          </NavigationNativeContainer>
+        </ContextProvider>
+      </ApolloProvider>
+    </Provider>
   );
 }
 
