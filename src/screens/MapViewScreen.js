@@ -30,7 +30,8 @@ import {ScaledSheet} from 'react-native-size-matters';
 import {FORMAT} from '../constants/format';
 import ListBookingCar from '../components/MapView/ListCar/ListBookingCar';
 import {connect} from 'react-redux';
-import {getPlaceByLocation} from '../stores/map/actions';
+import {getPlaceByLocation, searchAddress} from '../stores/map/actions';
+import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
 
 const listVehicle = [
   {
@@ -64,6 +65,7 @@ const STEP = {
   ENTER_DATE: 1,
   DATE_TIME_SELECT: 2,
   SELECT_CAR: 3,
+  SEARCH_ADDRESS: 4,
 };
 
 class MapViewScreen extends React.Component {
@@ -93,6 +95,7 @@ class MapViewScreen extends React.Component {
       chosenDate: new Date(),
       dateStart: moment(),
       dateEnd: moment().add(1, 'hours'),
+      listAddress: [],
     };
     this.mapView = null;
   }
@@ -174,6 +177,19 @@ class MapViewScreen extends React.Component {
     });
     this.setState({dateStart: dateNewStart, dateEnd: dateNewEnd});
   };
+
+  goToSearch = () => {
+    this.setState({step: STEP.SEARCH_ADDRESS});
+  };
+  goToMapScreen = () => {
+    this.setState({step: STEP.ENTER_ADDRESS});
+  };
+  onSearchAddress = query => {
+    this.props
+      .searchAddress(query)
+      .then(res => this.setState({listAddress: res.data}));
+  };
+
   render() {
     const {
       step,
@@ -182,56 +198,64 @@ class MapViewScreen extends React.Component {
       dateStart,
       dateEnd,
       startStation,
-      endLocation,
+      endStation,
+      listAddress,
     } = this.state;
     const {map} = this.props;
-    console.log('startStation', map);
     return (
       <View style={styles.container}>
-        <View style={styles.mapView}>
-          <View style={styles.header}>
-            <Button rounded style={styles.btnBack} onPress={this.goBack}>
-              <Icon name="arrow-back" type="MaterialIcons" />
-            </Button>
-          </View>
-          <MapView
-            ref={MapView => (this.MapView = MapView)}
-            provider="google"
-            style={styles.map}
-            showsUserLocation={true}
-            followUserLocation={true}
-            showsCompass={true}
-            zoomEnabled={true}
-            showsPointsOfInterest={false}
-            paddingAdjustmentBehavior={'automatic'}
-            showsIndoors={true}
-            showsIndoorLevelPicker={false}
-            showsTraffic={false}
-            toolbarEnabled={false}
-            loadingEnabled={true}
-            showsMyLocationButton={true}
-            provider="google"
-            onRegionChangeComplete={this.updateRegion}
-            region={{
-              latitude: LATITUDE,
-              longitude: LONGITUDE,
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA,
-            }}
-            moveOnMarkerPress={false}>
-            {coordinates.map(marker => {
-              return (
-                <Marker
-                  key={marker.id}
-                  coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude,
-                  }}
-                  title={marker.title}
-                />
-              );
-            })}
-            {/* {this.state.coordinates.length >= 2 && (
+        {step === STEP.SEARCH_ADDRESS ? (
+          <SearchAddress
+            onSearchAddress={this.onSearchAddress}
+            goToMapScreen={this.goToMapScreen}
+            listAddress={listAddress}
+          />
+        ) : (
+          <>
+            <View style={styles.mapView}>
+              <View style={styles.header}>
+                <Button rounded style={styles.btnBack} onPress={this.goBack}>
+                  <Icon name="arrow-back" type="MaterialIcons" />
+                </Button>
+              </View>
+              <MapView
+                ref={MapView => (this.MapView = MapView)}
+                provider="google"
+                style={styles.map}
+                showsUserLocation={true}
+                followUserLocation={true}
+                showsCompass={true}
+                zoomEnabled={true}
+                showsPointsOfInterest={false}
+                paddingAdjustmentBehavior={'automatic'}
+                showsIndoors={true}
+                showsIndoorLevelPicker={false}
+                showsTraffic={false}
+                toolbarEnabled={false}
+                loadingEnabled={true}
+                showsMyLocationButton={true}
+                provider="google"
+                onRegionChangeComplete={this.updateRegion}
+                region={{
+                  latitude: LATITUDE,
+                  longitude: LONGITUDE,
+                  latitudeDelta: LATITUDE_DELTA,
+                  longitudeDelta: LONGITUDE_DELTA,
+                }}
+                moveOnMarkerPress={false}>
+                {coordinates.map(marker => {
+                  return (
+                    <Marker
+                      key={marker.id}
+                      coordinate={{
+                        latitude: marker.latitude,
+                        longitude: marker.longitude,
+                      }}
+                      title={marker.title}
+                    />
+                  );
+                })}
+                {/* {this.state.coordinates.length >= 2 && (
               <MapViewDirections
                 origin={this.state.coordinates[0]}
                 waypoints={
@@ -270,96 +294,105 @@ class MapViewScreen extends React.Component {
                 }}
               />
             )} */}
-          </MapView>
-          <Callout style={styles.buttonMyLocation}>
-            <TouchableOpacity
-              style={styles.btnBack}
-              onPress={this.getCurrentLocation}>
-              <Icon name="my-location" type="MaterialIcons" />
-            </TouchableOpacity>
-          </Callout>
-        </View>
-        <View style={styles.viewInput}>
-          {step === STEP.ENTER_ADDRESS ? (
-            <Form>
-              <Item fixedLabel style={styles.textInput}>
-                <Icon
-                  active
-                  name="location"
-                  type="Entypo"
-                  style={{fontSize: 24, color: theme.primaryColor}}
-                />
-                <Input
-                  rounded
-                  placeholder="Xin vui lòng nhập điểm đi"
-                  onChangeText={this.onChangeText}
-                  defaultValue={map.startStation}
-                  value={startStation}
-                />
-              </Item>
-              <Item fixedLabel style={styles.textInput}>
-                <Icon
-                  active
-                  name="md-add"
-                  type="Ionicons"
-                  style={{fontSize: 24, color: theme.primaryColor}}
-                  onChangeText={this.onChangeText}
-                  value={endLocation}
-                />
-                <Input rounded placeholder="Xin vui lòng nhập điểm đến" />
-              </Item>
-            </Form>
-          ) : step === STEP.ENTER_DATE ? (
-            <View style={styles.date}>
-              <Text style={styles.textTitle}>Lịch trình chuyến đi</Text>
-              <TouchableOpacity
-                style={styles.inLine}
-                onPress={this.showViewSelectDate}>
-                <Icon
-                  active
-                  name="date"
-                  type="Fontisto"
-                  style={{fontSize: 24, color: theme.primaryColor}}
-                />
-                <Text style={styles.textDate}>Chọn thời gian di chuyển</Text>
-              </TouchableOpacity>
-              <Text style={styles.text} numberOfLines={2}>
-                Tài xế sẽ đón bạn vào khoảng thời gian từ{' '}
-                {moment(dateStart).format(FORMAT.TIME)} đến{' '}
-                {moment(dateEnd).format(FORMAT.TIME)} ngày{' '}
-                {moment(dateStart).format(FORMAT.DATE)}
-              </Text>
-            </View>
-          ) : step === STEP.DATE_TIME_SELECT ? (
-            <ScrollView style={styles.date}>
-              <View style={styles.inLine}>
+              </MapView>
+              <Callout style={styles.buttonMyLocation}>
                 <TouchableOpacity
-                  onPress={() => {
-                    this.setState({step: STEP.ENTER_DATE});
-                  }}>
-                  <Icon
-                    active
-                    name="close"
-                    type="EvilIcons"
-                    style={{fontSize: 24, color: 'dark'}}
-                  />
+                  style={styles.btnBack}
+                  onPress={this.getCurrentLocation}>
+                  <Icon name="my-location" type="MaterialIcons" />
                 </TouchableOpacity>
-                <Text style={styles.textTitle}>Chọn khoảng thời gian đón</Text>
-              </View>
-              <DateTimeSelect
-                dateStart={dateStart}
-                dateEnd={dateEnd}
-                onChangeDate={this.onChangeDate}
-                onChangeTimeStart={this.onChangeTimeStart}
-                onChangeTimeEnd={this.onChangeTimeEnd}
-              />
-            </ScrollView>
-          ) : (
-            <ScrollView style={styles.date}>
-              <ListBookingCar listVehicle={listVehicle} />
-            </ScrollView>
-          )}
-          {/* <CardItem>
+              </Callout>
+            </View>
+            <View style={styles.viewInput}>
+              {step === STEP.ENTER_ADDRESS ? (
+                <Form>
+                  <Item fixedLabel style={styles.textInput}>
+                    <Icon
+                      active
+                      name="location"
+                      type="Entypo"
+                      style={{fontSize: 24, color: theme.primaryColor}}
+                    />
+                    <Input
+                      rounded
+                      placeholder="Xin vui lòng nhập điểm đi"
+                      onChangeText={this.onChangeText}
+                      defaultValue={map.startStation}
+                      value={startStation}
+                      onFocus={this.goToSearch}
+                    />
+                  </Item>
+                  <Item fixedLabel style={styles.textInput}>
+                    <Icon
+                      active
+                      name="md-add"
+                      type="Ionicons"
+                      style={{fontSize: 24, color: theme.primaryColor}}
+                    />
+                    <Input
+                      rounded
+                      placeholder="Xin vui lòng nhập điểm đến"
+                      onChangeText={this.onChangeText}
+                      value={endStation}
+                      onFocus={this.goToSearch}
+                    />
+                  </Item>
+                </Form>
+              ) : step === STEP.ENTER_DATE ? (
+                <View style={styles.date}>
+                  <Text style={styles.textTitle}>Lịch trình chuyến đi</Text>
+                  <TouchableOpacity
+                    style={styles.inLine}
+                    onPress={this.showViewSelectDate}>
+                    <Icon
+                      active
+                      name="date"
+                      type="Fontisto"
+                      style={{fontSize: 24, color: theme.primaryColor}}
+                    />
+                    <Text style={styles.textDate}>
+                      Chọn thời gian di chuyển
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={styles.text} numberOfLines={2}>
+                    Tài xế sẽ đón bạn vào khoảng thời gian từ{' '}
+                    {moment(dateStart).format(FORMAT.TIME)} đến{' '}
+                    {moment(dateEnd).format(FORMAT.TIME)} ngày{' '}
+                    {moment(dateStart).format(FORMAT.DATE)}
+                  </Text>
+                </View>
+              ) : step === STEP.DATE_TIME_SELECT ? (
+                <ScrollView style={styles.date}>
+                  <View style={styles.inLine}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.setState({step: STEP.ENTER_DATE});
+                      }}>
+                      <Icon
+                        active
+                        name="close"
+                        type="EvilIcons"
+                        style={{fontSize: 24, color: 'dark'}}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.textTitle}>
+                      Chọn khoảng thời gian đón
+                    </Text>
+                  </View>
+                  <DateTimeSelect
+                    dateStart={dateStart}
+                    dateEnd={dateEnd}
+                    onChangeDate={this.onChangeDate}
+                    onChangeTimeStart={this.onChangeTimeStart}
+                    onChangeTimeEnd={this.onChangeTimeEnd}
+                  />
+                </ScrollView>
+              ) : (
+                <ScrollView style={styles.date}>
+                  <ListBookingCar listVehicle={listVehicle} />
+                </ScrollView>
+              )}
+              {/* <CardItem>
             <Left>
               <Icon name="people" type="MaterialIcons" />
               <Text style={styles.textKM}>Số người:</Text>
@@ -377,14 +410,16 @@ class MapViewScreen extends React.Component {
               <Text>HELLOBANMOI</Text>
             </Right>
           </CardItem> */}
-          <Button
-            block
-            danger
-            style={styles.btnNext}
-            onPress={this.onClickBtnNext}>
-            <Text>Tiếp theo</Text>
-          </Button>
-        </View>
+              <Button
+                block
+                danger
+                style={styles.btnNext}
+                onPress={this.onClickBtnNext}>
+                <Text>Tiếp theo</Text>
+              </Button>
+            </View>
+          </>
+        )}
       </View>
     );
   }
@@ -484,6 +519,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPlaceByLocation: params => dispatch(getPlaceByLocation(params)),
+  searchAddress: query => dispatch(searchAddress(query)),
 });
 
 export default connect(
