@@ -20,17 +20,26 @@ import {Image} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../../theme';
 import {Rating} from 'react-native-ratings';
+import {RESERVATION_DETAIL} from '../../../constants';
 
 class ListMyReservationHistory extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <Container>
         <Content>
           <List>
-            <ListItem noBorder>
+            <ListItem
+              noBorder
+              onPress={() => {
+                console.log('hhihih');
+                this.props.navigation.navigate(RESERVATION_DETAIL);
+              }}>
               <Card style={styles.card}>
                 <Item style={styles.top}>
-                  <Text>Lịch trình: 11:40 --> 12:10 - 15/05/2021</Text>
+                  <Text>Lịch trình: 11:40 - 12:10 - 15/05/2021</Text>
                 </Item>
                 <Item style={styles.center}>
                   <Left>
@@ -61,9 +70,6 @@ class ListMyReservationHistory extends Component {
                       </Text>
                     </View>
                   </Left>
-                  <Right>
-                    <Text>Đã hủy</Text>
-                  </Right>
                 </Item>
                 <Row style={styles.bottom}>
                   <Left>

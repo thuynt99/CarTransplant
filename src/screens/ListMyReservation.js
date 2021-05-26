@@ -15,6 +15,9 @@ import ListMyReservationHistory from '../components/MyReservation/MyReservationH
 import theme from '../theme';
 
 export default class ListMyReservation extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <Container>
@@ -36,7 +39,6 @@ export default class ListMyReservation extends Component {
             heading="Sắp tới"
             tabStyle={{
               backgroundColor: theme.white,
-              color: theme.white,
             }}
             activeTabStyle={{
               backgroundColor: theme.white,
@@ -49,14 +51,13 @@ export default class ListMyReservation extends Component {
             heading="Lịch sử"
             tabStyle={{
               backgroundColor: theme.white,
-              color: theme.white,
             }}
             activeTabStyle={{
               backgroundColor: theme.white,
             }}
             activeTextStyle={{color: theme.primaryColor, fontWeight: 'bold'}}
             textStyle={{color: theme.grey_dark}}>
-            <ListMyReservationHistory />
+            <ListMyReservationHistory {...this.props} />
           </Tab>
         </Tabs>
       </Container>
