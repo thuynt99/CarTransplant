@@ -30,7 +30,12 @@ class ListMyReservationHistory extends Component {
             <ListItem noBorder>
               <Card style={styles.card}>
                 <Item style={styles.top}>
-                  <Text>Lịch trình: 11:40 --> 12:10 - 15/05/2021</Text>
+                  <Left>
+                    <Text>Ngày 15/05/2021</Text>
+                  </Left>
+                  <Right>
+                    <Text>11:40 đến 12:10</Text>
+                  </Right>
                 </Item>
                 <Item style={styles.center}>
                   <Left>
@@ -61,11 +66,8 @@ class ListMyReservationHistory extends Component {
                       </Text>
                     </View>
                   </Left>
-                  <Right>
-                    <Text>Đã hủy</Text>
-                  </Right>
                 </Item>
-                <Row style={styles.bottom}>
+                <Item style={styles.bottom}>
                   <Left>
                     <Row>
                       <Image
@@ -95,6 +97,9 @@ class ListMyReservationHistory extends Component {
                       </View>
                     </Row>
                   </Right>
+                </Item>
+                <Row style={styles.stateView}>
+                  <Text style={styles.state}>Khách hàng đã hủy chuyến</Text>
                 </Row>
               </Card>
             </ListItem>
@@ -117,7 +122,7 @@ const styles = ScaledSheet.create({
   card: {
     width: '100%',
     paddingHorizontal: '16@ms',
-    paddingVertical: '8@ms',
+    paddingVertical: '10@ms',
     borderRadius: 8,
   },
   subTitle: {
@@ -134,7 +139,7 @@ const styles = ScaledSheet.create({
     marginLeft: '8@s',
   },
   bottom: {
-    paddingTop: '10@vs',
+    paddingVertical: '10@vs',
   },
   center: {
     paddingVertical: '10@vs',
@@ -145,6 +150,13 @@ const styles = ScaledSheet.create({
   location: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  stateView: {
+    paddingTop: '10@vs',
+    justifyContent: 'flex-end',
+  },
+  state: {
+    fontWeight: 'bold',
   },
 });
 export default ListMyReservationHistory;
