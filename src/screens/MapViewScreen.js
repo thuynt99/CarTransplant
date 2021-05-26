@@ -29,6 +29,8 @@ import MapViewDirections from 'react-native-maps-directions';
 import {ScaledSheet} from 'react-native-size-matters';
 import {FORMAT} from '../constants/format';
 import ListBookingCar from '../components/MapView/ListCar/ListBookingCar';
+import {connect} from 'react-redux';
+import {getPlaceByLocation} from '../stores/map/actions';
 
 const listVehicle = [
   {
@@ -69,15 +71,6 @@ class MapViewScreen extends React.Component {
     super(props);
 
     this.state = {
-      markers: [
-        {
-          key: 1,
-          coordinate: {
-            latitude: LATITUDE,
-            longitude: LONGITUDE,
-          },
-        },
-      ],
       coordinates: [
         {
           key: 1,
@@ -90,39 +83,53 @@ class MapViewScreen extends React.Component {
           longitude: -122.4053769,
         },
       ],
-      startLocation: '',
-      endLocation: '',
+      myLocation: {
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+      },
+      startStation: props.map.startStation,
+      endStation: '',
       step: STEP.ENTER_ADDRESS,
       chosenDate: new Date(),
       dateStart: moment(),
       dateEnd: moment().add(1, 'hours'),
-      startStation: '',
-      endStation: '',
     };
     this.mapView = null;
   }
-  componentDidMount() {
-    this.getCurrentLocation();
+
+  async componentDidMount() {
+    await this.getCurrentLocation();
   }
-  getCurrentLocation = () => {
-    getLocation().then(res => {
-      this.setState(
-        {
-          myLocation: {
-            latitude: res.latitude,
-            longitude: res.longitude,
-          },
+
+  callApi = async (lat, long) => {
+    await this.props.getPlaceByLocation({
+      lat,
+      long,
+    });
+    const {map} = this.props;
+    this.setState({startStation: map.startLocation.display_name});
+  };
+
+  getCurrentLocation = async () => {
+    getLocation().then(async res => {
+      this.setState({
+        myLocation: {
+          latitude: res.latitude,
+          longitude: res.longitude,
         },
-        () => console.log('myLocation', this.state.myLocation),
-      );
+      });
+      this.callApi(res.latitude, res.longitude);
     });
   };
+
   onChangeText = text => {
     this.setState({startStation: text});
   };
+
   goBack = () => {
     this.props.navigation.goBack();
   };
+
   onClickBtnNext = () => {
     const {step} = this.state;
     if (step === STEP.ENTER_DATE) {
@@ -131,20 +138,25 @@ class MapViewScreen extends React.Component {
       this.setState({step: STEP.ENTER_DATE});
     }
   };
+
   showViewSelectDate = () => {
     this.setState({step: STEP.DATE_TIME_SELECT});
   };
+
   onMapPress = e => {
     this.setState({
       coordinates: [...this.state.coordinates, e.nativeEvent.coordinate],
     });
   };
+
   onChangeTimeStart = date => {
     this.setState({dateStart: date});
   };
+
   onChangeTimeEnd = date => {
     this.setState({dateEnd: date});
   };
+
   onChangeDate = day => {
     const {dateStart, dateEnd} = this.state;
     const date = day.format(FORMAT.DAY);
@@ -164,7 +176,6 @@ class MapViewScreen extends React.Component {
   };
   render() {
     const {
-      markers,
       step,
       chosenDate,
       coordinates,
@@ -173,6 +184,8 @@ class MapViewScreen extends React.Component {
       startStation,
       endLocation,
     } = this.state;
+    const {map} = this.props;
+    console.log('startStation', map);
     return (
       <View style={styles.container}>
         <View style={styles.mapView}>
@@ -218,7 +231,7 @@ class MapViewScreen extends React.Component {
                 />
               );
             })}
-            {this.state.coordinates.length >= 2 && (
+            {/* {this.state.coordinates.length >= 2 && (
               <MapViewDirections
                 origin={this.state.coordinates[0]}
                 waypoints={
@@ -243,7 +256,6 @@ class MapViewScreen extends React.Component {
                 onReady={result => {
                   console.log(`Distance: ${result.distance} km`);
                   console.log(`Duration: ${result.duration} min.`);
-
                   this.mapView.fitToCoordinates(result.coordinates, {
                     edgePadding: {
                       right: width / 20,
@@ -257,7 +269,7 @@ class MapViewScreen extends React.Component {
                   console.log('GOT AN ERROR', errorMessage);
                 }}
               />
-            )}
+            )} */}
           </MapView>
           <Callout style={styles.buttonMyLocation}>
             <TouchableOpacity
@@ -281,6 +293,7 @@ class MapViewScreen extends React.Component {
                   rounded
                   placeholder="Xin vui lòng nhập điểm đi"
                   onChangeText={this.onChangeText}
+                  defaultValue={map.startStation}
                   value={startStation}
                 />
               </Item>
@@ -377,10 +390,6 @@ class MapViewScreen extends React.Component {
   }
 }
 
-MapViewScreen.propTypes = {
-  provider: ProviderPropType,
-};
-
 const styles = ScaledSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -469,5 +478,15 @@ const styles = ScaledSheet.create({
     fontSize: '14@ms',
   },
 });
+const mapStateToProps = state => ({
+  map: state.map,
+});
 
-export default MapViewScreen;
+const mapDispatchToProps = dispatch => ({
+  getPlaceByLocation: params => dispatch(getPlaceByLocation(params)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MapViewScreen);
