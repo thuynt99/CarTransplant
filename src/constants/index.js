@@ -14,6 +14,5 @@ const APP_NAME = {
   NOTIFICATION: 'Notification',
   PROFILE: 'Profile',
   MAP_VIEW: 'MapViewScreen',
-  RESERVATION_DETAIL: 'ReservationDetail',
 };
 module.exports = APP_NAME;

@@ -2,16 +2,10 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 // import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {
-  DASHBOARD_TAB,
-  MAP_VIEW,
-  POST_MODAL,
-  RESERVATION_DETAIL,
-} from '../constants';
+import {DASHBOARD_TAB, MAP_VIEW, POST_MODAL} from '../constants';
 import TabNavigator from './TabNavigator';
 import PostScreen from '../screens/Post';
 import MapViewScreen from '../screens/MapViewScreen';
-import ReservationDetail from '../screens/ReservationDetail';
 
 const Stack = createStackNavigator();
 
@@ -62,14 +56,6 @@ export default function DashboardStackNavigator() {
           title: '',
         }}
         component={MapViewScreen}
-      />
-      <Stack.Screen
-        name={RESERVATION_DETAIL}
-        options={{
-          headerShown: false,
-          title: '',
-        }}
-        component={ReservationDetail}
       />
     </Stack.Navigator>
   );
