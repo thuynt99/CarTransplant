@@ -16,6 +16,7 @@ import {
   Title,
 } from 'native-base';
 import moment from 'moment';
+import _ from 'lodash';
 import MapView, {
   Callout,
   Marker,
@@ -199,16 +200,14 @@ class MapViewScreen extends React.Component {
       await this.props.getRouting(params).then(res => {
         if (res.status) {
           const dataTmp = res.data.routes[0];
-          console.log(dataTmp);
           const arrayObj = dataTmp.steps.map((item, index) => {
             return {
               latitude: item.location.latitude,
               longitude: item.location.longitude,
               name: item.name,
-              key: index,
+              id: index,
             };
           });
-          console.log(arrayObj);
           this.setState({coordinates: arrayObj});
         }
       });
@@ -226,6 +225,7 @@ class MapViewScreen extends React.Component {
       listAddress,
     } = this.state;
     const {map} = this.props;
+    console.log(coordinates);
     return (
       <View style={styles.container}>
         {step === STEP.SEARCH_ADDRESS ? (
@@ -274,16 +274,18 @@ class MapViewScreen extends React.Component {
                   strokeWidth={6}
                 />
                 {coordinates.map(marker => {
-                  return (
-                    <Marker
-                      key={marker.id}
-                      coordinate={{
-                        latitude: marker.latitude,
-                        longitude: marker.longitude,
-                      }}
-                      title={marker.title}
-                    />
-                  );
+                  if (marker.id === _.last(coordinates).id) {
+                    return (
+                      <Marker
+                        key={marker.id}
+                        coordinate={{
+                          latitude: marker.latitude,
+                          longitude: marker.longitude,
+                        }}
+                        title={marker.title}
+                      />
+                    );
+                  }
                 })}
               </MapView>
               <Callout style={styles.buttonMyLocation}>
