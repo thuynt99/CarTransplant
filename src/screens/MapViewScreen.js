@@ -42,6 +42,7 @@ import {
   searchAddress,
 } from '../stores/map/actions';
 import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
+import ConfirmTrip from './ConfirmTrip';
 
 const listVehicle = [
   {
@@ -76,6 +77,7 @@ const STEP = {
   DATE_TIME_SELECT: 2,
   SELECT_CAR: 3,
   SEARCH_ADDRESS: 4,
+  CONFIRM_TRIP: 5,
 };
 
 class MapViewScreen extends React.Component {
@@ -235,8 +237,10 @@ class MapViewScreen extends React.Component {
             listAddress={listAddress}
             onPressAddress={this.onPressAddress}
           />
+        ) : step === STEP.CONFIRM_TRIP ? (
+          <ConfirmTrip />
         ) : (
-          <>
+          <ConfirmTrip>
             <View style={styles.mapView}>
               <View style={styles.header}>
                 <Button rounded style={styles.btnBack} onPress={this.goBack}>
@@ -409,7 +413,7 @@ class MapViewScreen extends React.Component {
                 <Text>Tiếp theo</Text>
               </Button>
             </View>
-          </>
+          </ConfirmTrip>
         )}
       </View>
     );
