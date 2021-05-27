@@ -130,9 +130,9 @@ class MapViewScreen extends React.Component {
   };
 
   onClickBtnNext = () => {
-    const {step} = this.state;
+    const {step, dateStart, dateEnd} = this.state;
     if (step === STEP.ENTER_DATE) {
-      this.setState({step: STEP.SELECT_CAR});
+      // this.setState({step: STEP.SELECT_CAR});
     } else {
       this.setState({step: STEP.ENTER_DATE});
     }
@@ -189,7 +189,6 @@ class MapViewScreen extends React.Component {
   onPressAddress = async item => {
     const {key} = this.state;
     this.setState({[key]: item});
-    console.log(item);
     if (key === 'endStation') {
       const params = {
         fromLat: this.state.startStation.latitude,
@@ -202,8 +201,8 @@ class MapViewScreen extends React.Component {
           const dataTmp = res.data.routes[0];
           const arrayObj = dataTmp.steps.map((item, index) => {
             return {
-              latitude: item.location.latitude,
-              longitude: item.location.longitude,
+              latitude: parseFloat(item.location.latitude),
+              longitude: parseFloat(item.location.longitude),
               name: item.name,
               id: index,
             };
@@ -225,7 +224,6 @@ class MapViewScreen extends React.Component {
       listAddress,
     } = this.state;
     const {map} = this.props;
-    console.log(coordinates);
     return (
       <View style={styles.container}>
         {step === STEP.SEARCH_ADDRESS ? (
