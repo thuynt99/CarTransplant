@@ -211,7 +211,6 @@ class MapViewScreen extends React.Component {
             goToMapScreen={this.goToMapScreen}
             listAddress={listAddress}
             onPressAddress={this.onPressAddress}
-            key={key}
           />
         ) : (
           <>
