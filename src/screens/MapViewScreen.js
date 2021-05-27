@@ -16,7 +16,12 @@ import {
   Title,
 } from 'native-base';
 import moment from 'moment';
-import MapView, {Callout, Marker, ProviderPropType} from 'react-native-maps';
+import MapView, {
+  Callout,
+  Marker,
+  Polyline,
+  ProviderPropType,
+} from 'react-native-maps';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -30,7 +35,11 @@ import {ScaledSheet} from 'react-native-size-matters';
 import {FORMAT} from '../constants/format';
 import ListBookingCar from '../components/MapView/ListCar/ListBookingCar';
 import {connect} from 'react-redux';
-import {getPlaceByLocation, searchAddress} from '../stores/map/actions';
+import {
+  getPlaceByLocation,
+  getRouting,
+  searchAddress,
+} from '../stores/map/actions';
 import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
 
 const listVehicle = [
@@ -73,18 +82,7 @@ class MapViewScreen extends React.Component {
     super(props);
 
     this.state = {
-      coordinates: [
-        {
-          key: 1,
-          latitude: LATITUDE,
-          longitude: LONGITUDE,
-        },
-        {
-          key: 2,
-          latitude: 37.771707,
-          longitude: -122.4053769,
-        },
-      ],
+      coordinates: [],
       myLocation: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
@@ -187,14 +185,39 @@ class MapViewScreen extends React.Component {
       .then(res => this.setState({listAddress: res.data}));
   };
 
-  onPressAddress = item => {
+  onPressAddress = async item => {
     const {key} = this.state;
     this.setState({[key]: item});
+    console.log(item);
+    if (key === 'endStation') {
+      const params = {
+        fromLat: this.state.startStation.latitude,
+        fromLong: this.state.startStation.longitude,
+        toLat: item.lat,
+        toLong: item.lon,
+      };
+      await this.props.getRouting(params).then(res => {
+        if (res.status) {
+          const dataTmp = res.data.routes[0];
+          console.log(dataTmp);
+          const arrayObj = dataTmp.steps.map((item, index) => {
+            return {
+              latitude: item.location.latitude,
+              longitude: item.location.longitude,
+              name: item.name,
+              key: index,
+            };
+          });
+          console.log(arrayObj);
+          this.setState({coordinates: arrayObj});
+        }
+      });
+    }
   };
   render() {
     const {
       step,
-      chosenDate,
+      myLocation,
       coordinates,
       dateStart,
       dateEnd,
@@ -239,12 +262,17 @@ class MapViewScreen extends React.Component {
                 provider="google"
                 onRegionChangeComplete={this.updateRegion}
                 region={{
-                  latitude: LATITUDE,
-                  longitude: LONGITUDE,
+                  latitude: myLocation.latitude,
+                  longitude: myLocation.longitude,
                   latitudeDelta: LATITUDE_DELTA,
                   longitudeDelta: LONGITUDE_DELTA,
                 }}
                 moveOnMarkerPress={false}>
+                <Polyline
+                  coordinates={coordinates}
+                  strokeColor={theme.primaryColor}
+                  strokeWidth={6}
+                />
                 {coordinates.map(marker => {
                   return (
                     <Marker
@@ -481,6 +509,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getPlaceByLocation: params => dispatch(getPlaceByLocation(params)),
   searchAddress: query => dispatch(searchAddress(query)),
+  getRouting: params => dispatch(getRouting(params)),
 });
 
 export default connect(

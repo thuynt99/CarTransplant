@@ -1,6 +1,7 @@
 import {HTTP} from '../../constants/api';
 import {
   getPlaceByLocationApi,
+  getRoutingApi,
   searchAddressApi,
 } from '../../services/mapService';
 import {
@@ -10,6 +11,9 @@ import {
   SEARCH_ADDRESS,
   SEARCH_ADDRESS_FAILED,
   SEARCH_ADDRESS_SUCCESS,
+  GET_ROUTING,
+  GET_ROUTING_SUCCESS,
+  GET_ROUTING_FAILED,
 } from './action-types';
 
 export function getPlaceByLocation(params) {
@@ -60,6 +64,32 @@ const processSearchAddress = (dataJson, dispatch) => {
   } else {
     dispatch({
       type: SEARCH_ADDRESS_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function getRouting(params) {
+  return dispatch => {
+    dispatch({
+      type: GET_ROUTING,
+    });
+    const dataJson = getRoutingApi(params);
+    return dataJson.then(dataJson => processRouting(dataJson, dispatch));
+  };
+}
+
+const processRouting = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: GET_ROUTING_SUCCESS,
+      data: dataJson.data,
+    });
+    return dataJson;
+  } else {
+    dispatch({
+      type: GET_ROUTING_FAILED,
       data: dataJson.data,
     });
     return dataJson;
