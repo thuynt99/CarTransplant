@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import APISauce, {NETWORK_ERROR, TIMEOUT_ERROR} from 'apisauce';
 import {HTTP} from '../constants/api';
+import {Toast} from 'native-base';
 
 const HOST = 'http://pi-cam.ddns.net:10000';
 const TIME_OUT_API = 20000;
@@ -34,7 +35,7 @@ const api = {
         case NETWORK_ERROR:
           errorCode = HTTP.ERROR_INTERNET;
           Toast.show({
-            text: error,
+            text: 'Please try again',
             type: 'danger',
           });
           break;
