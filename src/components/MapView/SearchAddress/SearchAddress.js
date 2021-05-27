@@ -18,67 +18,10 @@ import theme from '../../../theme';
 export default class SearchAddress extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      data: [
-        {
-          id: 1,
-          icon: 'https://img.icons8.com/color/70/000000/cottage.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-        {
-          id: 2,
-          icon: 'https://img.icons8.com/color/70/000000/administrator-male.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-        {
-          id: 3,
-          icon: 'https://img.icons8.com/color/70/000000/filled-like.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-        {
-          id: 4,
-          icon: 'https://img.icons8.com/color/70/000000/facebook-like.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-        {
-          id: 5,
-          icon: 'https://img.icons8.com/color/70/000000/shutdown.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-        {
-          id: 6,
-          icon: 'https://img.icons8.com/color/70/000000/traffic-jam.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-        {
-          id: 7,
-          icon: 'https://img.icons8.com/dusk/70/000000/visual-game-boy.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-        {
-          id: 8,
-          icon: 'https://img.icons8.com/flat_round/70/000000/cow.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-        {
-          id: 9,
-          icon: 'https://img.icons8.com/color/70/000000/coworking.png',
-          description:
-            'Lorem ipsum dolor sit amet, indu consectetur adipiscing elit',
-        },
-      ],
-    };
   }
 
   render() {
+    const {onPressAddress, goToMapScreen} = this.props;
     return (
       <View style={styles.container}>
         <Header>
@@ -86,7 +29,7 @@ export default class SearchAddress extends Component {
             <Title style={{color: theme.primaryColor}}>Chọn địa điểm đi</Title>
           </Left>
           <Right>
-            <TouchableOpacity onPress={this.props.goToMapScreen}>
+            <TouchableOpacity onPress={goToMapScreen}>
               <Icon name="close" type="AntDesign" />
             </TouchableOpacity>
           </Right>
@@ -117,7 +60,12 @@ export default class SearchAddress extends Component {
           data={this.props?.listAddress}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity style={styles.notificationBox}>
+              <TouchableOpacity
+                style={styles.notificationBox}
+                onPress={() => {
+                  onPressAddress(item);
+                  goToMapScreen();
+                }}>
                 <Icon
                   name="location-pin"
                   type="Entypo"

@@ -89,13 +89,14 @@ class MapViewScreen extends React.Component {
         latitude: LATITUDE,
         longitude: LONGITUDE,
       },
-      startStation: props.map.startStation,
-      endStation: '',
+      startStation: {},
+      endStation: {},
       step: STEP.ENTER_ADDRESS,
       chosenDate: new Date(),
       dateStart: moment(),
       dateEnd: moment().add(1, 'hours'),
       listAddress: [],
+      key: 'startStation',
     };
     this.mapView = null;
   }
@@ -110,7 +111,7 @@ class MapViewScreen extends React.Component {
       long,
     });
     const {map} = this.props;
-    this.setState({startStation: map.startLocation.display_name});
+    this.setState({startStation: map.startLocation});
   };
 
   getCurrentLocation = async () => {
@@ -123,10 +124,6 @@ class MapViewScreen extends React.Component {
       });
       this.callApi(res.latitude, res.longitude);
     });
-  };
-
-  onChangeText = text => {
-    this.setState({startStation: text});
   };
 
   goBack = () => {
@@ -178,8 +175,8 @@ class MapViewScreen extends React.Component {
     this.setState({dateStart: dateNewStart, dateEnd: dateNewEnd});
   };
 
-  goToSearch = () => {
-    this.setState({step: STEP.SEARCH_ADDRESS});
+  goToSearch = key => {
+    this.setState({step: STEP.SEARCH_ADDRESS, key: key});
   };
   goToMapScreen = () => {
     this.setState({step: STEP.ENTER_ADDRESS});
@@ -190,6 +187,10 @@ class MapViewScreen extends React.Component {
       .then(res => this.setState({listAddress: res.data}));
   };
 
+  onPressAddress = item => {
+    const {key} = this.state;
+    this.setState({[key]: item});
+  };
   render() {
     const {
       step,
@@ -209,6 +210,8 @@ class MapViewScreen extends React.Component {
             onSearchAddress={this.onSearchAddress}
             goToMapScreen={this.goToMapScreen}
             listAddress={listAddress}
+            onPressAddress={this.onPressAddress}
+            key={key}
           />
         ) : (
           <>
@@ -255,45 +258,6 @@ class MapViewScreen extends React.Component {
                     />
                   );
                 })}
-                {/* {this.state.coordinates.length >= 2 && (
-              <MapViewDirections
-                origin={this.state.coordinates[0]}
-                waypoints={
-                  this.state.coordinates.length > 2
-                    ? this.state.coordinates.slice(1, -1)
-                    : null
-                }
-                destination={
-                  this.state.coordinates[this.state.coordinates.length - 1]
-                }
-                apikey={GOOGLE_MAPS_APIKEY}
-                strokeWidth={3}
-                strokeColor="hotpink"
-                optimizeWaypoints={true}
-                onStart={params => {
-                  console.log(
-                    `Started routing between "${params.origin}" and "${
-                      params.destination
-                    }"`,
-                  );
-                }}
-                onReady={result => {
-                  console.log(`Distance: ${result.distance} km`);
-                  console.log(`Duration: ${result.duration} min.`);
-                  this.mapView.fitToCoordinates(result.coordinates, {
-                    edgePadding: {
-                      right: width / 20,
-                      bottom: height / 20,
-                      left: width / 20,
-                      top: height / 20,
-                    },
-                  });
-                }}
-                onError={errorMessage => {
-                  console.log('GOT AN ERROR', errorMessage);
-                }}
-              />
-            )} */}
               </MapView>
               <Callout style={styles.buttonMyLocation}>
                 <TouchableOpacity
@@ -316,10 +280,9 @@ class MapViewScreen extends React.Component {
                     <Input
                       rounded
                       placeholder="Xin vui lòng nhập điểm đi"
-                      onChangeText={this.onChangeText}
-                      defaultValue={map.startStation}
-                      value={startStation}
-                      onFocus={this.goToSearch}
+                      defaultValue={map.startLocation?.display_name}
+                      value={startStation?.display_name}
+                      onFocus={() => this.goToSearch('startStation')}
                     />
                   </Item>
                   <Item fixedLabel style={styles.textInput}>
@@ -332,9 +295,8 @@ class MapViewScreen extends React.Component {
                     <Input
                       rounded
                       placeholder="Xin vui lòng nhập điểm đến"
-                      onChangeText={this.onChangeText}
-                      value={endStation}
-                      onFocus={this.goToSearch}
+                      value={endStation?.display_name}
+                      onFocus={() => this.goToSearch('endStation')}
                     />
                   </Item>
                 </Form>
