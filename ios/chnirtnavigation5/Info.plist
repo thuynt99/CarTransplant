@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>CarTransplant</string>
+	<string>Car Transplant</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -38,7 +38,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>CarTransplant yêu cầu quyền truy cập vị trí của bạn</string>
+	<string>Car Transplant yêu cầu quyền truy cập vị trí của bạn</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
