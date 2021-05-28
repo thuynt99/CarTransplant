@@ -1,12 +1,13 @@
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
+import theme from '../theme';
 
 export default function SplashScreen() {
   return (
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={require('../assets/splash/image1.png')}
+        source={require('../assets/splash/image2.png')}
       />
     </View>
   );
@@ -17,10 +18,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFF6F9',
+    backgroundColor: theme.subPrimaryColor,
   },
   title: {
-    color: '#000000',
+    color: theme.black,
   },
   image: {
     height: 200,

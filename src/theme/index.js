@@ -1,6 +1,8 @@
 const theme = {
   primaryColor: '#ef5350',
   secondaryColor: '#3E54DA',
+  subPrimaryColor: '#da3329',
+  black: '#000000',
   thirdColor: '#48A2F8',
   underlayColor: '#ff867c',
   pinky_medium: '#ff9999',
