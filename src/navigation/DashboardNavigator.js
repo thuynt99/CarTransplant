@@ -2,10 +2,11 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 // import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {DASHBOARD_TAB, MAP_VIEW, POST_MODAL} from '../constants';
+import {DASHBOARD_TAB, MAP_VIEW, POST_MODAL, TRIP_DETAIL} from '../constants';
 import TabNavigator from './TabNavigator';
 import PostScreen from '../screens/Post';
 import MapViewScreen from '../screens/MapViewScreen';
+import TripDetail from '../screens/TripDetail';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +57,14 @@ export default function DashboardStackNavigator() {
           title: '',
         }}
         component={MapViewScreen}
+      />
+      <Stack.Screen
+        name={TRIP_DETAIL}
+        options={{
+          headerShown: false,
+          title: '',
+        }}
+        component={TripDetail}
       />
     </Stack.Navigator>
   );
