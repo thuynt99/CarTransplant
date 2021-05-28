@@ -9,7 +9,7 @@ const APP_NAME = {
   DASHBOARD_TAB: 'DashboardTabNavigator',
   POST_MODAL: 'PostModal',
   HOME: 'Home',
-  MESSAGE: 'Message',
+  LIST_MY_RESERVATION: 'ListMyReservation',
   POST: 'Post',
   NOTIFICATION: 'Notification',
   PROFILE: 'Profile',

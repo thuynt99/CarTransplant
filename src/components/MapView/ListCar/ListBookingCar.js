@@ -10,12 +10,13 @@ class ListBookingCar extends Component {
     super(props);
   }
   render() {
+    const {onSelectCar} = this.props;
     return (
       <View style={styles.container}>
         <FlatList
           style={styles.container}
           data={this.props.listVehicle}
-          renderItem={({item}) => <ItemBookingCar />}
+          renderItem={({item}) => <ItemBookingCar onSelectCar={onSelectCar} />}
           keyExtractor={item => item.id}
         />
       </View>

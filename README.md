@@ -13,7 +13,7 @@
         └── DashboardNavigator          # Stack
             ├── TabNavigator            # BottomTab
             │   ├── HomeScreen
-            │   ├── MessageScreen
+            │   ├── ListMyReservation
             │   ├── NotificationScreen
             │   └── ProfileScreen
             └── PostScreen
