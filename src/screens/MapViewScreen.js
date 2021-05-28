@@ -43,6 +43,7 @@ import {
 } from '../stores/map/actions';
 import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
 import axios from 'axios';
+import {findTrip} from '../stores/trip/actions';
 
 const listVehicle = [
   {
@@ -116,27 +117,20 @@ class MapViewScreen extends React.Component {
       },
       opt: 0,
     };
-    console.log('ahihi nyc la do con cho');
-    const options = {
-      method: 'get',
-      url: 'http://pi-cam.ddns.net:10000/car/find-trip',
-      body: JSON.stringify(abc),
-      transformResponse: [
-        data => {
-          // transform the response
-          console.log('ahihihihiihi', data);
-          return data;
-        },
-      ],
-    };
-
-    // send the request
+    console.log('ahihi nyc la do con cho', abc);
+    // const options = {
+    //   method: 'post',
+    //   url: 'http://pi-cam.ddns.net:10000/car/find-trip',
+    //   data: JSON.stringify(abc),
+    //   transformResponse: [
+    //     data => {
+    //       console.log('ahihihihiihi', data);
+    //       return data;
+    //     },
+    //   ],
+    // };
     // axios(options);
-
-    fetch('http://pi-cam.ddns.net:10000/car/find-trip', {
-      method: 'GET',
-      body: JSON.stringify(abc),
-    }).then(res => console.log(res.json()));
+    this.props.findTrip(JSON.stringify(abc)).then(res => console.log(res));
   }
 
   callApi = async (lat, long) => {
@@ -545,6 +539,7 @@ const mapDispatchToProps = dispatch => ({
   getPlaceByLocation: params => dispatch(getPlaceByLocation(params)),
   searchAddress: query => dispatch(searchAddress(query)),
   getRouting: params => dispatch(getRouting(params)),
+  findTrip: params => dispatch(findTrip(params)),
 });
 
 export default connect(

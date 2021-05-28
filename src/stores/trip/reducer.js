@@ -1,0 +1,27 @@
+import {
+  FIND_TRIP,
+  FIND_TRIP_FAILED,
+  FIND_TRIP_SUCCESS,
+} from '../map/action-types';
+
+const initialState = {
+  loading: false,
+};
+
+export default function mapReducer(state = initialState, action = {}) {
+  switch (action.type) {
+    case FIND_TRIP:
+      return {
+        ...state,
+        loading: true,
+      };
+    case FIND_TRIP_SUCCESS:
+    case FIND_TRIP_FAILED:
+      return {
+        ...state,
+        loading: false,
+      };
+    default:
+      return state;
+  }
+}
