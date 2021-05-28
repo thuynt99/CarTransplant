@@ -179,7 +179,9 @@ class MapViewScreen extends React.Component {
       .searchAddress(query)
       .then(res => this.setState({listAddress: res.data}));
   };
-
+  onSelectCar = () => {
+    this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
+  };
   onPressAddress = async item => {
     const {key} = this.state;
     this.setState({[key]: item});
@@ -378,7 +380,10 @@ class MapViewScreen extends React.Component {
                 </ScrollView>
               ) : (
                 <ScrollView style={styles.date}>
-                  <ListBookingCar listVehicle={listVehicle} />
+                  <ListBookingCar
+                    listVehicle={listVehicle}
+                    onSelectCar={this.onSelectCar}
+                  />
                 </ScrollView>
               )}
               <Button
