@@ -13,19 +13,39 @@ import {
   Icon,
   Textarea,
   Button,
+  Row,
 } from 'native-base';
-import HeaderCustom from '../components/common/HeaderCustom';
+import {Image} from 'react-native';
+import HeaderCustom from '../../common/HeaderCustom';
 import {ScaledSheet} from 'react-native-size-matters';
-import theme from '../theme';
+import theme from '../../../theme';
 import {ScrollView} from 'react-native-gesture-handler';
 export default class ConfirmTrip extends Component {
   render() {
+    const {goToMapScreen} = this.props;
     return (
       <Container style={styles.container}>
-        <HeaderCustom title="Xác nhận đặt chuyến" />
+        <HeaderCustom title="Xác nhận đặt chuyến" onGoBack={goToMapScreen} />
         <Content>
           <ScrollView style={styles.view}>
             <Text style={styles.id}>Mã đặt chuyến: #CA31176</Text>
+            <Row>
+              <Left>
+                <Text style={styles.from}>Hà Nội</Text>
+              </Left>
+              <Body>
+                <Image
+                  style={styles.icon}
+                  source={{
+                    uri:
+                      'https://img.icons8.com/plasticine/100/000000/double-right.png',
+                  }}
+                />
+              </Body>
+              <Right>
+                <Text style={styles.from}>Vĩnh Phúc</Text>
+              </Right>
+            </Row>
             <Item style={styles.item}>
               <View>
                 <View>
@@ -101,9 +121,20 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Tiền phải trả:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>325000đ</Text>
+                <Text style={styles.price}>325000đ</Text>
               </Right>
             </Item>
+            <View style={styles.note}>
+              <Text style={styles.title}>Lưu ý:</Text>
+              <Text style={styles.textNote}>
+                Giá trên CHƯA BAO GỒM các chi phí phát sinh (phí cầu đường, phí
+                sân bay, phí đỗ xe,...)
+              </Text>
+              <Text style={styles.textNote}>
+                Bạn vui lòng THANH TOÁN THÊM các loại phí này cho tài xế nếu có
+                phát sinh trong quá trình di chuyển
+              </Text>
+            </View>
             <Textarea
               rowSpan={5}
               bordered
@@ -129,6 +160,16 @@ const styles = ScaledSheet.create({
     marginHorizontal: '15@s',
     borderRadius: 8,
     marginTop: '16@vs',
+  },
+  note: {
+    paddingHorizontal: '15@s',
+    paddingVertical: '8@vs',
+    marginHorizontal: '15@s',
+    borderRadius: 8,
+    marginTop: '16@vs',
+    borderColor: theme.grey_light,
+    borderWidth: 1,
+    backgroundColor: theme.warning,
   },
   id: {
     color: theme.grey_dark,
@@ -172,8 +213,34 @@ const styles = ScaledSheet.create({
     color: theme.grey_dark,
     paddingHorizontal: '5@s',
   },
+  price: {
+    fontSize: '14@ms',
+    color: theme.subPrimaryColor,
+    paddingHorizontal: '5@s',
+    fontWeight: 'bold',
+  },
   textLocation: {
     paddingLeft: '30@s',
     fontSize: '16@ms',
+  },
+  icon: {
+    width: 30,
+    height: 30,
+  },
+  title: {
+    fontSize: '16@ms',
+    fontWeight: 'bold',
+    color: theme.black,
+  },
+  from: {
+    fontSize: '14@ms',
+    paddingHorizontal: '15@s',
+    paddingVertical: '10@vs',
+    color: theme.grey_dark_30,
+    fontWeight: 'bold',
+  },
+  textNote: {
+    paddingVertical: '8@vs',
+    fontSize: '13@ms',
   },
 });

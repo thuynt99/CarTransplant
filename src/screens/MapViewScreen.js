@@ -42,7 +42,8 @@ import {
   searchAddress,
 } from '../stores/map/actions';
 import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
-import ConfirmTrip from './ConfirmTrip';
+import ConfirmTrip from '../components/MapView/ConfirmTrip/ConfirmTrip';
+import {STEP_MAP_VIEW} from '../constants/data';
 
 const listVehicle = [
   {
@@ -71,15 +72,6 @@ const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const GOOGLE_MAPS_APIKEY = 'AIzaSyDyDhYNrrak9PXgIJRS6FAhLccCfJ2YgUI';
 
-const STEP = {
-  ENTER_ADDRESS: 0,
-  ENTER_DATE: 1,
-  DATE_TIME_SELECT: 2,
-  SELECT_CAR: 3,
-  SEARCH_ADDRESS: 4,
-  CONFIRM_TRIP: 5,
-};
-
 class MapViewScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -92,7 +84,7 @@ class MapViewScreen extends React.Component {
       },
       startStation: {},
       endStation: {},
-      step: STEP.ENTER_ADDRESS,
+      step: STEP_MAP_VIEW.ENTER_ADDRESS,
       chosenDate: new Date(),
       dateStart: moment(),
       dateEnd: moment().add(1, 'hours'),
@@ -133,15 +125,15 @@ class MapViewScreen extends React.Component {
 
   onClickBtnNext = () => {
     const {step} = this.state;
-    if (step === STEP.ENTER_DATE) {
-      this.setState({step: STEP.SELECT_CAR});
+    if (step === STEP_MAP_VIEW.ENTER_DATE) {
+      this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
     } else {
-      this.setState({step: STEP.ENTER_DATE});
+      this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
     }
   };
 
   showViewSelectDate = () => {
-    this.setState({step: STEP.DATE_TIME_SELECT});
+    this.setState({step: STEP_MAP_VIEW.DATE_TIME_SELECT});
   };
 
   onMapPress = e => {
@@ -177,10 +169,10 @@ class MapViewScreen extends React.Component {
   };
 
   goToSearch = key => {
-    this.setState({step: STEP.SEARCH_ADDRESS, key: key});
+    this.setState({step: STEP_MAP_VIEW.SEARCH_ADDRESS, key: key});
   };
-  goToMapScreen = () => {
-    this.setState({step: STEP.ENTER_ADDRESS});
+  goToMapScreen = (step = STEP_MAP_VIEW.ENTER_DATE) => {
+    this.setState({step: step});
   };
   onSearchAddress = query => {
     this.props
@@ -227,20 +219,22 @@ class MapViewScreen extends React.Component {
       listAddress,
     } = this.state;
     const {map} = this.props;
-    console.log(coordinates);
+    console.log(step);
     return (
       <View style={styles.container}>
-        {step === STEP.SEARCH_ADDRESS ? (
+        {step === STEP_MAP_VIEW.SEARCH_ADDRESS ? (
           <SearchAddress
             onSearchAddress={this.onSearchAddress}
             goToMapScreen={this.goToMapScreen}
             listAddress={listAddress}
             onPressAddress={this.onPressAddress}
           />
-        ) : step === STEP.CONFIRM_TRIP ? (
-          <ConfirmTrip />
+        ) : step === STEP_MAP_VIEW.CONFIRM_TRIP ? (
+          <ConfirmTrip
+            goToMapScreen={() => this.goToMapScreen(STEP_MAP_VIEW.SELECT_CAR)}
+          />
         ) : (
-          <ConfirmTrip>
+          <>
             <View style={styles.mapView}>
               <View style={styles.header}>
                 <Button rounded style={styles.btnBack} onPress={this.goBack}>
@@ -301,7 +295,7 @@ class MapViewScreen extends React.Component {
               </Callout>
             </View>
             <View style={styles.viewInput}>
-              {step === STEP.ENTER_ADDRESS ? (
+              {step === STEP_MAP_VIEW.ENTER_ADDRESS ? (
                 <Form>
                   <Item fixedLabel style={styles.textInput}>
                     <Icon
@@ -333,7 +327,7 @@ class MapViewScreen extends React.Component {
                     />
                   </Item>
                 </Form>
-              ) : step === STEP.ENTER_DATE ? (
+              ) : step === STEP_MAP_VIEW.ENTER_DATE ? (
                 <View style={styles.date}>
                   <Text style={styles.textTitle}>Lịch trình chuyến đi</Text>
                   <TouchableOpacity
@@ -356,12 +350,12 @@ class MapViewScreen extends React.Component {
                     {moment(dateStart).format(FORMAT.DATE)}
                   </Text>
                 </View>
-              ) : step === STEP.DATE_TIME_SELECT ? (
+              ) : step === STEP_MAP_VIEW.DATE_TIME_SELECT ? (
                 <ScrollView style={styles.date}>
                   <View style={styles.inLine}>
                     <TouchableOpacity
                       onPress={() => {
-                        this.setState({step: STEP.ENTER_DATE});
+                        this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
                       }}>
                       <Icon
                         active
@@ -387,24 +381,6 @@ class MapViewScreen extends React.Component {
                   <ListBookingCar listVehicle={listVehicle} />
                 </ScrollView>
               )}
-              {/* <CardItem>
-            <Left>
-              <Icon name="people" type="MaterialIcons" />
-              <Text style={styles.textKM}>Số người:</Text>
-            </Left>
-            <Right>
-              <Text>1</Text>
-            </Right>
-          </CardItem>
-          <CardItem>
-            <Left>
-              <Icon name="tagso" type="AntDesign" fontSize={10} />
-              <Text style={styles.textKM}>Khuyến mãi:</Text>
-            </Left>
-            <Right>
-              <Text>HELLOBANMOI</Text>
-            </Right>
-          </CardItem> */}
               <Button
                 block
                 danger
@@ -413,7 +389,7 @@ class MapViewScreen extends React.Component {
                 <Text>Tiếp theo</Text>
               </Button>
             </View>
-          </ConfirmTrip>
+          </>
         )}
       </View>
     );

@@ -8,7 +8,7 @@ export default function HeaderCustom(props) {
   return (
     <Header style={{backgroundColor: theme.primaryColor}}>
       <Left style={{flex: 1}}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.onGoBack}>
           <Image
             style={[styles.icon, styles.inputIcon]}
             source={{

@@ -45,3 +45,11 @@ export const ENTRIES_PROMO_HOME = [
     illustration: 'https://i.imgur.com/lceHsT6l.jpg',
   },
 ];
+export const STEP_MAP_VIEW = {
+  ENTER_ADDRESS: 0,
+  ENTER_DATE: 1,
+  DATE_TIME_SELECT: 2,
+  SELECT_CAR: 3,
+  SEARCH_ADDRESS: 4,
+  CONFIRM_TRIP: 5,
+};
