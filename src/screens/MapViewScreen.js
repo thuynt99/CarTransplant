@@ -42,6 +42,7 @@ import {
   searchAddress,
 } from '../stores/map/actions';
 import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
+import axios from 'axios';
 
 const listVehicle = [
   {
@@ -101,7 +102,41 @@ class MapViewScreen extends React.Component {
   }
 
   async componentDidMount() {
-    await this.getCurrentLocation();
+    // await this.getCurrentLocation();
+    const abc = {
+      begin_leave_time: 1620026664,
+      end_leave_time: 1622206664,
+      from: {
+        latitude: '20.914976',
+        longitude: '105.951109',
+      },
+      to: {
+        latitude: '20.895444',
+        longitude: '105.878397',
+      },
+      opt: 0,
+    };
+    console.log('ahihi nyc la do con cho');
+    const options = {
+      method: 'get',
+      url: 'http://pi-cam.ddns.net:10000/car/find-trip',
+      body: JSON.stringify(abc),
+      transformResponse: [
+        data => {
+          // transform the response
+          console.log('ahihihihiihi', data);
+          return data;
+        },
+      ],
+    };
+
+    // send the request
+    // axios(options);
+
+    fetch('http://pi-cam.ddns.net:10000/car/find-trip', {
+      method: 'GET',
+      body: JSON.stringify(abc),
+    }).then(res => console.log(res.json()));
   }
 
   callApi = async (lat, long) => {

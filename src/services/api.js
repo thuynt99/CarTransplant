@@ -45,11 +45,11 @@ const api = {
     });
   },
 
-  get: (endpoint, params, body) => {
+  get: (endpoint, params) => {
     console.log('------GET-----', endpoint);
     console.log('------params-----', params);
     // apiGlobal.setHeader(HEADERS);
-    return apiGlobal.get(endpoint, params, body).then(response => {
+    return apiGlobal.get(endpoint, params).then(response => {
       if (response.status) {
         return response.data;
       }
