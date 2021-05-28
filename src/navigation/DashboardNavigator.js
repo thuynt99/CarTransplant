@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {DASHBOARD_TAB, MAP_VIEW, POST_MODAL} from '../constants';
 import TabNavigator from './TabNavigator';
-import PostScreen from '../screens/Post';
 import MapViewScreen from '../screens/MapViewScreen';
 
 const Stack = createStackNavigator();
@@ -41,13 +40,6 @@ export default function DashboardStackNavigator() {
         //   ),
         // }}
         component={TabNavigator}
-      />
-      <Stack.Screen
-        name={POST_MODAL}
-        options={{
-          headerShown: false,
-        }}
-        component={PostScreen}
       />
       <Stack.Screen
         name={MAP_VIEW}
