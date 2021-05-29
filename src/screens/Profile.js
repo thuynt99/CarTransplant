@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Share,
+  Linking,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as firebase from 'firebase';
@@ -55,17 +56,23 @@ export default function ProfileScreen() {
     {
       id: 1,
       title: 'Hỗ trợ',
-      onPress: () => {},
+      onPress: () => {
+        Linking.openURL(`tel:0356533048`);
+      },
     },
     {
       id: 2,
       title: 'Liên hệ',
-      onPress: () => {},
+      onPress: () => {
+        Linking.openURL('mailto:cartransplantvn@gmail.com');
+      },
     },
     {
       id: 3,
       title: 'Về chúng tôi',
-      onPress: () => {},
+      onPress: () => {
+        Linking.openURL(`https://cartransplant.business.site/`);
+      },
     },
     {
       id: 4,
@@ -269,7 +276,7 @@ export default function ProfileScreen() {
             dataArray={LIST_ITEM_USER_PROFILE}
             renderItem={({item, index}) => {
               return (
-                <ListItem selected key={index} noIndent>
+                <ListItem selected key={index} noIndent onPress={item.onPress}>
                   <Left>
                     <Text>{item.title}</Text>
                   </Left>
