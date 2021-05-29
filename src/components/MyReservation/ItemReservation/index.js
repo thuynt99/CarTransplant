@@ -20,12 +20,20 @@ import {Image} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../../theme';
 import {Rating} from 'react-native-ratings';
+import {TRIP_DETAIL} from '../../../constants';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 
-class ItemReservation extends Component {
-  render() {
-    const {isHistory} = this.props;
-    return (
-      <Card style={styles.card}>
+export const ItemReservation = props => {
+  const navigation = useNavigation();
+  const {navigate} = navigation;
+  const {isHistory} = props;
+  function onClick() {
+    navigate(TRIP_DETAIL);
+  }
+  return (
+    <Card style={styles.card}>
+      <TouchableOpacity onPress={onClick}>
         <Item style={styles.top}>
           <Left>
             <Text>Ngày 15/05/2021</Text>
@@ -155,10 +163,10 @@ class ItemReservation extends Component {
             </Row>
           </>
         )}
-      </Card>
-    );
-  }
-}
+      </TouchableOpacity>
+    </Card>
+  );
+};
 
 const styles = ScaledSheet.create({
   container: {

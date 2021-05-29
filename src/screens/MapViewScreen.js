@@ -226,10 +226,12 @@ class MapViewScreen extends React.Component {
       <View style={styles.container}>
         {step === STEP_MAP_VIEW.SEARCH_ADDRESS ? (
           <SearchAddress
-            onSearchAddress={this.onSearchAddress}
-            goToMapScreen={this.goToMapScreen}
+            goToMapScreen={() =>
+              this.goToMapScreen(STEP_MAP_VIEW.ENTER_ADDRESS)
+            }
             listAddress={listAddress}
             onPressAddress={this.onPressAddress}
+            onSearchAddress={this.onSearchAddress}
           />
         ) : step === STEP_MAP_VIEW.CONFIRM_TRIP ? (
           <ConfirmTrip
