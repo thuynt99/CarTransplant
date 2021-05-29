@@ -50,35 +50,7 @@ export default function TabNavigator(props) {
         }}
         children={() => <ListMyReservation {...props} />}
       />
-      <Tab.Screen
-        name={POST}
-        options={{
-          tabBarIcon: ({color, size}) => (
-            // <AddButton />
-            <TouchableOpacity
-              onPress={() => {
-                navigate('PostModal');
-              }}>
-              <FontAwesome5
-                name={'plus-circle'}
-                // color={primaryColor}
-                size={40}
-                style={{
-                  color: primaryColor,
-                  elevation: 8,
-                  shadowColor: primaryColor,
-                  shadowOffset: {
-                    width: 0,
-                    height: 0,
-                  },
-                  shadowRadius: 10,
-                  shadowOpacity: 0.5,
-                }}
-              />
-            </TouchableOpacity>
-          ),
-        }}
-      />
+
       <Tab.Screen
         name={NOTIFICATION}
         options={{

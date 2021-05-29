@@ -18,7 +18,9 @@ export default class ListMyReservation extends Component {
   render() {
     return (
       <Container>
-        <Header style={{backgroundColor: theme.primaryColor}}>
+        <Header
+          style={{backgroundColor: theme.primaryColor}}
+          androidStatusBarColor={theme.primaryColor}>
           <Left style={{flex: 1}} />
           <Body style={{flex: 1}}>
             <Title style={{alignSelf: 'center', fontWeight: '600'}}>
