@@ -32,7 +32,12 @@ class NotificationDetailScreen extends React.Component {
             </View>
           </View>
           <View style={styles.body}>
-            <Image style={styles.attachment} source={{uri: item.attachment}} />
+            {item.attachment ? (
+              <Image
+                style={styles.attachment}
+                source={{uri: item.attachment}}
+              />
+            ) : null}
             <Text style={styles.textBody}>{item.text}</Text>
           </View>
         </Card>
@@ -79,6 +84,7 @@ const styles = ScaledSheet.create({
   textBody: {
     fontSize: '14@ms',
     textAlign: 'justify',
+    marginTop: '10@vs',
   },
   subTitle: {
     color: theme.grey_light,
