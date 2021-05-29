@@ -6,18 +6,25 @@ import theme from '../../theme';
 
 export default function HeaderCustom(props) {
   return (
-    <Header style={{backgroundColor: theme.primaryColor}}>
-      <Left style={{flex: 1}}>
-        <TouchableOpacity onPress={props.onGoBack}>
-          <Image
-            style={[styles.icon, styles.inputIcon]}
-            source={{
-              uri:
-                'https://img.icons8.com/plasticine/100/000000/circled-left-2.png',
-            }}
-          />
-        </TouchableOpacity>
-      </Left>
+    <Header
+      style={{backgroundColor: theme.primaryColor}}
+      androidStatusBarColor={theme.primaryColor}>
+      {!props.withoutBack ? (
+        <Left style={{flex: 1}}>
+          <TouchableOpacity onPress={props.onGoBack}>
+            <Image
+              style={[styles.icon, styles.inputIcon]}
+              source={{
+                uri:
+                  'https://img.icons8.com/plasticine/100/000000/circled-left-2.png',
+              }}
+            />
+          </TouchableOpacity>
+        </Left>
+      ) : (
+        <Left style={{flex: 1}} />
+      )}
+
       <Body style={{flex: 2}}>
         <Title style={{alignSelf: 'center', fontWeight: '600'}}>
           {props.title}

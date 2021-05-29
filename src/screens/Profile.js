@@ -6,6 +6,20 @@ import 'firebase/firestore';
 import ImagePicker from 'react-native-image-picker';
 
 import {CTX} from '../tools/context';
+import {
+  Button,
+  Card,
+  Icon,
+  Left,
+  List,
+  ListItem,
+  Right,
+  Row,
+} from 'native-base';
+import theme from '../theme';
+import {ScaledSheet} from 'react-native-size-matters';
+import HeaderCustom from '../components/common/HeaderCustom';
+import {ScrollView} from 'react-native-gesture-handler';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -24,6 +38,39 @@ export default function ProfileScreen() {
   const {_logout} = authContext;
 
   let unsubscribe = null;
+
+  const LIST_ITEM_USER_PROFILE = [
+    {
+      id: 1,
+      title: 'Chỉnh sửa thông tin cá nhân',
+      onPress: () => {},
+    },
+    {
+      id: 1,
+      title: 'Hỗ trợ',
+      onPress: () => {},
+    },
+    {
+      id: 2,
+      title: 'Liên hệ',
+      onPress: () => {},
+    },
+    {
+      id: 3,
+      title: 'Về chúng tôi',
+      onPress: () => {},
+    },
+    {
+      id: 4,
+      title: 'Trở thành tài xế',
+      onPress: () => {},
+    },
+    {
+      id: 5,
+      title: 'Điều khoản và chính sách',
+      onPress: () => {},
+    },
+  ];
 
   useEffect(() => {
     // console.log('componentDidMount');
@@ -160,11 +207,10 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{marginTop: 64, alignItems: 'center'}}>
+      <HeaderCustom title="Tài khoản" withoutBack />
+      <View style={styles.header}>
         <View
           style={{
-            // position: 'absolute',
-            // top: 64,
             alignItems: 'center',
             width: '100%',
           }}>
@@ -180,41 +226,82 @@ export default function ProfileScreen() {
               style={styles.avatar}
               blurRadius={user && user.avatar && 0}
             />
-            <FontAwesome5 name={'plus'} size={24} color="#fff" />
           </TouchableOpacity>
         </View>
-
-        <Text style={styles.name}>{user && user.fullName}</Text>
-      </View>
-
-      <View style={styles.statsContainer}>
-        <View style={styles.stat}>
-          <Text style={styles.statAmount}>21</Text>
-          <Text style={styles.statTitle}>Posts</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statAmount}>981</Text>
-          <Text style={styles.statTitle}>Followers</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statAmount}>63</Text>
-          <Text style={styles.statTitle}>Following</Text>
+        <View>
+          <Text style={styles.name}>{user && user.fullName}</Text>
+          <Text style={styles.name}>{user && user.phone}</Text>
         </View>
       </View>
 
-      <TouchableOpacity onPress={_onLogout}>
-        <Text>Log out</Text>
-      </TouchableOpacity>
+      <ScrollView style={styles.view}>
+        <Card style={styles.card}>
+          <List
+            dataArray={LIST_ITEM_USER_PROFILE}
+            renderItem={({item, index}) => {
+              return (
+                <ListItem selected key={index} noIndent>
+                  <Left>
+                    <Text>{item.title}</Text>
+                  </Left>
+                  <Right>
+                    <Icon
+                      name="right"
+                      type="AntDesign"
+                      style={{color: theme.primaryColor}}
+                    />
+                  </Right>
+                </ListItem>
+              );
+            }}
+          />
+        </Card>
+        <Card style={styles.card}>
+          <Image
+            source={{
+              uri:
+                'https://img.pikbest.com/png-images/qiantu/friends-share-bonus-activity-gift-box-gold-coin-coupon-combination-element_2738052.png!c1024wm0/compress/true/progressive/true/format/webp/fw/1024',
+            }}
+            style={styles.promotion}
+            resizeMode="cover"
+          />
+          <Text style={styles.textCode}>Giới thiệu bạn bè</Text>
+          <Text style={styles.text}>
+            Mã giới thiệu của bạn: {user && user.phone}
+          </Text>
+          <Button full onPress={_onLogout} danger style={styles.btnLogout}>
+            <Text style={styles.textShare}>Chia sẻ</Text>
+          </Button>
+        </Card>
+        <Button
+          full
+          onPress={_onLogout}
+          danger
+          bordered
+          style={styles.btnLogout}>
+          <Text style={styles.textLogout}>Đăng xuất</Text>
+        </Button>
+      </ScrollView>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#fff',
+  },
+  header: {
+    alignItems: 'center',
+    backgroundColor: theme.primaryColor,
+    paddingVertical: '10@vs',
+    borderBottomLeftRadius: '16@ms',
+    borderBottomRightRadius: '16@ms',
+    marginBottom: '10@vs',
+  },
+  view: {
+    flex: 1,
+    paddingHorizontal: '16@s',
   },
   avatarContainer: {
     shadowColor: '#151734',
@@ -226,7 +313,6 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: '#E1E2E6',
     borderRadius: 50,
-    marginTop: 48,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -237,9 +323,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   name: {
-    marginTop: 24,
     fontSize: 16,
-    fontWeight: '600',
+    color: theme.white,
+    fontWeight: 'bold',
+    alignSelf: 'center',
   },
   statsContainer: {
     flexDirection: 'row',
@@ -260,5 +347,39 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     marginTop: 4,
+  },
+  card: {
+    paddingHorizontal: '10@s',
+    borderRadius: '16@ms',
+  },
+  textLogout: {
+    color: theme.primaryColor,
+    fontSize: '14@ms',
+    fontWeight: 'bold',
+  },
+  btnLogout: {
+    marginVertical: '20@vs',
+    borderRadius: 8,
+  },
+  textShare: {
+    color: theme.white,
+    fontSize: '14@ms',
+    fontWeight: 'bold',
+  },
+  textCode: {
+    color: theme.grey_dark_30,
+    fontSize: '14@ms',
+    fontWeight: 'bold',
+    paddingVertical: '10@vs',
+    paddingHorizontal: '16@s',
+  },
+  text: {
+    color: theme.grey_dark,
+    fontSize: '14@ms',
+    paddingHorizontal: '16@s',
+  },
+  promotion: {
+    height: '70@vs',
+    width: '100%',
   },
 });
