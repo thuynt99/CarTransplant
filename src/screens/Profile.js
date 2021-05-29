@@ -1,5 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Image,
+  Share,
+} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -205,6 +212,28 @@ export default function ProfileScreen() {
     });
   }
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        title: 'Car Transplant',
+        message:
+          'Tải App CarTransplant nhập mã giới thiệu:' +
+          user?.phone +
+          ' để hưởng ưu đãi !!!',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
     <View style={styles.container}>
       <HeaderCustom title="Tài khoản" withoutBack />
@@ -269,7 +298,7 @@ export default function ProfileScreen() {
           <Text style={styles.text}>
             Mã giới thiệu của bạn: {user && user.phone}
           </Text>
-          <Button full onPress={_onLogout} danger style={styles.btnLogout}>
+          <Button full onPress={onShare} danger style={styles.btnLogout}>
             <Text style={styles.textShare}>Chia sẻ</Text>
           </Button>
         </Card>
