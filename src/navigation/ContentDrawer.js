@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import * as firebase from 'firebase';
 
 import {CTX} from '../tools/context';
+import {View} from 'native-base';
 
 export default function CustomDrawerContent({progress, ...rest}) {
   const navigation = useNavigation();
@@ -22,9 +23,9 @@ export default function CustomDrawerContent({progress, ...rest}) {
 
   function _onLogout() {
     firebase.auth().signOut();
-    // _logout();
+    _logout();
     closeDrawer();
-    navigate('Login');
+    // navigate('Login');
   }
 
   const translateX = Animated.interpolate(progress, {
@@ -37,16 +38,15 @@ export default function CustomDrawerContent({progress, ...rest}) {
       style={{
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
         transform: [{translateX}],
       }}>
       {/* <SafeAreaView style={{flex: 1}}> */}
+      <View>
+        <Text>Hello, Thuy</Text>
+        <Text>035653308</Text>
+      </View>
 
-      <Image
-        style={{width: 380, height: 150}}
-        source={require('../assets/background.png')}
-      />
-      <Text>Hello, Chin</Text>
       <TouchableOpacity onPress={_onLogout}>
         <Text style={{color: 'black'}}>Log out</Text>
       </TouchableOpacity>
