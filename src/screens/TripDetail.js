@@ -16,9 +16,9 @@ import {
   Row,
   Col,
 } from 'native-base';
-import {Image} from 'react-native';
+import {Image, Linking} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import HeaderCustom from '../components/common/HeaderCustom';
 import theme from '../theme';
 import {Rating} from 'react-native-ratings';
@@ -28,6 +28,9 @@ export default class TripDetail extends Component {
   }
   onGoBack = () => {
     this.props.navigation.goBack();
+  };
+  callDriver = phoneNumber => {
+    Linking.openURL(`tel:${phoneNumber}`);
   };
   render() {
     const {goToMapScreen} = this.props;
@@ -58,26 +61,31 @@ export default class TripDetail extends Component {
                   <Text style={styles.textVehicleInfo}>
                     Biển số: 14A-527.01
                   </Text>
-                  <View style={styles.makeCall}>
-                    <Button danger rounded style={styles.btnCall}>
-                      <Icon
-                        name="phone"
-                        type="FontAwesome"
-                        style={{marginRight: 0}}
-                      />
-                      <Text>Gọi tài xế</Text>
-                    </Button>
-                    <Button danger rounded style={styles.btnCall}>
-                      <Icon
-                        name="message1"
-                        type="AntDesign"
-                        style={{marginRight: 0}}
-                      />
-                      <Text>Nhắn tin</Text>
-                    </Button>
-                  </View>
                 </View>
               </Row>
+            </View>
+            <View style={styles.makeCall}>
+              <Button
+                small
+                danger
+                bordered
+                style={styles.btnCall}
+                onPress={this.callDriver}>
+                <Icon
+                  name="phone"
+                  type="FontAwesome"
+                  style={{marginRight: 0}}
+                />
+                <Text>Gọi tài xế</Text>
+              </Button>
+              <Button small danger bordered style={styles.btnCall}>
+                <Icon
+                  name="message1"
+                  type="AntDesign"
+                  style={{marginRight: 0}}
+                />
+                <Text>Nhắn tin</Text>
+              </Button>
             </View>
             <Item style={styles.item}>
               <Col>
@@ -298,9 +306,12 @@ const styles = ScaledSheet.create({
   makeCall: {
     flexDirection: 'row',
     marginTop: '5@vs',
+    justifyContent: 'space-around',
   },
   btnCall: {
-    height: '30@vs',
-    marginRight: '8@s',
+    borderRadius: 8,
+  },
+  textBtn: {
+    color: theme.white,
   },
 });

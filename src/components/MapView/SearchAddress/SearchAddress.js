@@ -14,6 +14,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../../theme';
+import HeaderCustom from '../../common/HeaderCustom';
 
 export default class SearchAddress extends Component {
   constructor(props) {
@@ -24,16 +25,7 @@ export default class SearchAddress extends Component {
     const {onPressAddress, goToMapScreen} = this.props;
     return (
       <View style={styles.container}>
-        <Header>
-          <Left>
-            <Title style={{color: theme.primaryColor}}>Chọn địa điểm đi</Title>
-          </Left>
-          <Right>
-            <TouchableOpacity onPress={goToMapScreen}>
-              <Icon name="close" type="AntDesign" />
-            </TouchableOpacity>
-          </Right>
-        </Header>
+        <HeaderCustom title="Chọn điểm" onGoBack={goToMapScreen} />
         <View style={styles.formContent}>
           <View style={styles.inputContainer}>
             <Image

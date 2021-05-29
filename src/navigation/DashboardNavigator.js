@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 // import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {DASHBOARD_TAB, MAP_VIEW} from '../constants';
+import {DASHBOARD_TAB, MAP_VIEW, TRIP_DETAIL} from '../constants';
 import TabNavigator from './TabNavigator';
 import MapViewScreen from '../screens/MapViewScreen';
 import TripDetail from '../screens/TripDetail';
