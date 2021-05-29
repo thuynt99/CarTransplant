@@ -198,8 +198,8 @@ class MapViewScreen extends React.Component {
           const dataTmp = res.data.routes[0];
           const arrayObj = dataTmp.steps.map((item, index) => {
             return {
-              latitude: item.location.latitude,
-              longitude: item.location.longitude,
+              latitude: parseFloat(item.location.latitude),
+              longitude: parseFloat(item.location.longitude),
               name: item.name,
               id: index,
             };
@@ -314,6 +314,7 @@ class MapViewScreen extends React.Component {
                       defaultValue={map.startLocation?.display_name}
                       value={startStation?.display_name}
                       onFocus={() => this.goToSearch('startStation')}
+                      ellipsizeMode="head"
                     />
                   </Item>
                   <Item fixedLabel style={styles.textInput}>

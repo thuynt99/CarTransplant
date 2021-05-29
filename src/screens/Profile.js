@@ -110,7 +110,6 @@ export default function ProfileScreen() {
   }, []);
 
   function _onLogout() {
-    console.log('logoutttttttt');
     // NOTE: context
     _logout();
 
