@@ -7,7 +7,6 @@ const APP_NAME = {
   REGISTER: 'Register',
   FORGOT: 'Forgot',
   DASHBOARD_TAB: 'DashboardTabNavigator',
-  POST_MODAL: 'PostModal',
   HOME: 'Home',
   LIST_MY_RESERVATION: 'ListMyReservation',
   POST: 'Post',
