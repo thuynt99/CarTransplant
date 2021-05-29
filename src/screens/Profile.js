@@ -1,7 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity, Image} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 import ImagePicker from 'react-native-image-picker';
 
 import {CTX} from '../tools/context';
@@ -48,6 +49,7 @@ export default function ProfileScreen() {
   }, []);
 
   function _onLogout() {
+    console.log('logoutttttttt');
     // NOTE: context
     _logout();
 

@@ -54,84 +54,12 @@ export default function HomeScreen() {
   let unsubscribe = null;
 
   useEffect(() => {
-    unsubscribe = firebase
-      .firestore()
-      .collection('posts')
-      .orderBy('timestamp', 'asc')
-      .limit(100)
-      .onSnapshot(
-        snapshot => {
-          if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-          }
-          var returnArray = [];
-          snapshot.forEach(function(doc) {
-            const {id} = doc;
-            returnArray.push({
-              id,
-              ...doc.data(),
-              avatar: require('../assets/avatar/image1.png'),
-            });
-          });
-
-          setPosts(returnArray);
-        },
-        err => {
-          console.log(`Encountered error: ${err.code}`);
-        },
-      );
     requestPermission();
     // getLocation();
-    return () => {
-      unsubscribe();
-    };
   });
-  renderPost = post => {
-    return (
-      <View key={post.id} style={styles.feedItem}>
-        <Image source={post.avatar} style={styles.avatar} />
-        <View style={{flex: 1}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <View>
-              <Text style={styles.name}>{post.uid}</Text>
-              <Text style={styles.timestamp}>
-                {moment(post.timestamp).fromNow()}
-              </Text>
-            </View>
-
-            <FontAwesome5 name="ellipsis-h" size={24} color="#73788B" />
-          </View>
-          <Text style={styles.post}>{post.text}</Text>
-          <Image
-            source={{uri: post.image}}
-            style={styles.postImage}
-            resizeMode="cover"
-          />
-          <View style={{flexDirection: 'row'}}>
-            <FontAwesome5
-              name="heart"
-              size={24}
-              color="#73788B"
-              style={{marginRight: 16}}
-            />
-            <FontAwesome5 name="comments" size={24} color="#73788B" />
-          </View>
-        </View>
-      </View>
-    );
-  };
   clickEventListener = () => {
     navigation.navigate(MAP_VIEW);
   };
-  function goToMapsView() {
-    navigation.navigate(MAP_VIEW);
-  }
   return (
     <ScrollView style={styles.container}>
       <Header
