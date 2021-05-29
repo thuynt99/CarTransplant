@@ -231,6 +231,7 @@ class MapViewScreen extends React.Component {
             }
             listAddress={listAddress}
             onPressAddress={this.onPressAddress}
+            onSearchAddress={this.onSearchAddress}
           />
         ) : step === STEP_MAP_VIEW.CONFIRM_TRIP ? (
           <ConfirmTrip
