@@ -2,29 +2,41 @@ import _ from 'lodash';
 import APISauce, {NETWORK_ERROR, TIMEOUT_ERROR} from 'apisauce';
 import {HTTP} from '../constants/api';
 import {Toast} from 'native-base';
+import firebase from 'firebase';
 
 const HOST = 'http://pi-cam.ddns.net:10000';
 const TIME_OUT_API = 20000;
-// const HEADERS = {
-//   Accept: 'application/json',
-//   Content-Type: 'application/json',
-// };
 
-// let HEADERS_MULTIPLE_PART = {
-//   Accept: 'application/json',
-//   'Content-Type': 'multipart/form-data',
-// };
-
+let HEADERS_MULTIPLE_PART = {
+  Accept: 'application/json',
+  'Content-Type': 'multipart/form-data',
+};
+let HEADERS = {};
+const getHeader = async () => {
+  await firebase
+    .auth()
+    .currentUser.getIdToken(/* forceRefresh */ true)
+    .then(function(idToken) {
+      HEADERS = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: idToken,
+      };
+    })
+    .catch(function(error) {
+      console.log('error', error);
+    });
+};
 export const apiGlobal = APISauce.create({
   baseURL: HOST,
   timeout: TIME_OUT_API,
-  headers: {},
 });
 const api = {
-  post: (endpoint, params) => {
+  post: async (endpoint, params) => {
     console.log('------POST-----', endpoint);
     console.log('------params-----', params);
-    // apiGlobal.setHeader(HEADERS);
+    await getHeader();
+    apiGlobal.setHeader(HEADERS);
     return apiGlobal.post(endpoint, params).then(response => {
       if (response.status) {
         return response.data;
@@ -45,10 +57,13 @@ const api = {
     });
   },
 
-  get: (endpoint, params) => {
+  get: async (endpoint, params) => {
     console.log('------GET-----', endpoint);
     console.log('------params-----', params);
-    // apiGlobal.setHeader(HEADERS);
+    await getHeader();
+    console.log(HEADERS);
+    apiGlobal.setHeaders(HEADERS);
+    console.log('-------header-----', apiGlobal);
     return apiGlobal.get(endpoint, params).then(response => {
       if (response.status) {
         return response.data;
