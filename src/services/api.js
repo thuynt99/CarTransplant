@@ -36,7 +36,7 @@ const api = {
     console.log('------POST-----', endpoint);
     console.log('------params-----', params);
     await getHeader();
-    apiGlobal.setHeader(HEADERS);
+    apiGlobal.setHeaders(HEADERS);
     return apiGlobal.post(endpoint, params).then(response => {
       if (response.status) {
         return response.data;

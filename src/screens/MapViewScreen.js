@@ -44,6 +44,8 @@ import {
 import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
 import ConfirmTrip from '../components/MapView/ConfirmTrip/ConfirmTrip';
 import {STEP_MAP_VIEW} from '../constants/data';
+import {findTrip} from '../stores/trip/actions';
+import axios from 'axios';
 
 const listVehicle = [
   {
@@ -125,17 +127,36 @@ class MapViewScreen extends React.Component {
 
   onClickBtnNext = () => {
     const {step} = this.state;
-    if (step === STEP_MAP_VIEW.ENTER_DATE) {
-      this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
-    } else {
-      this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
-    }
+    // if (step === STEP_MAP_VIEW.ENTER_DATE) {
+    //   this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
+    // } else {
+    //   this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
+    // }
+    this.getTrip();
   };
 
   showViewSelectDate = () => {
     this.setState({step: STEP_MAP_VIEW.DATE_TIME_SELECT});
   };
-
+  getTrip = () => {
+    const {startStation, endStation, dateStart, dateEnd} = this.state;
+    const body = {
+      begin_leave_time: dateStart.unix(),
+      end_leave_time: dateEnd.unix(),
+      from: {
+        latitude: startStation.latitude,
+        longitude: startStation.longitude,
+      },
+      to: {
+        latitude: endStation.lat,
+        longitude: endStation.lon,
+      },
+      opt: 0,
+    };
+    this.props
+      .findTrip(JSON.stringify(body))
+      .then(res => console.log('res', res));
+  };
   onMapPress = e => {
     this.setState({
       coordinates: [...this.state.coordinates, e.nativeEvent.coordinate],
@@ -500,6 +521,7 @@ const mapDispatchToProps = dispatch => ({
   getPlaceByLocation: params => dispatch(getPlaceByLocation(params)),
   searchAddress: query => dispatch(searchAddress(query)),
   getRouting: params => dispatch(getRouting(params)),
+  findTrip: params => dispatch(findTrip(params)),
 });
 
 export default connect(
