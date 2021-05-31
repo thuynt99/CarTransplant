@@ -248,11 +248,13 @@ class MapViewScreen extends React.Component {
         ) : (
           <>
             <View style={styles.mapView}>
-              <View style={styles.header}>
-                <Button rounded style={styles.btnBack} onPress={this.goBack}>
-                  <Icon name="arrow-back" type="MaterialIcons" />
-                </Button>
-              </View>
+              <Callout style={styles.buttonBack}>
+                <TouchableOpacity style={styles.btnBack} onPress={this.goBack}>
+                  <Button rounded style={styles.btnBack}>
+                    <Icon name="arrow-back" type="MaterialIcons" />
+                  </Button>
+                </TouchableOpacity>
+              </Callout>
               <MapView
                 ref={MapView => (this.MapView = MapView)}
                 provider="google"
@@ -300,7 +302,7 @@ class MapViewScreen extends React.Component {
               </MapView>
               <Callout style={styles.buttonMyLocation}>
                 <TouchableOpacity
-                  style={styles.btnBack}
+                  style={styles.backBtn}
                   onPress={this.getCurrentLocation}>
                   <Icon name="my-location" type="MaterialIcons" />
                 </TouchableOpacity>
@@ -449,6 +451,10 @@ const styles = ScaledSheet.create({
     borderRadius: 8,
   },
   btnBack: {
+    backgroundColor: theme.primaryColor,
+    borderRadius: 8,
+  },
+  backBtn: {
     backgroundColor: 'transparent',
   },
   buttonCallout: {
@@ -500,6 +506,13 @@ const styles = ScaledSheet.create({
   textKM: {
     paddingLeft: '16@s',
     fontSize: '14@ms',
+  },
+  buttonBack: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    height: responsiveHeight(25),
+    zIndex: 2,
   },
 });
 const mapStateToProps = state => ({
