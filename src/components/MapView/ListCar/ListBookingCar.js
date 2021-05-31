@@ -1,4 +1,4 @@
-import {Body, Icon, Left, Right, Text, Card, CardItem, View} from 'native-base';
+import {View} from 'native-base';
 import React, {Component} from 'react';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../../theme';
@@ -10,13 +10,19 @@ class ListBookingCar extends Component {
     super(props);
   }
   render() {
-    const {onSelectCar} = this.props;
+    const {onSelectCar, listVehicle} = this.props;
     return (
       <View style={styles.container}>
         <FlatList
           style={styles.container}
-          data={this.props.listVehicle}
-          renderItem={({item}) => <ItemBookingCar onSelectCar={onSelectCar} />}
+          data={listVehicle}
+          renderItem={({item, index}) => (
+            <ItemBookingCar
+              onSelectCar={onSelectCar}
+              index={index}
+              item={item}
+            />
+          )}
           keyExtractor={item => item.id}
         />
       </View>

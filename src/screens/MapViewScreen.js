@@ -47,24 +47,6 @@ import {STEP_MAP_VIEW} from '../constants/data';
 import {findTrip} from '../stores/trip/actions';
 import axios from 'axios';
 
-const listVehicle = [
-  {
-    id: 1,
-    name: 'Xe 5 chỗ',
-    price: 325.0,
-  },
-  {
-    id: 2,
-    name: 'Xe 7 chỗ',
-    price: 325.0,
-  },
-  {
-    id: 3,
-    name: 'Xe 5 chỗ',
-    price: 325.0,
-  },
-];
-
 const {width, height} = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -92,6 +74,7 @@ class MapViewScreen extends React.Component {
       dateEnd: moment().add(1, 'hours'),
       listAddress: [],
       key: 'startStation',
+      listVehicle: [],
     };
     this.mapView = null;
   }
@@ -125,20 +108,20 @@ class MapViewScreen extends React.Component {
     this.props.navigation.goBack();
   };
 
-  onClickBtnNext = () => {
+  onClickBtnNext = async () => {
     const {step} = this.state;
-    // if (step === STEP_MAP_VIEW.ENTER_DATE) {
-    //   this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
-    // } else {
-    //   this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
-    // }
-    this.getTrip();
+    if (step === STEP_MAP_VIEW.ENTER_DATE) {
+      await this.getTrip();
+      this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
+    } else {
+      this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
+    }
   };
 
   showViewSelectDate = () => {
     this.setState({step: STEP_MAP_VIEW.DATE_TIME_SELECT});
   };
-  getTrip = () => {
+  getTrip = async () => {
     const {startStation, endStation, dateStart, dateEnd} = this.state;
     const body = {
       begin_leave_time: dateStart.unix(),
@@ -148,14 +131,17 @@ class MapViewScreen extends React.Component {
         longitude: startStation.longitude,
       },
       to: {
-        latitude: endStation.lat,
-        longitude: endStation.lon,
+        latitude: endStation.latitude,
+        longitude: endStation.longitude,
       },
       opt: 0,
     };
-    this.props
-      .findTrip(JSON.stringify(body))
-      .then(res => console.log('res', res));
+    await this.props.findTrip(JSON.stringify(body)).then(res => {
+      console.log('res', res);
+      if (res.data && res.data.length > 0) {
+        this.setState({listVehicle: res.data});
+      }
+    });
   };
   onMapPress = e => {
     this.setState({
@@ -196,9 +182,10 @@ class MapViewScreen extends React.Component {
     this.setState({step: step});
   };
   onSearchAddress = query => {
-    this.props
-      .searchAddress(query)
-      .then(res => this.setState({listAddress: res.data}));
+    this.props.searchAddress(query).then(res => {
+      console.log('searchAddress', res);
+      this.setState({listAddress: res.data});
+    });
   };
   onSelectCar = () => {
     this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
@@ -206,15 +193,15 @@ class MapViewScreen extends React.Component {
   onPressAddress = async item => {
     const {key} = this.state;
     this.setState({[key]: item});
-    console.log(item);
     if (key === 'endStation') {
       const params = {
         fromLat: this.state.startStation.latitude,
         fromLong: this.state.startStation.longitude,
-        toLat: item.lat,
-        toLong: item.lon,
+        toLat: item.latitude,
+        toLong: item.longitude,
       };
       await this.props.getRouting(params).then(res => {
+        console.log('res', res);
         if (res.status) {
           const dataTmp = res.data.routes[0];
           const arrayObj = dataTmp.steps.map((item, index) => {
@@ -240,9 +227,9 @@ class MapViewScreen extends React.Component {
       startStation,
       endStation,
       listAddress,
+      listVehicle,
     } = this.state;
     const {map} = this.props;
-    console.log(step);
     return (
       <View style={styles.container}>
         {step === STEP_MAP_VIEW.SEARCH_ADDRESS ? (
@@ -410,13 +397,15 @@ class MapViewScreen extends React.Component {
                   />
                 </ScrollView>
               )}
-              <Button
-                block
-                danger
-                style={styles.btnNext}
-                onPress={this.onClickBtnNext}>
-                <Text>Tiếp theo</Text>
-              </Button>
+              {step !== STEP_MAP_VIEW.SELECT_CAR && (
+                <Button
+                  block
+                  danger
+                  style={styles.btnNext}
+                  onPress={this.onClickBtnNext}>
+                  <Text>Tiếp theo</Text>
+                </Button>
+              )}
             </View>
           </>
         )}

@@ -61,13 +61,13 @@ const api = {
     console.log('------GET-----', endpoint);
     console.log('------params-----', params);
     await getHeader();
-    console.log(HEADERS);
     apiGlobal.setHeaders(HEADERS);
-    console.log('-------header-----', apiGlobal);
+    console.log('-------header-----', HEADERS);
     return apiGlobal.get(endpoint, params).then(response => {
       if (response.status) {
         return response.data;
       }
+      console.log('data', response.data);
       let errorCode = '';
       switch (response.problem) {
         case TIMEOUT_ERROR:
