@@ -16,12 +16,9 @@ class ListBookingCar extends Component {
         <FlatList
           style={styles.container}
           data={listVehicle}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => (
-            <ItemBookingCar
-              onSelectCar={onSelectCar}
-              index={index}
-              item={item}
-            />
+            <ItemBookingCar onSelectCar={onSelectCar} key={index} item={item} />
           )}
           keyExtractor={item => item.id}
         />

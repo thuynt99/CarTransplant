@@ -12,6 +12,7 @@ import {
   Item,
   Left,
   Right,
+  Spinner,
   Text,
   Title,
 } from 'native-base';
@@ -79,6 +80,11 @@ class MapViewScreen extends React.Component {
     this.mapView = null;
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {map} = nextProps;
+    return {loading: map.loading};
+  }
+
   async componentDidMount() {
     await this.getCurrentLocation();
   }
@@ -105,7 +111,14 @@ class MapViewScreen extends React.Component {
   };
 
   goBack = () => {
-    this.props.navigation.goBack();
+    const {step} = this.state;
+    if (step === STEP_MAP_VIEW.ENTER_ADDRESS) {
+      this.props.navigation.goBack();
+    } else if (step === STEP_MAP_VIEW.ENTER_DATE) {
+      this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS});
+    } else if (step === STEP_MAP_VIEW.SELECT_CAR) {
+      this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
+    }
   };
 
   onClickBtnNext = async () => {
@@ -190,18 +203,18 @@ class MapViewScreen extends React.Component {
   onSelectCar = () => {
     this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
   };
-  onPressAddress = async item => {
+  onPressAddress = item => {
     const {key} = this.state;
     this.setState({[key]: item});
     if (key === 'endStation') {
       const params = {
-        fromLat: this.state.startStation.latitude,
-        fromLong: this.state.startStation.longitude,
-        toLat: item.latitude,
-        toLong: item.longitude,
+        fromLat: parseFloat(this.state.startStation.latitude),
+        fromLong: parseFloat(this.state.startStation.longitude),
+        toLat: parseFloat(item.latitude),
+        toLong: parseFloat(item.longitude),
       };
-      await this.props.getRouting(params).then(res => {
-        console.log('res', res);
+      this.props.getRouting(params).then(res => {
+        console.log('getRouting', res);
         if (res.status) {
           const dataTmp = res.data.routes[0];
           const arrayObj = dataTmp.steps.map((item, index) => {
@@ -249,11 +262,13 @@ class MapViewScreen extends React.Component {
           <>
             <View style={styles.mapView}>
               <Callout style={styles.buttonBack}>
-                <TouchableOpacity style={styles.btnBack} onPress={this.goBack}>
-                  <Button rounded style={styles.btnBack}>
-                    <Icon name="arrow-back" type="MaterialIcons" />
-                  </Button>
-                </TouchableOpacity>
+                <Button rounded style={styles.btnBack} onPress={this.goBack}>
+                  <Icon
+                    name="arrow-back"
+                    type="MaterialIcons"
+                    style={{color: theme.primaryColor}}
+                  />
+                </Button>
               </Callout>
               <MapView
                 ref={MapView => (this.MapView = MapView)}
@@ -270,7 +285,7 @@ class MapViewScreen extends React.Component {
                 showsTraffic={false}
                 toolbarEnabled={false}
                 loadingEnabled={true}
-                showsMyLocationButton={true}
+                showsMyLocationButton={false}
                 provider="google"
                 onRegionChangeComplete={this.updateRegion}
                 region={{
@@ -451,8 +466,9 @@ const styles = ScaledSheet.create({
     borderRadius: 8,
   },
   btnBack: {
-    backgroundColor: theme.primaryColor,
+    backgroundColor: theme.white,
     borderRadius: 8,
+    marginTop: '20@vs',
   },
   backBtn: {
     backgroundColor: 'transparent',
