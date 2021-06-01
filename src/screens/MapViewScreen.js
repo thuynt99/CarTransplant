@@ -12,6 +12,7 @@ import {
   Item,
   Left,
   Right,
+  Spinner,
   Text,
   Title,
 } from 'native-base';
@@ -44,24 +45,8 @@ import {
 import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
 import ConfirmTrip from '../components/MapView/ConfirmTrip/ConfirmTrip';
 import {STEP_MAP_VIEW} from '../constants/data';
-
-const listVehicle = [
-  {
-    id: 1,
-    name: 'Xe 5 chỗ',
-    price: 325.0,
-  },
-  {
-    id: 2,
-    name: 'Xe 7 chỗ',
-    price: 325.0,
-  },
-  {
-    id: 3,
-    name: 'Xe 5 chỗ',
-    price: 325.0,
-  },
-];
+import {findTrip} from '../stores/trip/actions';
+import axios from 'axios';
 
 const {width, height} = Dimensions.get('window');
 
@@ -90,8 +75,14 @@ class MapViewScreen extends React.Component {
       dateEnd: moment().add(1, 'hours'),
       listAddress: [],
       key: 'startStation',
+      listVehicle: [],
     };
     this.mapView = null;
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {map} = nextProps;
+    return {loading: map.loading};
   }
 
   async componentDidMount() {
@@ -120,12 +111,20 @@ class MapViewScreen extends React.Component {
   };
 
   goBack = () => {
-    this.props.navigation.goBack();
+    const {step} = this.state;
+    if (step === STEP_MAP_VIEW.ENTER_ADDRESS) {
+      this.props.navigation.goBack();
+    } else if (step === STEP_MAP_VIEW.ENTER_DATE) {
+      this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS});
+    } else if (step === STEP_MAP_VIEW.SELECT_CAR) {
+      this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
+    }
   };
 
-  onClickBtnNext = () => {
+  onClickBtnNext = async () => {
     const {step} = this.state;
     if (step === STEP_MAP_VIEW.ENTER_DATE) {
+      await this.getTrip();
       this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
     } else {
       this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
@@ -135,7 +134,28 @@ class MapViewScreen extends React.Component {
   showViewSelectDate = () => {
     this.setState({step: STEP_MAP_VIEW.DATE_TIME_SELECT});
   };
-
+  getTrip = async () => {
+    const {startStation, endStation, dateStart, dateEnd} = this.state;
+    const body = {
+      begin_leave_time: dateStart.unix(),
+      end_leave_time: dateEnd.unix(),
+      from: {
+        latitude: startStation.latitude,
+        longitude: startStation.longitude,
+      },
+      to: {
+        latitude: endStation.latitude,
+        longitude: endStation.longitude,
+      },
+      opt: 0,
+    };
+    await this.props.findTrip(JSON.stringify(body)).then(res => {
+      console.log('res', res);
+      if (res.data && res.data.length > 0) {
+        this.setState({listVehicle: res.data});
+      }
+    });
+  };
   onMapPress = e => {
     this.setState({
       coordinates: [...this.state.coordinates, e.nativeEvent.coordinate],
@@ -175,25 +195,26 @@ class MapViewScreen extends React.Component {
     this.setState({step: step});
   };
   onSearchAddress = query => {
-    this.props
-      .searchAddress(query)
-      .then(res => this.setState({listAddress: res.data}));
+    this.props.searchAddress(query).then(res => {
+      console.log('searchAddress', res);
+      this.setState({listAddress: res.data});
+    });
   };
   onSelectCar = () => {
     this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
   };
-  onPressAddress = async item => {
+  onPressAddress = item => {
     const {key} = this.state;
     this.setState({[key]: item});
-    console.log(item);
     if (key === 'endStation') {
       const params = {
-        fromLat: this.state.startStation.latitude,
-        fromLong: this.state.startStation.longitude,
-        toLat: item.lat,
-        toLong: item.lon,
+        fromLat: parseFloat(this.state.startStation.latitude),
+        fromLong: parseFloat(this.state.startStation.longitude),
+        toLat: parseFloat(item.latitude),
+        toLong: parseFloat(item.longitude),
       };
-      await this.props.getRouting(params).then(res => {
+      this.props.getRouting(params).then(res => {
+        console.log('getRouting', res);
         if (res.status) {
           const dataTmp = res.data.routes[0];
           const arrayObj = dataTmp.steps.map((item, index) => {
@@ -219,9 +240,9 @@ class MapViewScreen extends React.Component {
       startStation,
       endStation,
       listAddress,
+      listVehicle,
     } = this.state;
     const {map} = this.props;
-    console.log(step);
     return (
       <View style={styles.container}>
         {step === STEP_MAP_VIEW.SEARCH_ADDRESS ? (
@@ -240,11 +261,15 @@ class MapViewScreen extends React.Component {
         ) : (
           <>
             <View style={styles.mapView}>
-              <View style={styles.header}>
+              <Callout style={styles.buttonBack}>
                 <Button rounded style={styles.btnBack} onPress={this.goBack}>
-                  <Icon name="arrow-back" type="MaterialIcons" />
+                  <Icon
+                    name="arrow-back"
+                    type="MaterialIcons"
+                    style={{color: theme.primaryColor}}
+                  />
                 </Button>
-              </View>
+              </Callout>
               <MapView
                 ref={MapView => (this.MapView = MapView)}
                 provider="google"
@@ -260,7 +285,7 @@ class MapViewScreen extends React.Component {
                 showsTraffic={false}
                 toolbarEnabled={false}
                 loadingEnabled={true}
-                showsMyLocationButton={true}
+                showsMyLocationButton={false}
                 provider="google"
                 onRegionChangeComplete={this.updateRegion}
                 region={{
@@ -292,7 +317,7 @@ class MapViewScreen extends React.Component {
               </MapView>
               <Callout style={styles.buttonMyLocation}>
                 <TouchableOpacity
-                  style={styles.btnBack}
+                  style={styles.backBtn}
                   onPress={this.getCurrentLocation}>
                   <Icon name="my-location" type="MaterialIcons" />
                 </TouchableOpacity>
@@ -389,13 +414,15 @@ class MapViewScreen extends React.Component {
                   />
                 </ScrollView>
               )}
-              <Button
-                block
-                danger
-                style={styles.btnNext}
-                onPress={this.onClickBtnNext}>
-                <Text>Tiếp theo</Text>
-              </Button>
+              {step !== STEP_MAP_VIEW.SELECT_CAR && (
+                <Button
+                  block
+                  danger
+                  style={styles.btnNext}
+                  onPress={this.onClickBtnNext}>
+                  <Text>Tiếp theo</Text>
+                </Button>
+              )}
             </View>
           </>
         )}
@@ -439,6 +466,11 @@ const styles = ScaledSheet.create({
     borderRadius: 8,
   },
   btnBack: {
+    backgroundColor: theme.white,
+    borderRadius: 8,
+    marginTop: '20@vs',
+  },
+  backBtn: {
     backgroundColor: 'transparent',
   },
   buttonCallout: {
@@ -491,6 +523,13 @@ const styles = ScaledSheet.create({
     paddingLeft: '16@s',
     fontSize: '14@ms',
   },
+  buttonBack: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    height: responsiveHeight(25),
+    zIndex: 2,
+  },
 });
 const mapStateToProps = state => ({
   map: state.map,
@@ -500,6 +539,7 @@ const mapDispatchToProps = dispatch => ({
   getPlaceByLocation: params => dispatch(getPlaceByLocation(params)),
   searchAddress: query => dispatch(searchAddress(query)),
   getRouting: params => dispatch(getRouting(params)),
+  findTrip: params => dispatch(findTrip(params)),
 });
 
 export default connect(

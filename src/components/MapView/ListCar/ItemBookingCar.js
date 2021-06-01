@@ -1,6 +1,6 @@
 import {Body, Icon, Left, Right, Text, Card, CardItem} from 'native-base';
 import React, {Component} from 'react';
-import {View, Platform, BackHandler, Touchable} from 'react-native';
+import {View, Platform, BackHandler, Touchable, Image} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import moment from 'moment';
 import theme from '../../../theme';
@@ -11,28 +11,42 @@ class ItemBookingCar extends Component {
     super(props);
   }
   render() {
-    const {onSelectCar} = this.props;
+    const {onSelectCar, item} = this.props;
+    const price = item?.price.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
     return (
       <Card>
-        <TouchableOpacity onPress={onSelectCar}>
-          <CardItem>
-            <Left>
-              <Icon
-                name="car"
-                type="Fontisto"
-                style={{color: theme.primaryColor}}
-              />
-              <View style={styles.view}>
-                <Text style={styles.textPrice}>Đi ghép</Text>
-                <Text style={styles.textCar}>Xe 5 chỗ</Text>
-              </View>
-            </Left>
-            <Body />
-            <Right>
-              <Text style={styles.textPrice}>352,000</Text>
-              <Text style={styles.textPriceNormal}>780,000</Text>
-            </Right>
-          </CardItem>
+        <TouchableOpacity onPress={onSelectCar} style={styles.btn}>
+          <Image
+            style={{
+              width: 50,
+              height: 50,
+            }}
+            source={{
+              uri: 'https://img.icons8.com/dusk/64/000000/car--v1.png',
+            }}
+          />
+          <View styles={styles.left}>
+            <View style={styles.view}>
+              <Text>
+                <Text style={styles.textPrice}>{item?.car?.model}</Text>
+                <Text> - {item?.car?.color}</Text>
+              </Text>
+
+              <Text style={styles.textCar}>Xe 5 chỗ</Text>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.textPrice}>{price}</Text>
+            <Text style={styles.textPriceNormal}>
+              {(2 * item?.price).toLocaleString('it-IT', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </Text>
+          </View>
         </TouchableOpacity>
       </Card>
     );
@@ -45,7 +59,7 @@ const styles = ScaledSheet.create({
     fontSize: '12@ms',
   },
   view: {
-    paddingLeft: '20@s',
+    // paddingLeft: '20@s',
   },
   textPrice: {
     fontSize: '14@ms',
@@ -62,6 +76,19 @@ const styles = ScaledSheet.create({
     fontSize: '13@ms',
     color: 'black',
     fontStyle: 'italic',
+  },
+  left: {
+    flexDirection: 'row',
+  },
+  item: {
+    flexDirection: 'row',
+  },
+  btn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderRadius: 8,
+    paddingHorizontal: '16@s',
+    paddingVertical: '8@vs',
   },
 });
 

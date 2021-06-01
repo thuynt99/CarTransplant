@@ -50,7 +50,8 @@ export default class SearchAddress extends Component {
           style={styles.notificationList}
           enableEmptySections={true}
           data={this.props?.listAddress}
-          renderItem={({item}) => {
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => {
             return (
               <TouchableOpacity
                 style={styles.notificationBox}
