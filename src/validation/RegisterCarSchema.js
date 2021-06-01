@@ -5,7 +5,7 @@ const vehicleBrand = Yup.string()
   .max(50, 'Fullname too Long!')
   .required('Fullname is required');
 
-const vehicleModal = Yup.string()
+const model = Yup.string()
   .min(1, 'Fullname too Short!')
   .max(50, 'Fullname too Long!')
   .required('Fullname is required');
@@ -15,7 +15,7 @@ const licensePlate = Yup.string()
   .max(50, 'Fullname too Long!')
   .required('Fullname is required');
 
-const vehicleColor = Yup.string()
+const color = Yup.string()
   .min(1, 'Fullname too Short!')
   .max(50, 'Fullname too Long!')
   .required('Fullname is required');
@@ -33,9 +33,9 @@ const phone = Yup.string()
 
 const RegisterCarSchema = Yup.object().shape({
   vehicleBrand,
-  vehicleModal,
+  model,
   licensePlate,
-  vehicleColor,
+  color,
   bookingType,
 });
 

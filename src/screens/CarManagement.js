@@ -7,6 +7,7 @@ import {
   Icon,
   Left,
   Right,
+  Spinner,
   View,
 } from 'native-base';
 import CheckBox from '@react-native-community/checkbox';
@@ -20,11 +21,12 @@ import {
   NOTIFICATION_DETAIL,
   REGISTER_CAR,
 } from '../constants';
-import {Image, Text} from 'react-native';
+import {Image, RefreshControl, Text} from 'react-native';
 import theme from '../theme';
 import HeaderCustom from '../components/common/HeaderCustom';
 import {connect} from 'react-redux';
-import {getListMyCar} from '../stores/cars/actions';
+import {deteleListCar, getListMyCar} from '../stores/cars/actions';
+import carReducer from '../stores/cars/reducer';
 
 class CarManagement extends Component {
   constructor(props) {
@@ -33,7 +35,13 @@ class CarManagement extends Component {
       loading: false,
       selectedCarId: [],
       listMyCar: [],
+      refreshing: false,
+      loading: false,
     };
+  }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {car} = nextProps;
+    return {loading: car.loading, listMyCar: car.listMyCar};
   }
   componentDidMount() {
     this.getListMyCar();
@@ -53,15 +61,22 @@ class CarManagement extends Component {
       selectedCarId: tmp,
     });
   };
-  removeCar = () => {};
+  removeCar = async () => {
+    const {selectedCarId} = this.state;
+    await this.props.deteleListCar(selectedCarId);
+    this.getListMyCar();
+  };
   getListMyCar = async () => {
-    await this.props.getListMyCar({
-      limit: 20,
-    });
-    this.setState({listMyCar: this.props.car.listMyCar});
+    await this.props
+      .getListMyCar({
+        limit: 20,
+      })
+      .then(res => {
+        console.log(this.props.car.listMyCar);
+      });
   };
   render() {
-    const {listMyCar} = this.state;
+    const {listMyCar, refreshing, loading} = this.state;
     return (
       <Container>
         <HeaderCustom
@@ -70,9 +85,24 @@ class CarManagement extends Component {
           iconRight
           onClickBtnRight={this.removeCar}
         />
+        {loading && (
+          <Spinner
+            color={theme.primaryColor}
+            style={{
+              alignSelf: 'center',
+              justifyContent: 'center',
+            }}
+          />
+        )}
         <FlatList
           style={styles.list}
           data={listMyCar}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={this.getListMyCar}
+            />
+          }
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => (
             <Card key={index} style={styles.item}>
@@ -165,6 +195,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getListMyCar: params => dispatch(getListMyCar(params)),
+  deteleListCar: params => dispatch(deteleListCar(params)),
 });
 export default connect(
   mapStateToProps,

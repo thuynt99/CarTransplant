@@ -21,7 +21,7 @@ import HeaderCustom from '../components/common/HeaderCustom';
 import {Formik} from 'formik';
 import RegisterCarSchema from '../validation/RegisterCarSchema';
 import {connect} from 'react-redux';
-import {registerCar} from '../stores/cars/actions';
+import {getListMyCar, registerCar} from '../stores/cars/actions';
 import {CAR_MANAGEMENT} from '../constants';
 
 class RegisterCar extends Component {
@@ -43,6 +43,9 @@ class RegisterCar extends Component {
     this.props.registerCar(JSON.stringify(values)).then(res => {
       console.log('res', res);
       if (res.status) {
+        this.props.getListMyCar({
+          limit: 20,
+        });
         Alert.alert(
           'Thông báo',
           'Bạn đã thêm xe thành công!\n Đi đễn màn hình quản lý xe?',
@@ -81,7 +84,7 @@ class RegisterCar extends Component {
       {
         id: 2,
         label: 'Dòng xe',
-        value: 'vehicleModal',
+        value: 'model',
       },
       {
         id: 3,
@@ -91,7 +94,7 @@ class RegisterCar extends Component {
       {
         id: 4,
         label: 'Màu sắc',
-        value: 'vehicleColor',
+        value: 'color',
       },
       {
         id: 5,
@@ -191,6 +194,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   registerCar: params => dispatch(registerCar(params)),
+  getListMyCar: params => dispatch(getListMyCar(params)),
 });
 export default connect(
   mapStateToProps,
