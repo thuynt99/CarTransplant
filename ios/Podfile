@@ -50,6 +50,8 @@ target 'chnirtnavigation5' do
   pod 'Google-Maps-iOS-Utils'
 
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'chnirtnavigation5Tests' do
     inherit! :search_paths
     # Pods for testing

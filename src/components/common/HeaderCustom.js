@@ -3,6 +3,7 @@ import React from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import theme from '../../theme';
+import ImageIcon from './ImageIcon';
 
 export default function HeaderCustom(props) {
   return (
@@ -30,7 +31,13 @@ export default function HeaderCustom(props) {
           {props.title}
         </Title>
       </Body>
-      <Right style={{flex: 1}} />
+      <Right style={{flex: 1}}>
+        {props.iconRight ? (
+          <TouchableOpacity style={styles.btn} onPress={props.onClickBtnRight}>
+            <Icon name="delete" type="AntDesign" style={styles.right} />
+          </TouchableOpacity>
+        ) : null}
+      </Right>
     </Header>
   );
 }
@@ -39,4 +46,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  right: {
+    color: theme.white,
+    fontSize: 28,
+  },
+  btn: {},
 });
