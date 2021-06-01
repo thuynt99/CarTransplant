@@ -8,7 +8,7 @@ const initialState = {
   loading: false,
 };
 
-export default function mapReducer(state = initialState, action = {}) {
+export default function tripReducer(state = initialState, action = {}) {
   switch (action.type) {
     case FIND_TRIP:
       return {

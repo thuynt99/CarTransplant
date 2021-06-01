@@ -78,7 +78,7 @@ export default function LoginScreen() {
             shadowRadius: 10,
           }}>
           <Image
-            source={require('../assets/logo/image1.png')}
+            source={require('../assets/logo/image_white.png')}
             style={{
               width: 80,
               height: 80,

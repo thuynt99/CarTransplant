@@ -76,13 +76,14 @@ class MapViewScreen extends React.Component {
       listAddress: [],
       key: 'startStation',
       listVehicle: [],
+      loading: false,
     };
     this.mapView = null;
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {map} = nextProps;
-    return {loading: map.loading};
+    const {map, trip} = nextProps;
+    return {loading: map.loading || trip.loading};
   }
 
   async componentDidMount() {
@@ -241,6 +242,7 @@ class MapViewScreen extends React.Component {
       endStation,
       listAddress,
       listVehicle,
+      loading,
     } = this.state;
     const {map} = this.props;
     return (
@@ -321,6 +323,9 @@ class MapViewScreen extends React.Component {
                   onPress={this.getCurrentLocation}>
                   <Icon name="my-location" type="MaterialIcons" />
                 </TouchableOpacity>
+              </Callout>
+              <Callout style={styles.spinner}>
+                {loading && <Spinner color={theme.primaryColor} />}
               </Callout>
             </View>
             <View style={styles.viewInput}>
@@ -530,9 +535,13 @@ const styles = ScaledSheet.create({
     height: responsiveHeight(25),
     zIndex: 2,
   },
+  spinner: {
+    bottom: responsiveHeight(28),
+  },
 });
 const mapStateToProps = state => ({
   map: state.map,
+  trip: state.trip,
 });
 
 const mapDispatchToProps = dispatch => ({
