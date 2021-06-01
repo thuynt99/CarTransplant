@@ -56,7 +56,7 @@ export default function TabNavigator(props) {
         name={LIST_MY_RESERVATION}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome5 name={'car-alt'} color={color} size={size} />
+            <FontAwesome5 name={'opencart'} color={color} size={size} />
           ),
         }}
         children={() => <ListMyReservation {...props} />}
