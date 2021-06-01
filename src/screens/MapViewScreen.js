@@ -12,6 +12,7 @@ import {
   Item,
   Left,
   Right,
+  Row,
   Spinner,
   Text,
   Title,
@@ -77,6 +78,8 @@ class MapViewScreen extends React.Component {
       key: 'startStation',
       listVehicle: [],
       loading: false,
+      itemCarSelected: {},
+      seat: 1,
     };
     this.mapView = null;
   }
@@ -127,6 +130,8 @@ class MapViewScreen extends React.Component {
     if (step === STEP_MAP_VIEW.ENTER_DATE) {
       await this.getTrip();
       this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
+    } else if (step === STEP_MAP_VIEW.SELECT_CAR) {
+      this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
     } else {
       this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
     }
@@ -201,8 +206,8 @@ class MapViewScreen extends React.Component {
       this.setState({listAddress: res.data});
     });
   };
-  onSelectCar = () => {
-    this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
+  onSelectCar = item => {
+    this.setState({itemCarSelected: item});
   };
   onPressAddress = item => {
     const {key} = this.state;
@@ -243,6 +248,8 @@ class MapViewScreen extends React.Component {
       listAddress,
       listVehicle,
       loading,
+      itemCarSelected,
+      seat,
     } = this.state;
     const {map} = this.props;
     return (
@@ -413,21 +420,60 @@ class MapViewScreen extends React.Component {
                 </ScrollView>
               ) : (
                 <ScrollView style={styles.date}>
+                  <Row>
+                    <Left>
+                      <Text style={styles.textTitleCar}>Số người</Text>
+                    </Left>
+                    <Right>
+                      <View style={styles.row}>
+                        {seat > 1 && (
+                          <TouchableOpacity
+                            style={styles.btnPlus}
+                            onPress={() =>
+                              this.setState({
+                                seat: seat - 1,
+                              })
+                            }>
+                            <Icon
+                              name="minus"
+                              type="Entypo"
+                              style={{color: theme.primaryColor}}
+                            />
+                          </TouchableOpacity>
+                        )}
+                        <Text style={styles.textSeat}>{seat}</Text>
+                        <TouchableOpacity
+                          style={styles.btnPlus}
+                          onPress={() =>
+                            this.setState({
+                              seat: seat + 1,
+                            })
+                          }>
+                          <Icon
+                            name="plus"
+                            type="Entypo"
+                            style={{color: theme.primaryColor}}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </Right>
+                  </Row>
                   <ListBookingCar
                     listVehicle={listVehicle}
                     onSelectCar={this.onSelectCar}
+                    itemCarSelected={itemCarSelected}
                   />
                 </ScrollView>
               )}
-              {step !== STEP_MAP_VIEW.SELECT_CAR && (
-                <Button
-                  block
-                  danger
-                  style={styles.btnNext}
-                  onPress={this.onClickBtnNext}>
-                  <Text>Tiếp theo</Text>
-                </Button>
-              )}
+              <Button
+                block
+                danger
+                style={styles.btnNext}
+                onPress={this.onClickBtnNext}>
+                <Text>
+                  {step !== STEP_MAP_VIEW.SELECT_CAR ? 'Tiếp theo' : 'Xác nhận'}
+                </Text>
+              </Button>
             </View>
           </>
         )}
@@ -538,6 +584,24 @@ const styles = ScaledSheet.create({
   spinner: {
     bottom: responsiveHeight(28),
   },
+  btnPlus: {
+    paddingHorizontal: '2@s',
+    marginHorizontal: '16@s',
+  },
+  textTitleCar: {
+    fontSize: '14@ms',
+    fontWeight: 'bold',
+    paddingLeft: '16@s',
+  },
+  textSeat: {
+    fontSize: '16@ms',
+    fontWeight: 'bold',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 const mapStateToProps = state => ({
   map: state.map,
@@ -549,6 +613,7 @@ const mapDispatchToProps = dispatch => ({
   searchAddress: query => dispatch(searchAddress(query)),
   getRouting: params => dispatch(getRouting(params)),
   findTrip: params => dispatch(findTrip(params)),
+  takeTrip: params => dispatch(takeTrip(params)),
 });
 
 export default connect(
