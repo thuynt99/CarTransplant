@@ -20,7 +20,6 @@ class ListBookingCar extends Component {
           renderItem={({item, index}) => (
             <ItemBookingCar onSelectCar={onSelectCar} key={index} item={item} />
           )}
-          keyExtractor={item => item.id}
         />
       </View>
     );

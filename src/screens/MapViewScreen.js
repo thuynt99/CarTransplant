@@ -100,7 +100,7 @@ class MapViewScreen extends React.Component {
   };
 
   getCurrentLocation = async () => {
-    getLocation().then(async (res) => {
+    getLocation().then(async res => {
       this.setState({
         myLocation: {
           latitude: res.latitude,
@@ -150,28 +150,28 @@ class MapViewScreen extends React.Component {
       },
       opt: 0,
     };
-    await this.props.findTrip(JSON.stringify(body)).then((res) => {
+    await this.props.findTrip(JSON.stringify(body)).then(res => {
       console.log('res', res);
       if (res.data && res.data.length > 0) {
         this.setState({listVehicle: res.data});
       }
     });
   };
-  onMapPress = (e) => {
+  onMapPress = e => {
     this.setState({
       coordinates: [...this.state.coordinates, e.nativeEvent.coordinate],
     });
   };
 
-  onChangeTimeStart = (date) => {
+  onChangeTimeStart = date => {
     this.setState({dateStart: date});
   };
 
-  onChangeTimeEnd = (date) => {
+  onChangeTimeEnd = date => {
     this.setState({dateEnd: date});
   };
 
-  onChangeDate = (day) => {
+  onChangeDate = day => {
     const {dateStart, dateEnd} = this.state;
     const date = day.format(FORMAT.DAY);
     const month = day.format(FORMAT.MONTH) - 1;
@@ -189,14 +189,14 @@ class MapViewScreen extends React.Component {
     this.setState({dateStart: dateNewStart, dateEnd: dateNewEnd});
   };
 
-  goToSearch = (key) => {
+  goToSearch = key => {
     this.setState({step: STEP_MAP_VIEW.SEARCH_ADDRESS, key: key});
   };
   goToMapScreen = (step = STEP_MAP_VIEW.ENTER_DATE) => {
     this.setState({step: step});
   };
-  onSearchAddress = (query) => {
-    this.props.searchAddress(query).then((res) => {
+  onSearchAddress = query => {
+    this.props.searchAddress(query).then(res => {
       console.log('searchAddress', res);
       this.setState({listAddress: res.data});
     });
@@ -204,7 +204,7 @@ class MapViewScreen extends React.Component {
   onSelectCar = () => {
     this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
   };
-  onPressAddress = (item) => {
+  onPressAddress = item => {
     const {key} = this.state;
     this.setState({[key]: item});
     if (key === 'endStation') {
@@ -214,7 +214,7 @@ class MapViewScreen extends React.Component {
         toLat: parseFloat(item.latitude),
         toLong: parseFloat(item.longitude),
       };
-      this.props.getRouting(params).then((res) => {
+      this.props.getRouting(params).then(res => {
         console.log('getRouting', res);
         if (res.status) {
           const dataTmp = res.data.routes[0];
@@ -273,7 +273,7 @@ class MapViewScreen extends React.Component {
                 </Button>
               </Callout>
               <MapView
-                ref={(MapView) => (this.MapView = MapView)}
+                ref={MapView => (this.MapView = MapView)}
                 provider="google"
                 style={styles.map}
                 showsUserLocation={true}
@@ -302,7 +302,7 @@ class MapViewScreen extends React.Component {
                   strokeColor={theme.primaryColor}
                   strokeWidth={6}
                 />
-                {coordinates.map((marker) => {
+                {coordinates.map(marker => {
                   if (marker.id === _.last(coordinates).id) {
                     return (
                       <Marker
@@ -539,15 +539,19 @@ const styles = ScaledSheet.create({
     bottom: responsiveHeight(28),
   },
 });
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   map: state.map,
+  trip: state.trip,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  getPlaceByLocation: (params) => dispatch(getPlaceByLocation(params)),
-  searchAddress: (query) => dispatch(searchAddress(query)),
-  getRouting: (params) => dispatch(getRouting(params)),
-  findTrip: (params) => dispatch(findTrip(params)),
+const mapDispatchToProps = dispatch => ({
+  getPlaceByLocation: params => dispatch(getPlaceByLocation(params)),
+  searchAddress: query => dispatch(searchAddress(query)),
+  getRouting: params => dispatch(getRouting(params)),
+  findTrip: params => dispatch(findTrip(params)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapViewScreen);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MapViewScreen);

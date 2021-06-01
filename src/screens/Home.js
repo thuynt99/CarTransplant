@@ -40,7 +40,7 @@ export default function HomeScreen() {
     },
     {
       id: 3,
-      title: 'Đi ngay',
+      title: 'Chở hàng',
       color: theme.blue_dark,
       image: 'https://img.icons8.com/plasticine/100/000000/car-theft.png',
     },
