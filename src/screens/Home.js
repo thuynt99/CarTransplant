@@ -21,6 +21,7 @@ import {
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import MyCarousel from '../components/ListPromo/MyCarousel';
+import MapViewScreen from './MapViewScreen';
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState([]);
@@ -57,63 +58,10 @@ export default function HomeScreen() {
     requestPermission();
     // getLocation();
   });
-  clickEventListener = () => {
-    navigation.navigate(MAP_VIEW);
-  };
-  return (
-    <ScrollView style={styles.container}>
-      <Header
-        androidStatusBarColor={theme.primaryColor}
-        style={{backgroundColor: theme.primaryColor}}>
-        <Left />
-        <Body />
-        <Right>
-          <Title style={styles.appName}>Car Transplant</Title>
-        </Right>
-      </Header>
-      <FlatList
-        style={styles.list}
-        contentContainerStyle={styles.listContainer}
-        data={data}
-        horizontal={false}
-        numColumns={2}
-        keyExtractor={item => {
-          return item.id;
-        }}
-        renderItem={({item}) => {
-          return (
-            <View>
-              <TouchableOpacity
-                style={[styles.card, {backgroundColor: item.color}]}
-                onPress={() => {
-                  clickEventListener(item);
-                }}>
-                <Image style={styles.cardImage} source={{uri: item.image}} />
-              </TouchableOpacity>
-
-              <View style={styles.cardHeader}>
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Text style={[styles.title, {color: item.color}]}>
-                    {item.title}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          );
-        }}
-      />
-      <TitleCustom
-        title="Ưu đãi nổi bật từ Car Transplant"
-        subTitle="Nội dung mới nhất"
-      />
-      <MyCarousel />
-      <TitleCustom
-        title="Tin tức nổi bật từ Car Transplant"
-        subTitle="Nội dung mới nhất"
-      />
-      <MyCarousel />
-    </ScrollView>
-  );
+  // clickEventListener = () => {
+  //   navigation.navigate(MAP_VIEW);
+  // };
+  return <MapViewScreen />;
 }
 
 const styles = StyleSheet.create({
