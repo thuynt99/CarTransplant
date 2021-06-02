@@ -263,15 +263,6 @@ class MapViewScreen extends React.Component {
         ) : (
           <>
             <View style={styles.mapView}>
-              <Callout style={styles.buttonBack}>
-                <Button rounded style={styles.btnBack} onPress={this.goBack}>
-                  <Icon
-                    name="arrow-back"
-                    type="MaterialIcons"
-                    style={{color: theme.primaryColor}}
-                  />
-                </Button>
-              </Callout>
               <MapView
                 ref={MapView => (this.MapView = MapView)}
                 provider="google"
