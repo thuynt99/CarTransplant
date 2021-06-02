@@ -10,12 +10,14 @@ import {
   POST,
   NOTIFICATION,
   PROFILE,
+  CAR_MANAGEMENT,
 } from '../constants';
 import {primaryColor} from '../theme';
 import HomeScreen from '../screens/Home';
 import NotificationScreen from '../screens/Notification';
 import ProfileScreen from '../screens/Profile';
 import ListMyReservation from '../screens/ListMyReservation';
+import CarManagement from '../screens/CarManagement';
 
 // import {AddButton} from '../components/AddButton';
 
@@ -42,10 +44,19 @@ export default function TabNavigator(props) {
         children={() => <HomeScreen {...props} />}
       />
       <Tab.Screen
-        name={LIST_MY_RESERVATION}
+        name={CAR_MANAGEMENT}
         options={{
           tabBarIcon: ({color, size}) => (
             <FontAwesome5 name={'car-alt'} color={color} size={size} />
+          ),
+        }}
+        children={() => <CarManagement {...props} />}
+      />
+      <Tab.Screen
+        name={LIST_MY_RESERVATION}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome5 name={'opencart'} color={color} size={size} />
           ),
         }}
         children={() => <ListMyReservation {...props} />}
