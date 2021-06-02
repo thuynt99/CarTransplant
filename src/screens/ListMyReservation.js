@@ -55,6 +55,7 @@ class ListMyReservation extends Component {
   };
   render() {
     const {listTrip, loading} = this.state;
+    console.log(listTrip);
     return (
       <Container>
         <Header
@@ -121,8 +122,25 @@ class ListMyReservation extends Component {
           />
         )}
         {_.isEmpty(listTrip) && (
-          <View>
-            <Text>Bạn chưa có chuyến nào</Text>
+          <View style={{alignSelf: 'center', flex: 1, paddingHorizontal: 30}}>
+            <Text
+              style={{
+                color: theme.grey_dark,
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}>
+              Bạn chưa có chuyến đi nào !!!
+            </Text>
+            <Text
+              style={{
+                color: theme.grey_light,
+                textAlign: 'justify',
+                fontSize: 12,
+                paddingVertical: 5,
+              }}>
+              Hãy nhớ đặt xe để tiết kiệm chi phí lên tới 60% nhé. Vui lòng quay
+              về trang chủ đặt xe và hưởng ưu đãi mới nhất từ Car Transplant!
+            </Text>
           </View>
         )}
       </Container>
