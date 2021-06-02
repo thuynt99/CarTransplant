@@ -27,11 +27,16 @@ class ListMyReservationHistory extends Component {
     return (
       <Container>
         <Content>
-          <List>
-            <ListItem noBorder>
-              <ItemReservation isHistory />
-            </ListItem>
-          </List>
+          <List
+            dataArray={this.props.data}
+            renderItem={({item}) => {
+              return (
+                <ListItem noBorder>
+                  <ItemReservation isHistory />
+                </ListItem>
+              );
+            }}
+          />
         </Content>
       </Container>
     );

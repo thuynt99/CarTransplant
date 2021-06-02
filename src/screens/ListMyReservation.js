@@ -10,6 +10,7 @@ import {
   Right,
   Title,
   Spinner,
+  View,
 } from 'native-base';
 import ListMyReservationUpComing from '../components/MyReservation/MyReservationUpcomming/ListMyReservationUpComing';
 import ListMyReservationHistory from '../components/MyReservation/MyReservationHistory/ListMyReservationHistory';
@@ -17,6 +18,8 @@ import theme from '../theme';
 import {connect} from 'react-redux';
 import {getListTripUser} from '../stores/trip/actions';
 import {PARAMS_LIST_TRIP} from '../constants/api';
+import _ from 'lodash';
+import {Text} from 'react-native';
 
 class ListMyReservation extends Component {
   constructor(props) {
@@ -47,12 +50,11 @@ class ListMyReservation extends Component {
         : currentTab === 1
         ? PARAMS_LIST_TRIP.PENDING
         : PARAMS_LIST_TRIP.HISTORY;
-    await this.props.getListTripUser(params).then(res => console.log(res));
+    await this.props.getListTripUser(params);
     this.setState({listTrip: this.props.trip.listTrip});
   };
   render() {
     const {listTrip, loading} = this.state;
-    console.log('listTrip', listTrip);
     return (
       <Container>
         <Header
@@ -117,6 +119,11 @@ class ListMyReservation extends Component {
               justifyContent: 'center',
             }}
           />
+        )}
+        {_.isEmpty(listTrip) && (
+          <View>
+            <Text>Bạn chưa có chuyến nào</Text>
+          </View>
         )}
       </Container>
     );
