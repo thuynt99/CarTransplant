@@ -291,13 +291,32 @@ class MapViewScreen extends React.Component {
           [
             {
               text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
+              onPress: () => this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS}),
               style: 'cancel',
             },
             {
               text: 'OK',
+              onPress: () => {
+                this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS});
+                this.props.navigation.navigate(LIST_MY_RESERVATION);
+              },
+            },
+          ],
+        );
+      } else {
+        Alert.alert(
+          'Đăng kí chuyến thất bại',
+          'Hãy thử lại hoặc liên hệ với chúng tôi?',
+          [
+            {
+              text: 'Thử lại',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'Liên hệ',
               onPress: () =>
-                this.props.navigation.navigate(LIST_MY_RESERVATION),
+                Linking.openURL('mailto:cartransplantvn@gmail.com'),
             },
           ],
         );
