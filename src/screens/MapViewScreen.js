@@ -160,6 +160,25 @@ class MapViewScreen extends React.Component {
       console.log('res', res);
       if (res.status) {
         this.setState({listVehicle: res.data});
+        if (_.isEmpty(res.data)) {
+          Alert.alert(
+            'Không tìm được xe thoả mãn',
+            'Bạn có muốn lưu lại chuyến đi.\n Chúng tôi sẽ tìm tài xế cho bạn sớm nhất?',
+            [
+              {
+                text: 'Cancel',
+                onPress: () =>
+                  this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS}),
+                style: 'cancel',
+              },
+              {
+                text: 'OK',
+                onPress: () =>
+                  this.props.navigation.navigate(LIST_MY_RESERVATION),
+              },
+            ],
+          );
+        }
       }
     });
   };
