@@ -27,7 +27,7 @@ export default function TabNavigator(props) {
 
   return (
     <Tab.Navigator
-      initialRouteName={MAP}
+      initialRouteName={HOME}
       tabBarOptions={{
         activeTintColor: '#161F3D',
         showLabel: false,
