@@ -21,6 +21,7 @@ import {
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import MyCarousel from '../components/ListPromo/MyCarousel';
+import MapViewScreen from './MapViewScreen';
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState([]);
@@ -62,7 +63,8 @@ export default function HomeScreen() {
   };
   return (
     <ScrollView style={styles.container}>
-      <Header
+      <MapViewScreen />
+      {/* <Header
         androidStatusBarColor={theme.primaryColor}
         style={{backgroundColor: theme.primaryColor}}>
         <Left />
@@ -111,7 +113,7 @@ export default function HomeScreen() {
         title="Tin tức nổi bật từ Car Transplant"
         subTitle="Nội dung mới nhất"
       />
-      <MyCarousel />
+      <MyCarousel /> */}
     </ScrollView>
   );
 }

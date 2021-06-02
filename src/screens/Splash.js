@@ -7,7 +7,7 @@ export default function SplashScreen() {
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={require('../assets/splash/image2.png')}
+        source={require('../assets/logo/image_white.png')}
       />
     </View>
   );
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.subPrimaryColor,
+    backgroundColor: theme.white,
   },
   title: {
     color: theme.black,
