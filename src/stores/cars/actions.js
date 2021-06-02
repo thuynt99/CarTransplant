@@ -3,6 +3,7 @@ import {
   deleteListCarAPi,
   getListMyCarApi,
   registerCarApi,
+  registerTripDriverApi,
 } from '../../services/carService';
 import {
   REGISTER_CAR,
@@ -14,6 +15,9 @@ import {
   DELETE_LIST_MY_CAR,
   DELETE_LIST_MY_CAR_SUCCESS,
   DELETE_LIST_MY_CAR_FAILED,
+  REGISTER_TRP_DRIVER,
+  REGISTER_TRP_DRIVER_SUCCESS,
+  REGISTER_TRP_DRIVER_FAILED,
 } from './action-types';
 
 export function registerCar(params) {
@@ -87,6 +91,34 @@ const processDeleteListCar = (dataJson, dispatch) => {
   } else {
     dispatch({
       type: DELETE_LIST_MY_CAR_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function registerTripDriver(params) {
+  return dispatch => {
+    dispatch({
+      type: REGISTER_TRP_DRIVER,
+    });
+    const dataJson = registerTripDriverApi(params);
+    return dataJson.then(dataJson =>
+      processRegisterTripDriver(dataJson, dispatch),
+    );
+  };
+}
+
+const processRegisterTripDriver = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: REGISTER_TRP_DRIVER_SUCCESS,
+      data: dataJson.data,
+    });
+    return dataJson;
+  } else {
+    dispatch({
+      type: REGISTER_TRP_DRIVER_FAILED,
       data: dataJson.data,
     });
     return dataJson;

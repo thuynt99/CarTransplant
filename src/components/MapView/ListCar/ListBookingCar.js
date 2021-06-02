@@ -10,7 +10,7 @@ class ListBookingCar extends Component {
     super(props);
   }
   render() {
-    const {onSelectCar, listVehicle} = this.props;
+    const {onSelectCar, listVehicle, itemCarSelected} = this.props;
     return (
       <View style={styles.container}>
         <FlatList
@@ -18,7 +18,12 @@ class ListBookingCar extends Component {
           data={listVehicle}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => (
-            <ItemBookingCar onSelectCar={onSelectCar} key={index} item={item} />
+            <ItemBookingCar
+              onSelectCar={onSelectCar}
+              key={index}
+              item={item}
+              itemCarSelected={itemCarSelected}
+            />
           )}
         />
       </View>
@@ -29,6 +34,8 @@ class ListBookingCar extends Component {
 const styles = ScaledSheet.create({
   container: {
     // flex: 1,
+    paddingTop: '5@vs',
+    paddingBottom: '10@vs',
   },
 });
 
