@@ -52,4 +52,5 @@ export const STEP_MAP_VIEW = {
   SELECT_CAR: 3,
   SEARCH_ADDRESS: 4,
   CONFIRM_TRIP: 5,
+  ENTER_KM: 6,
 };

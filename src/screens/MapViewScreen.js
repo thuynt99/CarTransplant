@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
+import {StyleSheet, View, Dimensions, Alert} from 'react-native';
 import {
   Body,
   Button,
@@ -10,8 +10,10 @@ import {
   Icon,
   Input,
   Item,
+  Label,
   Left,
   Right,
+  Row,
   Spinner,
   Text,
   Title,
@@ -47,6 +49,8 @@ import ConfirmTrip from '../components/MapView/ConfirmTrip/ConfirmTrip';
 import {STEP_MAP_VIEW} from '../constants/data';
 import {findTrip} from '../stores/trip/actions';
 import axios from 'axios';
+import {getListMyCar, registerTripDriver} from '../stores/cars/actions';
+import {LIST_MY_RESERVATION} from '../constants';
 
 const {width, height} = Dimensions.get('window');
 
@@ -77,6 +81,10 @@ class MapViewScreen extends React.Component {
       key: 'startStation',
       listVehicle: [],
       loading: false,
+      itemCarSelected: {},
+      seat: 1,
+      max_distance: '',
+      fee_each_km: '',
     };
     this.mapView = null;
   }
@@ -111,6 +119,15 @@ class MapViewScreen extends React.Component {
     });
   };
 
+  getListMyCar = async () => {
+    await this.props
+      .getListMyCar({
+        limit: 20,
+      })
+      .then(res => {
+        this.setState({listVehicle: this.props.car.listMyCar});
+      });
+  };
   goBack = () => {
     const {step} = this.state;
     if (step === STEP_MAP_VIEW.ENTER_ADDRESS) {
@@ -119,14 +136,20 @@ class MapViewScreen extends React.Component {
       this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS});
     } else if (step === STEP_MAP_VIEW.SELECT_CAR) {
       this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
+    } else if (step === STEP_MAP_VIEW.ENTER_KM) {
+      this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
     }
   };
 
   onClickBtnNext = async () => {
     const {step} = this.state;
     if (step === STEP_MAP_VIEW.ENTER_DATE) {
-      await this.getTrip();
+      await this.getListMyCar();
       this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
+    } else if (step === STEP_MAP_VIEW.SELECT_CAR) {
+      this.setState({step: STEP_MAP_VIEW.ENTER_KM});
+    } else if (step === STEP_MAP_VIEW.ENTER_KM) {
+      this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
     } else {
       this.setState({step: STEP_MAP_VIEW.ENTER_DATE});
     }
@@ -188,7 +211,9 @@ class MapViewScreen extends React.Component {
     });
     this.setState({dateStart: dateNewStart, dateEnd: dateNewEnd});
   };
-
+  onChangeText = (text, key) => {
+    this.setState({[key]: text});
+  };
   goToSearch = key => {
     this.setState({step: STEP_MAP_VIEW.SEARCH_ADDRESS, key: key});
   };
@@ -201,8 +226,8 @@ class MapViewScreen extends React.Component {
       this.setState({listAddress: res.data});
     });
   };
-  onSelectCar = () => {
-    this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
+  onSelectCar = item => {
+    this.setState({itemCarSelected: item});
   };
   onPressAddress = item => {
     const {key} = this.state;
@@ -231,6 +256,73 @@ class MapViewScreen extends React.Component {
       });
     }
   };
+  onClickConfirmTrip = async () => {
+    const {
+      itemCarSelected,
+      startStation,
+      endStation,
+      dateStart,
+      dateEnd,
+      max_distance,
+      fee_each_km,
+      seat,
+    } = this.state;
+    const body = {
+      car_id: itemCarSelected.id,
+      begin_leave_time: dateStart.unix(),
+      end_leave_time: dateEnd.unix(),
+      from: {
+        latitude: startStation.latitude,
+        longitude: startStation.longitude,
+      },
+      to: {
+        latitude: endStation.latitude,
+        longitude: endStation.longitude,
+      },
+      max_distance: parseFloat(max_distance),
+      fee_each_km: parseFloat(fee_each_km),
+      seat,
+    };
+    await this.props.registerTripDriver(JSON.stringify(body)).then(res => {
+      if (res.status) {
+        Alert.alert(
+          'Đăng kí chuyến thành công',
+          'Đi đễn màn hình chuyến đi của bạn?',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS}),
+              style: 'cancel',
+            },
+            {
+              text: 'OK',
+              onPress: () => {
+                this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS});
+                this.props.navigation.navigate(LIST_MY_RESERVATION);
+              },
+            },
+          ],
+        );
+      } else {
+        Alert.alert(
+          'Đăng kí chuyến thất bại',
+          'Hãy thử lại hoặc liên hệ với chúng tôi?',
+          [
+            {
+              text: 'Thử lại',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'Liên hệ',
+              onPress: () =>
+                Linking.openURL('mailto:cartransplantvn@gmail.com'),
+            },
+          ],
+        );
+      }
+    });
+  };
   render() {
     const {
       step,
@@ -243,6 +335,10 @@ class MapViewScreen extends React.Component {
       listAddress,
       listVehicle,
       loading,
+      itemCarSelected,
+      seat,
+      max_distance,
+      fee_each_km,
     } = this.state;
     const {map} = this.props;
     return (
@@ -258,11 +354,31 @@ class MapViewScreen extends React.Component {
           />
         ) : step === STEP_MAP_VIEW.CONFIRM_TRIP ? (
           <ConfirmTrip
-            goToMapScreen={() => this.goToMapScreen(STEP_MAP_VIEW.SELECT_CAR)}
+            goToMapScreen={() => this.goToMapScreen(STEP_MAP_VIEW.ENTER_KM)}
+            startStation={startStation}
+            endStation={endStation}
+            dateStart={dateStart}
+            dateEnd={dateEnd}
+            seat={seat}
+            max_distance={max_distance}
+            fee_each_km={fee_each_km}
+            itemCarSelected={itemCarSelected}
+            onClickConfirmTrip={this.onClickConfirmTrip}
           />
         ) : (
           <>
             <View style={styles.mapView}>
+              {step !== STEP_MAP_VIEW.ENTER_ADDRESS && (
+                <Callout style={styles.buttonBack}>
+                  <Button rounded style={styles.btnBack} onPress={this.goBack}>
+                    <Icon
+                      name="arrow-back"
+                      type="MaterialIcons"
+                      style={{color: theme.primaryColor}}
+                    />
+                  </Button>
+                </Callout>
+              )}
               <MapView
                 ref={MapView => (this.MapView = MapView)}
                 provider="google"
@@ -402,23 +518,92 @@ class MapViewScreen extends React.Component {
                     onChangeTimeEnd={this.onChangeTimeEnd}
                   />
                 </ScrollView>
-              ) : (
+              ) : step === STEP_MAP_VIEW.SELECT_CAR ? (
                 <ScrollView style={styles.date}>
+                  <Row>
+                    <Left>
+                      <Text style={styles.textTitleCar}>Số người</Text>
+                    </Left>
+                    <Right>
+                      <View style={styles.row}>
+                        {seat > 1 && (
+                          <TouchableOpacity
+                            style={styles.btnPlus}
+                            onPress={() =>
+                              this.setState({
+                                seat: seat - 1,
+                              })
+                            }>
+                            <Icon
+                              name="minus"
+                              type="Entypo"
+                              style={{color: theme.primaryColor}}
+                            />
+                          </TouchableOpacity>
+                        )}
+                        <Text style={styles.textSeat}>{seat}</Text>
+                        <TouchableOpacity
+                          style={styles.btnPlus}
+                          onPress={() =>
+                            this.setState({
+                              seat: seat + 1,
+                            })
+                          }>
+                          <Icon
+                            name="plus"
+                            type="Entypo"
+                            style={{color: theme.primaryColor}}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </Right>
+                  </Row>
                   <ListBookingCar
                     listVehicle={listVehicle}
                     onSelectCar={this.onSelectCar}
+                    itemCarSelected={itemCarSelected}
                   />
                 </ScrollView>
+              ) : (
+                <Form>
+                  <Item fixedLabel style={styles.textInput}>
+                    <Label>Giá tiền theo km</Label>
+                    <Input
+                      rounded
+                      placeholder="VND/km"
+                      value={fee_each_km}
+                      ellipsizeMode="head"
+                      onChangeText={text =>
+                        this.onChangeText(text, 'fee_each_km')
+                      }
+                      keyboardType="numeric"
+                    />
+                  </Item>
+                  <Item fixedLabel style={styles.textInput}>
+                    <Label>Khoảng cách đón tối đa</Label>
+                    <Input
+                      rounded
+                      placeholder="km"
+                      value={max_distance}
+                      onChangeText={text =>
+                        this.onChangeText(text, 'max_distance')
+                      }
+                      keyboardType="numeric"
+                    />
+                  </Item>
+                </Form>
               )}
-              {step !== STEP_MAP_VIEW.SELECT_CAR && (
+              {
                 <Button
                   block
                   danger
                   style={styles.btnNext}
                   onPress={this.onClickBtnNext}>
-                  <Text>Tiếp theo</Text>
+                  <Text>
+                    {step === STEP_MAP_VIEW.ENTER_KM ? 'Xác nhận' : 'Tiếp theo'}
+                  </Text>
                 </Button>
-              )}
+              }
             </View>
           </>
         )}
@@ -529,10 +714,29 @@ const styles = ScaledSheet.create({
   spinner: {
     bottom: responsiveHeight(28),
   },
+  btnPlus: {
+    paddingHorizontal: '2@s',
+    marginHorizontal: '16@s',
+  },
+  textTitleCar: {
+    fontSize: '14@ms',
+    fontWeight: 'bold',
+    paddingLeft: '16@s',
+  },
+  textSeat: {
+    fontSize: '16@ms',
+    fontWeight: 'bold',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 const mapStateToProps = state => ({
   map: state.map,
   trip: state.trip,
+  car: state.car,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -540,6 +744,8 @@ const mapDispatchToProps = dispatch => ({
   searchAddress: query => dispatch(searchAddress(query)),
   getRouting: params => dispatch(getRouting(params)),
   findTrip: params => dispatch(findTrip(params)),
+  getListMyCar: params => dispatch(getListMyCar(params)),
+  registerTripDriver: params => dispatch(registerTripDriver(params)),
 });
 
 export default connect(

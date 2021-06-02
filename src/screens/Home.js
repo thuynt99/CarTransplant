@@ -61,7 +61,7 @@ export default function HomeScreen() {
   // clickEventListener = () => {
   //   navigation.navigate(MAP_VIEW);
   // };
-  return <MapViewScreen />;
+  return <MapViewScreen navigation={navigation} />;
 }
 
 const styles = StyleSheet.create({

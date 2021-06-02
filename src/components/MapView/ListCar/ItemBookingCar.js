@@ -11,42 +11,36 @@ class ItemBookingCar extends Component {
     super(props);
   }
   render() {
-    const {onSelectCar, item} = this.props;
-    const price = item?.price.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'VND',
-    });
-    return (
-      <Card>
-        <TouchableOpacity onPress={onSelectCar} style={styles.btn}>
-          <Image
-            style={{
-              width: 50,
-              height: 50,
-            }}
-            source={{
-              uri: 'https://img.icons8.com/dusk/64/000000/car--v1.png',
-            }}
-          />
-          <View styles={styles.left}>
-            <View style={styles.view}>
-              <Text>
-                <Text style={styles.textPrice}>{item?.car?.model}</Text>
-                <Text> - {item?.car?.color}</Text>
-              </Text>
+    const {onSelectCar, item, itemCarSelected} = this.props;
 
-              <Text style={styles.textCar}>Xe 5 chỗ</Text>
+    const selected = item?.id === itemCarSelected?.id;
+    return (
+      <Card style={{borderRadius: 8}}>
+        <TouchableOpacity
+          onPress={() => onSelectCar(item)}
+          style={selected ? styles.btnSelect : styles.btn}>
+          <CardItem>
+            <Image
+              style={{
+                width: 50,
+                height: 50,
+              }}
+              source={{
+                uri: 'https://img.icons8.com/dusk/64/000000/car--v1.png',
+              }}
+            />
+            <View styles={styles.left}>
+              <View style={styles.view}>
+                <Text style={styles.textPrice}>
+                  <Text>{item?.model}</Text>
+                  <Text> - {item?.color}</Text>
+                </Text>
+
+                <Text style={styles.textCar}>{item.licensePlate}</Text>
+              </View>
             </View>
-          </View>
-          <View>
-            <Text style={styles.textPrice}>{price}</Text>
-            <Text style={styles.textPriceNormal}>
-              {(2 * item?.price).toLocaleString('it-IT', {
-                style: 'currency',
-                currency: 'VND',
-              })}
-            </Text>
-          </View>
+            <Right />
+          </CardItem>
         </TouchableOpacity>
       </Card>
     );
@@ -89,6 +83,51 @@ const styles = ScaledSheet.create({
     borderRadius: 8,
     paddingHorizontal: '16@s',
     paddingVertical: '8@vs',
+  },
+  item: {
+    paddingHorizontal: '8@s',
+    marginVertical: '16@vs',
+    borderRadius: 8,
+  },
+  list: {
+    paddingHorizontal: '16@s',
+    marginVertical: '16@s',
+  },
+  view: {
+    paddingLeft: '20@s',
+  },
+  textPrice: {
+    fontSize: '14@ms',
+    color: theme.grey_dark_30,
+    fontWeight: 'bold',
+  },
+  textCar: {
+    fontSize: '13@ms',
+    color: theme.grey_dark,
+  },
+  checkboxStyle: {
+    width: '24@ms',
+    height: '24@ms',
+    borderRadius: '24@ms',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bottom: {
+    flexDirection: 'row',
+  },
+  btnSelect: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderRadius: 8,
+    paddingHorizontal: '8@s',
+    borderColor: theme.primaryColor,
+    borderWidth: 1,
+  },
+  btn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderRadius: 8,
+    paddingHorizontal: '8@s',
   },
 });
 
