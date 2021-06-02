@@ -39,7 +39,7 @@ export default class ConfirmTrip extends Component {
     } = this.props;
     const [start] = _.split(startStation?.display_name, ',').slice(-3);
     const [end] = _.split(endStation?.display_name, ',').slice(-3);
-    const price = fee_each_km?.toLocaleString('it-IT', {
+    const price = parseFloat(fee_each_km).toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
@@ -174,7 +174,7 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Giá tiền:</Text>
               </Left>
               <Right>
-                <Text style={styles.price}>{price} VND/km</Text>
+                <Text style={styles.price}>{price}/km</Text>
               </Right>
             </Item>
             <View style={styles.note}>
@@ -184,14 +184,14 @@ export default class ConfirmTrip extends Component {
                 sân bay, phí đỗ xe,...)
               </Text>
               <Text style={styles.textNote}>
-                Bạn vui lòng THANH TOÁN THÊM các loại phí này cho tài xế nếu có
-                phát sinh trong quá trình di chuyển
+                Khách hàng sẽ phải THANH TOÁN THÊM các loại phí này cho tài xế
+                nếu có phát sinh trong quá trình di chuyển
               </Text>
             </View>
             <Textarea
               rowSpan={5}
               bordered
-              placeholder="Ghi chú cho tài xế..."
+              placeholder="Ghi chú thêm..."
               style={styles.input}
             />
           </ScrollView>

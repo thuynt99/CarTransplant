@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
+import {StyleSheet, View, Dimensions, Alert} from 'react-native';
 import {
   Body,
   Button,
@@ -50,6 +50,7 @@ import {STEP_MAP_VIEW} from '../constants/data';
 import {findTrip} from '../stores/trip/actions';
 import axios from 'axios';
 import {getListMyCar, registerTripDriver} from '../stores/cars/actions';
+import {LIST_MY_RESERVATION} from '../constants';
 
 const {width, height} = Dimensions.get('window');
 
@@ -82,8 +83,8 @@ class MapViewScreen extends React.Component {
       loading: false,
       itemCarSelected: {},
       seat: 1,
-      max_distance: 0,
-      fee_each_km: 0,
+      max_distance: '',
+      fee_each_km: '',
     };
     this.mapView = null;
   }
@@ -283,7 +284,24 @@ class MapViewScreen extends React.Component {
       seat,
     };
     await this.props.registerTripDriver(JSON.stringify(body)).then(res => {
-      console.log('dat trip', res);
+      if (res.status) {
+        Alert.alert(
+          'Đăng kí chuyến thành công',
+          'Đi đễn màn hình chuyến đi của bạn?',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'OK',
+              onPress: () =>
+                this.props.navigation.navigate(LIST_MY_RESERVATION),
+            },
+          ],
+        );
+      }
     });
   };
   render() {
@@ -539,6 +557,7 @@ class MapViewScreen extends React.Component {
                       onChangeText={text =>
                         this.onChangeText(text, 'fee_each_km')
                       }
+                      keyboardType="numeric"
                     />
                   </Item>
                   <Item fixedLabel style={styles.textInput}>
@@ -550,6 +569,7 @@ class MapViewScreen extends React.Component {
                       onChangeText={text =>
                         this.onChangeText(text, 'max_distance')
                       }
+                      keyboardType="numeric"
                     />
                   </Item>
                 </Form>

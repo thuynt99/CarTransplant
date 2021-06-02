@@ -38,7 +38,6 @@ export default class ListMyReservation extends Component {
             heading="Sắp tới"
             tabStyle={{
               backgroundColor: theme.white,
-              color: theme.white,
             }}
             activeTabStyle={{
               backgroundColor: theme.white,
@@ -51,7 +50,6 @@ export default class ListMyReservation extends Component {
             heading="Lịch sử"
             tabStyle={{
               backgroundColor: theme.white,
-              color: theme.white,
             }}
             activeTabStyle={{
               backgroundColor: theme.white,
