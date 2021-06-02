@@ -269,7 +269,7 @@ class MapViewScreen extends React.Component {
     const body = {
       car_id: itemCarSelected.id,
       begin_leave_time: dateStart.unix(),
-      end_leave_time: dateStart.unix(),
+      end_leave_time: dateEnd.unix(),
       from: {
         latitude: startStation.latitude,
         longitude: startStation.longitude,
@@ -278,8 +278,8 @@ class MapViewScreen extends React.Component {
         latitude: endStation.latitude,
         longitude: endStation.longitude,
       },
-      max_distance,
-      fee_each_km,
+      max_distance: parseFloat(max_distance),
+      fee_each_km: parseFloat(fee_each_km),
       seat,
     };
     await this.props.registerTripDriver(JSON.stringify(body)).then(res => {
