@@ -27,11 +27,16 @@ class ListMyReservationUpComing extends Component {
     return (
       <Container>
         <Content>
-          <List>
-            <ListItem noBorder>
-              <ItemReservation />
-            </ListItem>
-          </List>
+          <List
+            dataArray={this.props.data}
+            renderItem={({item}) => {
+              return (
+                <ListItem noBorder>
+                  <ItemReservation item={item} />
+                </ListItem>
+              );
+            }}
+          />
         </Content>
       </Container>
     );

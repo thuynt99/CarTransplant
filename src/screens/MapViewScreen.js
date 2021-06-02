@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
+import {StyleSheet, View, Dimensions, Alert} from 'react-native';
 import {
   Body,
   Button,
@@ -46,7 +46,7 @@ import {
 import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
 import ConfirmTrip from '../components/MapView/ConfirmTrip/ConfirmTrip';
 import {STEP_MAP_VIEW} from '../constants/data';
-import {findTrip} from '../stores/trip/actions';
+import {findTrip, takeTrip} from '../stores/trip/actions';
 import axios from 'axios';
 import {LIST_MY_RESERVATION} from '../constants';
 

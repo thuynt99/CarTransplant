@@ -9,6 +9,7 @@ import {
   Body,
   Right,
   Title,
+  Spinner,
 } from 'native-base';
 import ListMyReservationUpComing from '../components/MyReservation/MyReservationUpcomming/ListMyReservationUpComing';
 import ListMyReservationHistory from '../components/MyReservation/MyReservationHistory/ListMyReservationHistory';
@@ -31,9 +32,11 @@ class ListMyReservation extends Component {
     const {trip} = nextProps;
     return {loading: trip.loading, listTrip: trip.listTrip};
   }
-
-  onChangeTab = () => {
-    this.setState({currentTab: i});
+  componentDidMount() {
+    this.getListTripUser();
+  }
+  onChangeTab = i => {
+    this.setState({currentTab: i}, this.getListTripUser);
     console.log(i);
   };
   getListTripUser = async () => {
@@ -44,11 +47,12 @@ class ListMyReservation extends Component {
         : currentTab === 1
         ? PARAMS_LIST_TRIP.PENDING
         : PARAMS_LIST_TRIP.HISTORY;
-    await this.props.getListTripUser(params);
+    await this.props.getListTripUser(params).then(res => console.log(res));
+    this.setState({listTrip: this.props.trip.listTrip});
   };
   render() {
     const {listTrip, loading} = this.state;
-    console.log(listTrip);
+    console.log('listTrip', listTrip);
     return (
       <Container>
         <Header
@@ -62,21 +66,12 @@ class ListMyReservation extends Component {
           </Body>
           <Right style={{flex: 1}} />
         </Header>
-        {loading && (
-          <Spinner
-            color={theme.primaryColor}
-            style={{
-              alignSelf: 'center',
-              justifyContent: 'center',
-            }}
-          />
-        )}
         <Tabs
           tabBarBackgroundColor="#fff"
           headerTintColor="#fff"
           tabBarUnderlineStyle={{backgroundColor: theme.primaryColor}}
           tabBarPosition="top"
-          onChangeTab={({i}) => this.onChangeTab}>
+          onChangeTab={({i}) => this.onChangeTab(i)}>
           <Tab
             heading="Sắp tới"
             tabStyle={{
@@ -114,6 +109,15 @@ class ListMyReservation extends Component {
             <ListMyReservationHistory data={listTrip} />
           </Tab>
         </Tabs>
+        {loading && (
+          <Spinner
+            color={theme.primaryColor}
+            style={{
+              alignSelf: 'center',
+              justifyContent: 'center',
+            }}
+          />
+        )}
       </Container>
     );
   }

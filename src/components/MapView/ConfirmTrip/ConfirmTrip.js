@@ -15,6 +15,7 @@ import {
   Button,
   Row,
 } from 'native-base';
+import moment from 'moment';
 import {Image} from 'react-native';
 import HeaderCustom from '../../common/HeaderCustom';
 import {ScaledSheet} from 'react-native-size-matters';
@@ -33,8 +34,8 @@ export default class ConfirmTrip extends Component {
       seat,
       onClickConfirmTrip,
     } = this.props;
-    const [start] = _.split(startStation, ',').slice(-3);
-    const [end] = _.split(endStation, ',').slice(-3);
+    const [start] = _.split(startStation?.display_name, ',').slice(-3);
+    const [end] = _.split(endStation?.display_name, ',').slice(-3);
 
     return (
       <Container style={styles.container}>
@@ -268,6 +269,7 @@ const styles = ScaledSheet.create({
     paddingVertical: '10@vs',
     color: theme.grey_dark_30,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   textNote: {
     paddingVertical: '8@vs',

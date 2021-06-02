@@ -82,6 +82,7 @@ const processGetListTripUser = (dataJson, dispatch) => {
       type: GET_LIST_TRIP_USER_SUCCESS,
       data: dataJson.data,
     });
+    console.log('dataJson', dataJson);
     return dataJson;
   } else {
     dispatch({

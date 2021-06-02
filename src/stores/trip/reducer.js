@@ -27,6 +27,7 @@ export default function tripReducer(state = initialState, action = {}) {
     case GET_LIST_TRIP_USER_SUCCESS:
       return {
         ...state,
+        loading: false,
         listTrip: action.data,
       };
     case FIND_TRIP_SUCCESS:

@@ -11,5 +11,5 @@ export const takeTripApi = params => {
   return api.post(takeTripUrl, params);
 };
 export const getListTripUserUApi = params => {
-  return api.get(getListTripUserUrl, params);
+  return api.get(getListTripUserUrl, {state: params});
 };
