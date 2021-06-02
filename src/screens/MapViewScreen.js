@@ -48,6 +48,7 @@ import ConfirmTrip from '../components/MapView/ConfirmTrip/ConfirmTrip';
 import {STEP_MAP_VIEW} from '../constants/data';
 import {findTrip} from '../stores/trip/actions';
 import axios from 'axios';
+import {LIST_MY_RESERVATION} from '../constants';
 
 const {width, height} = Dimensions.get('window');
 
@@ -157,7 +158,7 @@ class MapViewScreen extends React.Component {
     };
     await this.props.findTrip(JSON.stringify(body)).then(res => {
       console.log('res', res);
-      if (res.data && res.data.length > 0) {
+      if (res.status) {
         this.setState({listVehicle: res.data});
       }
     });
@@ -236,6 +237,49 @@ class MapViewScreen extends React.Component {
       });
     }
   };
+  onClickConfirmTrip = async () => {
+    const {startStation, endStation, dateStart, dateEnd, seat} = this.state;
+    const body = {
+      begin_leave_time: dateStart.unix(),
+      end_leave_time: dateEnd.unix(),
+      from: {
+        latitude: startStation.latitude,
+        longitude: startStation.longitude,
+      },
+      to: {
+        latitude: endStation.latitude,
+        longitude: endStation.longitude,
+      },
+      seat,
+    };
+    this.props.takeTrip(JSON.stringify(body)).then(res => {
+      if (res.status) {
+        Alert.alert('Đặt xe thành công', 'Đi đễn màn hình chuyến đi của bạn?', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => this.props.navigation.navigate(LIST_MY_RESERVATION),
+          },
+        ]);
+      } else {
+        Alert.alert('Đặt xe thất bại', 'Hãy thử đặt chuyến lại?', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS}),
+          },
+        ]);
+      }
+    });
+  };
   render() {
     const {
       step,
@@ -271,6 +315,7 @@ class MapViewScreen extends React.Component {
             dateStart={dateStart}
             dateEnd={dateEnd}
             seat={seat}
+            onClickConfirmTrip={this.onClickConfirmTrip}
           />
         ) : (
           <>
@@ -463,11 +508,13 @@ class MapViewScreen extends React.Component {
                       </View>
                     </Right>
                   </Row>
-                  <ListBookingCar
-                    listVehicle={listVehicle}
-                    onSelectCar={this.onSelectCar}
-                    itemCarSelected={itemCarSelected}
-                  />
+                  {!_.isEmpty(listVehicle) && (
+                    <ListBookingCar
+                      listVehicle={listVehicle}
+                      onSelectCar={this.onSelectCar}
+                      itemCarSelected={itemCarSelected}
+                    />
+                  )}
                 </ScrollView>
               )}
               <Button

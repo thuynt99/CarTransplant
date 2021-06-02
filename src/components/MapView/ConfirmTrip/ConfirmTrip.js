@@ -20,18 +20,31 @@ import HeaderCustom from '../../common/HeaderCustom';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../../theme';
 import {ScrollView} from 'react-native-gesture-handler';
+import _ from 'lodash';
+import {FORMAT} from '../../../constants/format';
 export default class ConfirmTrip extends Component {
   render() {
-    const {goToMapScreen} = this.props;
+    const {
+      goToMapScreen,
+      startStation,
+      endStation,
+      dateStart,
+      dateEnd,
+      seat,
+      onClickConfirmTrip,
+    } = this.props;
+    const [start] = _.split(startStation, ',').slice(-3);
+    const [end] = _.split(endStation, ',').slice(-3);
+
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Xác nhận đặt chuyến" onGoBack={goToMapScreen} />
         <Content>
           <ScrollView style={styles.view}>
-            <Text style={styles.id}>Mã đặt chuyến: #CA31176</Text>
+            {/* <Text style={styles.id}>Mã đặt chuyến: #CA31176</Text> */}
             <Row>
               <Left>
-                <Text style={styles.from}>Hà Nội</Text>
+                <Text style={styles.from}>{start}</Text>
               </Left>
               <Body>
                 <Image
@@ -43,7 +56,7 @@ export default class ConfirmTrip extends Component {
                 />
               </Body>
               <Right>
-                <Text style={styles.from}>Vĩnh Phúc</Text>
+                <Text style={styles.from}>{end}</Text>
               </Right>
             </Row>
             <Item style={styles.item}>
@@ -58,7 +71,7 @@ export default class ConfirmTrip extends Component {
                     <Text style={styles.subTitle}>Điểm đón:</Text>
                   </View>
                   <Text style={styles.textLocation}>
-                    1096 Đường Láng, Yên Hòa, Đống Đa, Hà Nội
+                    {startStation?.display_name}
                   </Text>
                 </View>
                 <View>
@@ -71,7 +84,7 @@ export default class ConfirmTrip extends Component {
                     <Text style={styles.subTitle}>Điểm đến:</Text>
                   </View>
                   <Text style={styles.textLocation}>
-                    Thái Hòa, Lập Thạch, Vĩnh Phúc
+                    {endStation?.display_name}
                   </Text>
                 </View>
               </View>
@@ -86,18 +99,31 @@ export default class ConfirmTrip extends Component {
             </Item>
             <Item style={styles.item}>
               <Left>
+                <Text style={styles.subTitle}>Số người:</Text>
+              </Left>
+              <Right>
+                <Text style={styles.textValue}>{seat}</Text>
+              </Right>
+            </Item>
+            <Item style={styles.item}>
+              <Left>
                 <Text style={styles.subTitle}>Loại xe:</Text>
               </Left>
               <Right>
                 <Text style={styles.textValue}>5 chỗ</Text>
               </Right>
             </Item>
+
             <Item style={styles.item}>
               <Left>
                 <Text style={styles.subTitle}>Lịch trình:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>09:30 đến 11:00 15/05/2021</Text>
+                <Text style={styles.textValue}>
+                  từ {moment(dateStart).format(FORMAT.TIME)} đến{' '}
+                  {moment(dateEnd).format(FORMAT.TIME)} ngày{' '}
+                  {moment(dateStart).format(FORMAT.DATE)}
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -142,7 +168,11 @@ export default class ConfirmTrip extends Component {
               style={styles.input}
             />
           </ScrollView>
-          <Button danger full style={styles.btnConfirm}>
+          <Button
+            danger
+            full
+            style={styles.btnConfirm}
+            onPress={onClickConfirmTrip}>
             <Text>Xác nhận đặt xe</Text>
           </Button>
         </Content>

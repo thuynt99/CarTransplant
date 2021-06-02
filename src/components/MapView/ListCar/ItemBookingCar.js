@@ -12,11 +12,11 @@ class ItemBookingCar extends Component {
   }
   render() {
     const {onSelectCar, item, itemCarSelected} = this.props;
-    const price = item?.price.toLocaleString('it-IT', {
+    const price = item?.price?.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
-    const selected = item.car.id === itemCarSelected.car.id;
+    const selected = item?.car?.id === itemCarSelected?.car?.id;
     return (
       <Card>
         <TouchableOpacity onPress={() => onSelectCar(item)} style={styles.btn}>
