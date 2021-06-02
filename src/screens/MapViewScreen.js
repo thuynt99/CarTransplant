@@ -266,6 +266,11 @@ class MapViewScreen extends React.Component {
         ) : step === STEP_MAP_VIEW.CONFIRM_TRIP ? (
           <ConfirmTrip
             goToMapScreen={() => this.goToMapScreen(STEP_MAP_VIEW.SELECT_CAR)}
+            startStation={startStation}
+            endStation={endStation}
+            dateStart={dateStart}
+            dateEnd={dateEnd}
+            seat={seat}
           />
         ) : (
           <>
