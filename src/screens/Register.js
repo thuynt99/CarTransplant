@@ -85,10 +85,10 @@ export default function RegisterScreen() {
 
       <Formik
         initialValues={{
-          fullName: 'Trinh Chin Chin',
-          phone: '0704498756',
-          email: 'trinhchinchin@gmail.com',
-          password: '123456',
+          fullName: '',
+          phone: '',
+          email: '',
+          password: '',
         }}
         validationSchema={RegisterSchema}
         onSubmit={values => {

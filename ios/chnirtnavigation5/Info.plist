@@ -39,6 +39,25 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Car Transplant yêu cầu quyền truy cập vị trí của bạn</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>comgooglemaps</string>
+		<string>citymapper</string>
+		<string>lyft</string>
+		<string>transit</string>
+		<string>waze</string>
+		<string>yandexnavi</string>
+		<string>moovit</string>
+		<string>yandexmaps</string>
+		<string>message</string>
+    	<string>readdle-spark</string>
+   		<string>airmail</string>
+    	<string>ms-outlook</string>
+    	<string>googlegmail</string>
+    	<string>inbox-gmail</string>
+    	<string>ymail</string>
+    	<string>superhuman</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

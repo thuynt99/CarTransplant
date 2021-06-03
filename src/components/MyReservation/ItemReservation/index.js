@@ -23,23 +23,30 @@ import {Rating} from 'react-native-ratings';
 import {TRIP_DETAIL} from '../../../constants';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
-
+import moment from 'moment';
+import {FORMAT} from '../../../constants/format';
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
-  const {isHistory} = props;
+  const {isHistory, item} = props;
   function onClick() {
-    navigate(TRIP_DETAIL);
+    navigate(TRIP_DETAIL, {item: item});
   }
+
   return (
     <Card style={styles.card}>
       <TouchableOpacity onPress={onClick}>
         <Item style={styles.top}>
           <Left>
-            <Text>Ngày 15/05/2021</Text>
+            <Text>
+              Ngày {moment.unix(item?.beginLeaveTime).format(FORMAT.DATE)}
+            </Text>
           </Left>
           <Right>
-            <Text>11:40 đến 12:10</Text>
+            <Text>
+              {moment.unix(item?.beginLeaveTime).format(FORMAT.TIME)} đến{' '}
+              {moment.unix(item?.endLeaveTime).format(FORMAT.TIME)}{' '}
+            </Text>
           </Right>
         </Item>
         <Item style={styles.center}>
@@ -53,9 +60,7 @@ export const ItemReservation = props => {
                 />
                 <Text style={styles.subTitle}>Điểm đón:</Text>
               </View>
-              <Text style={styles.textLocation}>
-                1096 Đường Láng, Yên Hòa, Đống Đa, Hà Nội
-              </Text>
+              <Text style={styles.textLocation}>{item?.from}</Text>
             </View>
             <View>
               <View style={styles.location}>
@@ -66,9 +71,7 @@ export const ItemReservation = props => {
                 />
                 <Text style={styles.subTitle}>Điểm đến:</Text>
               </View>
-              <Text style={styles.textLocation}>
-                Thái Hòa, Lập Thạch, Vĩnh Phúc
-              </Text>
+              <Text style={styles.textLocation}>{item?.to}</Text>
             </View>
           </Left>
         </Item>
@@ -84,14 +87,16 @@ export const ItemReservation = props => {
                       borderRadius: 50,
                     }}
                     source={{
-                      uri: 'https://reactnative.dev/img/tiny_logo.png',
+                      uri: item?.driver?.Avatar,
                     }}
                   />
                   <View style={styles.viewDriver}>
-                    <Text style={styles.name}>John Smith</Text>
+                    <Text style={styles.name}>{item?.driver?.FullName}</Text>
                     <Rating ratingCount={5} imageSize={16} />
                     <View style={styles.vehicleInfo}>
-                      <Text style={styles.textVehicleInfo}>14A-527.01</Text>
+                      <Text style={styles.textVehicleInfo}>
+                        {item?.car?.licensePlate}
+                      </Text>
                     </View>
                   </View>
                 </Row>
@@ -104,13 +109,22 @@ export const ItemReservation = props => {
                   </View>
                   <View>
                     <Text style={styles.subTitle}>Giá tiền</Text>
-                    <Text style={styles.value}>300.000</Text>
+                    <Text style={styles.value}>
+                      {item?.price?.toLocaleString('it-IT', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })}
+                    </Text>
                   </View>
                 </Row>
               </Right>
             </Item>
             <Row style={styles.stateView}>
-              <Text style={styles.state}>Khách hàng đã hủy chuyến</Text>
+              <Text style={styles.state}>
+                {item?.state === 3
+                  ? 'Chuyến đã hoàn thành'
+                  : 'Khách hàng đã hủy chuyến'}
+              </Text>
             </Row>
           </>
         ) : (
@@ -119,7 +133,7 @@ export const ItemReservation = props => {
               <Left>
                 <Text style={styles.subTitle}>
                   Mã chuyến đi:
-                  <Text style={styles.value}>12435</Text>
+                  <Text style={styles.value}> {item?.id}</Text>
                 </Text>
               </Left>
               <Right>
@@ -136,27 +150,34 @@ export const ItemReservation = props => {
                       borderRadius: 50,
                     }}
                     source={{
-                      uri: 'https://reactnative.dev/img/tiny_logo.png',
+                      uri: item?.driver?.Avatar,
                     }}
                   />
                   <View style={styles.viewDriver}>
-                    <Text style={styles.name}>John Smith</Text>
+                    <Text style={styles.name}>{item?.driver?.FullName}</Text>
                     <Rating ratingCount={5} imageSize={16} />
                     <View style={styles.vehicleInfo}>
-                      <Text style={styles.textVehicleInfo}>14A-527.01</Text>
+                      <Text style={styles.textVehicleInfo}>
+                        {item?.car?.licensePlate}
+                      </Text>
                     </View>
                   </View>
                 </Row>
               </Left>
               <Right>
                 <Row>
-                  <View>
+                  {/* <View>
                     <Text style={styles.subTitle}>Thời gian</Text>
                     <Text style={styles.value}>1.3h</Text>
-                  </View>
+                  </View> */}
                   <View>
                     <Text style={styles.subTitle}>Giá tiền</Text>
-                    <Text style={styles.value}>300.000</Text>
+                    <Text style={styles.value}>
+                      {item?.price?.toLocaleString('it-IT', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })}
+                    </Text>
                   </View>
                 </Row>
               </Right>
@@ -223,7 +244,7 @@ const styles = ScaledSheet.create({
     fontWeight: 'bold',
   },
   name: {
-    fontSize: '14@ms',
+    fontSize: '12@ms',
     fontWeight: 'bold',
   },
   textLocation: {
@@ -238,7 +259,7 @@ const styles = ScaledSheet.create({
     marginTop: '3@vs',
   },
   textVehicleInfo: {
-    fontSize: '14@ms',
+    fontSize: '13@ms',
   },
 });
 export default ItemReservation;

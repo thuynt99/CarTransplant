@@ -11,14 +11,17 @@ class ItemBookingCar extends Component {
     super(props);
   }
   render() {
-    const {onSelectCar, item} = this.props;
-    const price = item?.price.toLocaleString('it-IT', {
+    const {onSelectCar, item, itemCarSelected} = this.props;
+    const price = item?.price?.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
+    const selected = item?.car?.id === itemCarSelected?.car?.id;
     return (
       <Card>
-        <TouchableOpacity onPress={onSelectCar} style={styles.btn}>
+        <TouchableOpacity
+          onPress={() => onSelectCar(item)}
+          style={selected ? styles.btnSelect : styles.btn}>
           <Image
             style={{
               width: 50,
@@ -89,6 +92,15 @@ const styles = ScaledSheet.create({
     borderRadius: 8,
     paddingHorizontal: '16@s',
     paddingVertical: '8@vs',
+  },
+  btnSelect: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderRadius: 8,
+    paddingHorizontal: '16@s',
+    paddingVertical: '8@vs',
+    borderColor: theme.primaryColor,
+    borderWidth: 1,
   },
 });
 
