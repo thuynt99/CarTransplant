@@ -30,10 +30,17 @@ export default class TripDetail extends Component {
     this.props.navigation.goBack();
   };
   callDriver = phoneNumber => {
-    Linking.openURL(`tel:${phoneNumber}`);
+    const url = `telprompt:${phoneNumber}`;
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        return Linking.openURL(url).catch(() => null);
+      }
+    });
   };
   render() {
     const {goToMapScreen} = this.props;
+    const {item} = this.props.route.params;
+    console.log(item);
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Thông tin chuyến đi" onGoBack={this.onGoBack} />
@@ -48,18 +55,18 @@ export default class TripDetail extends Component {
                     borderRadius: 50,
                   }}
                   source={{
-                    uri: 'https://reactnative.dev/img/tiny_logo.png',
+                    uri: item?.driver?.Avatar,
                   }}
                 />
                 <View style={styles.viewDriver}>
-                  <Text style={styles.name}>John Smith</Text>
+                  <Text style={styles.name}>{item?.driver?.FullName}</Text>
                   <Rating
                     ratingCount={5}
                     imageSize={16}
                     style={{alignSelf: 'flex-start'}}
                   />
                   <Text style={styles.textVehicleInfo}>
-                    Biển số: 14A-527.01
+                    Biển số: {item?.car.licensePlate}
                   </Text>
                 </View>
               </Row>
@@ -70,7 +77,7 @@ export default class TripDetail extends Component {
                 danger
                 bordered
                 style={styles.btnCall}
-                onPress={this.callDriver}>
+                onPress={() => this.callDriver(item?.driver?.Phone)}>
                 <Icon
                   name="phone"
                   type="FontAwesome"
@@ -90,17 +97,13 @@ export default class TripDetail extends Component {
             <Item style={styles.item}>
               <Col>
                 <Text style={styles.name}>Điểm đón:</Text>
-                <Text style={styles.textLocation}>
-                  1096 Đường Láng, Yên Hòa, Đống Đa, Hà Nội
-                </Text>
+                <Text style={styles.textLocation}>{item?.from}</Text>
               </Col>
             </Item>
             <Item style={styles.item}>
               <Col>
                 <Text style={styles.name}>Điểm đến:</Text>
-                <Text style={styles.textLocation}>
-                  Thái Hòa, Lập Thạch, Vĩnh Phúc
-                </Text>
+                <Text style={styles.textLocation}>{item?.to}</Text>
               </Col>
             </Item>
             <Item style={styles.item}>
@@ -135,20 +138,28 @@ export default class TripDetail extends Component {
                 <Text style={styles.textValue}>5 km</Text>
               </Right>
             </Item>
-            <Item style={styles.item}>
+            {/* <Item style={styles.item}>
               <Left>
                 <Text style={styles.name}>Thời gian dự kiến:</Text>
               </Left>
               <Right>
                 <Text style={styles.textValue}>1 giờ 12 phút</Text>
               </Right>
-            </Item>
+            </Item> */}
             <Item style={styles.item}>
               <Left>
                 <Text style={styles.name}>Trạng thái:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>Chờ xe đón</Text>
+                <Text style={styles.textValue}>
+                  {item?.state === 1
+                    ? 'Chờ tài xế xác nhận'
+                    : item?.state === 2
+                    ? 'Chờ xe đón'
+                    : item?.state === 3
+                    ? 'Chuyến đã hoàn thành'
+                    : 'Khách hàng đã hủy chuyến'}
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -172,7 +183,12 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Tiền phải trả:</Text>
               </Left>
               <Right>
-                <Text style={styles.price}>325000đ</Text>
+                <Text style={styles.price}>
+                  {item?.price?.toLocaleString('it-IT', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
               </Right>
             </Item>
             <View style={styles.note}>
@@ -187,9 +203,11 @@ export default class TripDetail extends Component {
               </Text>
             </View>
           </ScrollView>
-          <Button light full style={styles.btnConfirm}>
-            <Text>HUỶ CHUYẾN</Text>
-          </Button>
+          {(item.state === 1 || item.state === 2) && (
+            <Button light full style={styles.btnConfirm}>
+              <Text>HUỶ CHUYẾN</Text>
+            </Button>
+          )}
         </Content>
       </Container>
     );

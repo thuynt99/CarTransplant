@@ -39,6 +39,11 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Car Transplant yêu cầu quyền truy cập vị trí của bạn</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>telprompt</string>
+	<string>tel</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

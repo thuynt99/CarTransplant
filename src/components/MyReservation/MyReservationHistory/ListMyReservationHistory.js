@@ -32,7 +32,7 @@ class ListMyReservationHistory extends Component {
             renderItem={({item}) => {
               return (
                 <ListItem noBorder>
-                  <ItemReservation isHistory />
+                  <ItemReservation isHistory item={item} />
                 </ListItem>
               );
             }}
