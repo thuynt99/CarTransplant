@@ -57,8 +57,8 @@ export default function HomeScreen() {
     requestPermission();
     // getLocation();
   });
-  clickEventListener = () => {
-    navigation.navigate(MAP_VIEW);
+  clickEventListener = item => {
+    navigation.navigate(MAP_VIEW, {item: item});
   };
   return (
     <ScrollView style={styles.container}>

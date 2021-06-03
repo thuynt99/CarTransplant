@@ -18,7 +18,7 @@ class ItemBookingCar extends Component {
     });
     const selected = item?.car?.id === itemCarSelected?.car?.id;
     return (
-      <Card>
+      <Card style={{borderRadius: 8}}>
         <TouchableOpacity
           onPress={() => onSelectCar(item)}
           style={selected ? styles.btnSelect : styles.btn}>
