@@ -334,6 +334,7 @@ class MapViewScreen extends React.Component {
             dateStart={dateStart}
             dateEnd={dateEnd}
             seat={seat}
+            itemCarSelected={itemCarSelected}
             onClickConfirmTrip={this.onClickConfirmTrip}
           />
         ) : (

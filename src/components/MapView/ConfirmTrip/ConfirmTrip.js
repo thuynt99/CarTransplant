@@ -33,6 +33,7 @@ export default class ConfirmTrip extends Component {
       dateEnd,
       seat,
       onClickConfirmTrip,
+      itemCarSelected,
     } = this.props;
     const [start] = _.split(startStation?.display_name, ',').slice(-3);
     const [end] = _.split(endStation?.display_name, ',').slice(-3);
@@ -127,7 +128,7 @@ export default class ConfirmTrip extends Component {
                 </Text>
               </Right>
             </Item>
-            <Item style={styles.item}>
+            {/* <Item style={styles.item}>
               <Left>
                 <Text style={styles.subTitle}>Khoảng cách:</Text>
               </Left>
@@ -142,13 +143,18 @@ export default class ConfirmTrip extends Component {
               <Right>
                 <Text style={styles.textValue}>1 giờ 12 phút</Text>
               </Right>
-            </Item>
+            </Item> */}
             <Item style={styles.item}>
               <Left>
                 <Text style={styles.subTitle}>Tiền phải trả:</Text>
               </Left>
               <Right>
-                <Text style={styles.price}>325000đ</Text>
+                <Text style={styles.price}>
+                  {itemCarSelected?.price?.toLocaleString('it-IT', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
               </Right>
             </Item>
             <View style={styles.note}>
