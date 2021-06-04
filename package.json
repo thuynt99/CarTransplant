@@ -51,6 +51,7 @@
     "react-native-maps-directions": "1.7.0",
     "react-native-maps-super-cluster": "^1.6.0",
     "react-native-modal-datetime-picker": "^9.2.1",
+    "react-native-modalbox": "^2.0.2",
     "react-native-permissions": "^2.0.9",
     "react-native-ratings": "^8.0.4",
     "react-native-reanimated": "^1.4.0",
