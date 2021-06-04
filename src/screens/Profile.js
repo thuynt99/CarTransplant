@@ -28,6 +28,8 @@ import theme from '../theme';
 import {ScaledSheet} from 'react-native-size-matters';
 import HeaderCustom from '../components/common/HeaderCustom';
 import {ScrollView} from 'react-native-gesture-handler';
+import Modal from 'react-native-modalbox';
+import Dialog from '../components/common/Dialog';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -317,6 +319,7 @@ export default function ProfileScreen() {
           <Text style={styles.textLogout}>Đăng xuất</Text>
         </Button>
       </ScrollView>
+      <Dialog />
     </View>
   );
 }
