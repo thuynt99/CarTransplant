@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Car Transplant</string>
+    <string name="app_name">Car Transplant</string>\
+    <string name="default_notification_channel_id">FCM_FIREBASE_NOTIFICATION_DÈAULT_CHANNEL</string>
 </resources>
