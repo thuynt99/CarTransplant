@@ -22,23 +22,38 @@ import theme from '../../../theme';
 import {Rating} from 'react-native-ratings';
 import ItemReservation from '../ItemReservation';
 import _ from 'lodash';
+import ImageIcon from '../../common/ImageIcon';
 
 class ListMyReservationHistory extends Component {
   render() {
     const {data} = this.props;
     const sum = _.sumBy(data, function(o) {
-      return o.n;
+      return o.totalIncome;
     });
     return (
       <Container>
-        <Card style={styles.card}>
-          <Text>Tổng chuyến</Text>
-          <Text>{data?.length}</Text>
-        </Card>
-        <Card>
-          <Text>Tổng tiền nhận được</Text>
-          <Text>{data?.length}</Text>
-        </Card>
+        <View style={styles.inLine}>
+          <Card style={styles.card}>
+            <ImageIcon uri="https://img.icons8.com/ios-glyphs/100/000000/car.png" />
+            <View style={styles.right}>
+              <Text style={styles.subTitle}>Tổng chuyến</Text>
+              <Text style={styles.value}>{data?.length ? data.length : 0}</Text>
+            </View>
+          </Card>
+          <Card style={[styles.card, {backgroundColor: theme.primaryColor}]}>
+            <ImageIcon uri="https://img.icons8.com/ios-filled/50/000000/expensive-2.png" />
+            <View style={styles.right}>
+              <Text style={styles.subTitle}>Thu nhập</Text>
+              <Text style={styles.value}>
+                {sum.toLocaleString('it-IT', {
+                  // style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
+            </View>
+          </Card>
+        </View>
+
         <Content>
           <List
             dataArray={data}
@@ -60,6 +75,11 @@ const styles = ScaledSheet.create({
   container: {
     paddingVertical: 5,
   },
+  inLine: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: '16@s',
+  },
   text: {
     fontSize: '14@ms',
     textAlign: 'center',
@@ -70,16 +90,17 @@ const styles = ScaledSheet.create({
     paddingHorizontal: '16@ms',
     paddingVertical: '10@ms',
     borderRadius: 8,
+    backgroundColor: theme.warning,
+    flexDirection: 'row',
   },
   subTitle: {
     fontSize: '14@ms',
-    color: theme.grey_dark,
-    paddingHorizontal: '5@s',
+    color: theme.white,
   },
   value: {
-    fontSize: '16@ms',
-    fontWeight: '600',
-    textAlign: 'center',
+    fontSize: '14@ms',
+    fontWeight: 'bold',
+    color: theme.white,
   },
   viewDriver: {
     marginLeft: '8@s',
@@ -129,6 +150,9 @@ const styles = ScaledSheet.create({
   },
   textVehicleInfo: {
     fontSize: '14@ms',
+  },
+  right: {
+    paddingLeft: '8@s',
   },
 });
 export default ListMyReservationHistory;

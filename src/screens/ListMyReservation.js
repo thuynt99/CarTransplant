@@ -33,13 +33,13 @@ class ListMyReservation extends Component {
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     const {trip} = nextProps;
-    return {loading: trip.loading, listTrip: trip.listTrip};
+    return {loading: trip.loading};
   }
   componentDidMount() {
     this.getListTripDriver();
   }
   onChangeTab = i => {
-    this.setState({currentTab: i}, this.getListTripDriver);
+    this.setState({currentTab: i, listTrip: []}, this.getListTripDriver);
     console.log(i);
   };
   getListTripDriver = async () => {
@@ -118,10 +118,11 @@ class ListMyReservation extends Component {
             style={{
               alignSelf: 'center',
               justifyContent: 'center',
+              flex: 1,
             }}
           />
         )}
-        {_.isEmpty(listTrip) && (
+        {_.isEmpty(listTrip) && !loading && (
           <View style={{alignSelf: 'center', flex: 1, paddingHorizontal: 30}}>
             <Text
               style={{
