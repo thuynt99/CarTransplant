@@ -15,6 +15,7 @@ const theme = {
   grey_dark_30: '#4d4d4d',
   white: '#ffff',
   warning: '#f0ad4e',
+  success: '#4BB543',
 };
 
 module.exports = theme;

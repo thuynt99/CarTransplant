@@ -69,5 +69,4 @@ const getLocation = () => {
     });
   });
 };
-
 export {getCurrentPermission, requestPermission, checkPermission, getLocation};

@@ -21,17 +21,35 @@ import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../../theme';
 import {Rating} from 'react-native-ratings';
 import ItemReservation from '../ItemReservation';
+import _ from 'lodash';
 
 class ListMyReservationHistory extends Component {
   render() {
+    const {data} = this.props;
+    const sum = _.sumBy(data, function(o) {
+      return o.n;
+    });
     return (
       <Container>
+        <Card style={styles.card}>
+          <Text>Tổng chuyến</Text>
+          <Text>{data?.length}</Text>
+        </Card>
+        <Card>
+          <Text>Tổng tiền nhận được</Text>
+          <Text>{data?.length}</Text>
+        </Card>
         <Content>
-          <List>
-            <ListItem noBorder>
-              <ItemReservation isHistory />
-            </ListItem>
-          </List>
+          <List
+            dataArray={data}
+            renderItem={({item}) => {
+              return (
+                <ListItem noBorder>
+                  <ItemReservation isHistory item={item} />
+                </ListItem>
+              );
+            }}
+          />
         </Content>
       </Container>
     );
@@ -48,7 +66,7 @@ const styles = ScaledSheet.create({
     paddingHorizontal: 10,
   },
   card: {
-    width: '100%',
+    width: '50%',
     paddingHorizontal: '16@ms',
     paddingVertical: '10@ms',
     borderRadius: 8,

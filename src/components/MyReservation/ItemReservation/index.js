@@ -23,23 +23,31 @@ import {Rating} from 'react-native-ratings';
 import {TRIP_DETAIL} from '../../../constants';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
+import {FORMAT} from '../../../constants/format';
 
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
-  const {isHistory} = props;
+  const {isHistory, item} = props;
   function onClick() {
-    navigate(TRIP_DETAIL);
+    navigate(TRIP_DETAIL, {item: item});
   }
+
   return (
     <Card style={styles.card}>
       <TouchableOpacity onPress={onClick}>
         <Item style={styles.top}>
           <Left>
-            <Text>Ngày 15/05/2021</Text>
+            <Text>
+              Ngày {moment.unix(item?.beginLeaveTime).format(FORMAT.DATE)}
+            </Text>
           </Left>
           <Right>
-            <Text>11:40 đến 12:10</Text>
+            <Text>
+              {moment.unix(item?.beginLeaveTime).format(FORMAT.TIME)} đến{' '}
+              {moment.unix(item?.endLeaveTime).format(FORMAT.TIME)}{' '}
+            </Text>
           </Right>
         </Item>
         <Item style={styles.center}>
@@ -51,11 +59,9 @@ export const ItemReservation = props => {
                   type="MaterialIcons"
                   style={{color: 'green', fontSize: 28}}
                 />
-                <Text style={styles.subTitle}>Điểm đón:</Text>
+                <Text style={styles.subTitle}>Điểm xuất phát:</Text>
               </View>
-              <Text style={styles.textLocation}>
-                1096 Đường Láng, Yên Hòa, Đống Đa, Hà Nội
-              </Text>
+              <Text style={styles.textLocation}>{item?.from}</Text>
             </View>
             <View>
               <View style={styles.location}>
@@ -66,9 +72,7 @@ export const ItemReservation = props => {
                 />
                 <Text style={styles.subTitle}>Điểm đến:</Text>
               </View>
-              <Text style={styles.textLocation}>
-                Thái Hòa, Lập Thạch, Vĩnh Phúc
-              </Text>
+              <Text style={styles.textLocation}>{item?.to}</Text>
             </View>
           </Left>
         </Item>
@@ -84,14 +88,16 @@ export const ItemReservation = props => {
                       borderRadius: 50,
                     }}
                     source={{
-                      uri: 'https://reactnative.dev/img/tiny_logo.png',
+                      uri: item?.driver?.Avatar,
                     }}
                   />
                   <View style={styles.viewDriver}>
-                    <Text style={styles.name}>John Smith</Text>
+                    <Text style={styles.name}>{item?.driver?.FullName}</Text>
                     <Rating ratingCount={5} imageSize={16} />
                     <View style={styles.vehicleInfo}>
-                      <Text style={styles.textVehicleInfo}>14A-527.01</Text>
+                      <Text style={styles.textVehicleInfo}>
+                        {item?.car?.licensePlate}
+                      </Text>
                     </View>
                   </View>
                 </Row>
@@ -104,61 +110,57 @@ export const ItemReservation = props => {
                   </View>
                   <View>
                     <Text style={styles.subTitle}>Giá tiền</Text>
-                    <Text style={styles.value}>300.000</Text>
+                    <Text style={styles.value}>
+                      {item?.price?.toLocaleString('it-IT', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })}
+                    </Text>
                   </View>
                 </Row>
               </Right>
             </Item>
             <Row style={styles.stateView}>
-              <Text style={styles.state}>Khách hàng đã hủy chuyến</Text>
+              <Text style={styles.state}>
+                {item?.state === 3
+                  ? 'Chuyến đã hoàn thành'
+                  : 'Khách hàng đã hủy chuyến'}
+              </Text>
             </Row>
           </>
         ) : (
           <>
             <Item style={styles.vehicleTypeView}>
               <Left>
+                <Text style={styles.subTitle}>Số chỗ còn trống:</Text>
+              </Left>
+              <Right>
+                <Text style={styles.value}>
+                  {' '}
+                  {item?.reamaingSeat}/{item?.totalSeat}
+                </Text>
+              </Right>
+            </Item>
+
+            <Row style={styles.vehicleTypeView}>
+              <Left>
                 <Text style={styles.subTitle}>
-                  Mã chuyến đi:
-                  <Text style={styles.value}>12435</Text>
+                  Xe sử dụng:
+                  <Text style={styles.value}>
+                    {' '}
+                    {item?.car.model} - {item?.car.color} -{' '}
+                    {item?.car.licensePlate}
+                  </Text>
                 </Text>
               </Left>
               <Right>
-                <Text style={styles.subTitle}>Ghép người</Text>
-              </Right>
-            </Item>
-            <Row style={styles.bottom}>
-              <Left>
-                <Row>
-                  <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 50,
-                    }}
-                    source={{
-                      uri: 'https://reactnative.dev/img/tiny_logo.png',
-                    }}
-                  />
-                  <View style={styles.viewDriver}>
-                    <Text style={styles.name}>John Smith</Text>
-                    <Rating ratingCount={5} imageSize={16} />
-                    <View style={styles.vehicleInfo}>
-                      <Text style={styles.textVehicleInfo}>14A-527.01</Text>
-                    </View>
-                  </View>
-                </Row>
-              </Left>
-              <Right>
-                <Row>
-                  <View>
-                    <Text style={styles.subTitle}>Thời gian</Text>
-                    <Text style={styles.value}>1.3h</Text>
-                  </View>
-                  <View>
-                    <Text style={styles.subTitle}>Giá tiền</Text>
-                    <Text style={styles.value}>300.000</Text>
-                  </View>
-                </Row>
+                <Text style={styles.price}>
+                  {item?.priceEachKm.toLocaleString('it-IT', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                  /km
+                </Text>
               </Right>
             </Row>
           </>
@@ -223,7 +225,7 @@ const styles = ScaledSheet.create({
     fontWeight: 'bold',
   },
   name: {
-    fontSize: '14@ms',
+    fontSize: '12@ms',
     fontWeight: 'bold',
   },
   textLocation: {
@@ -238,6 +240,10 @@ const styles = ScaledSheet.create({
     marginTop: '3@vs',
   },
   textVehicleInfo: {
+    fontSize: '13@ms',
+  },
+  price: {
+    color: theme.primaryColor,
     fontSize: '14@ms',
   },
 });

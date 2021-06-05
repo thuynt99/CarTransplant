@@ -27,81 +27,21 @@ class ListMyReservationUpComing extends Component {
     return (
       <Container>
         <Content>
-          <List>
-            <ListItem noBorder>
-              <ItemReservation />
-            </ListItem>
-          </List>
+          <List
+            dataArray={this.props.data}
+            renderItem={({item}) => {
+              return (
+                <ListItem noBorder>
+                  <ItemReservation item={item} />
+                </ListItem>
+              );
+            }}
+          />
         </Content>
       </Container>
     );
   }
 }
 
-const styles = ScaledSheet.create({
-  container: {
-    paddingVertical: 5,
-  },
-  text: {
-    fontSize: '14@ms',
-    textAlign: 'center',
-    paddingHorizontal: 10,
-  },
-  card: {
-    width: '100%',
-    paddingHorizontal: '16@ms',
-    paddingVertical: '10@ms',
-    borderRadius: 8,
-  },
-  subTitle: {
-    fontSize: '14@ms',
-    color: theme.grey_dark,
-    paddingHorizontal: '5@s',
-  },
-  value: {
-    fontSize: '16@ms',
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  viewDriver: {
-    marginLeft: '8@s',
-  },
-  bottom: {
-    paddingVertical: '10@vs',
-  },
-  center: {
-    paddingVertical: '10@vs',
-  },
-  top: {
-    paddingBottom: '10@vs',
-  },
-  location: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  vehicleTypeView: {
-    paddingVertical: '10@vs',
-  },
-  state: {
-    fontWeight: 'bold',
-  },
-  name: {
-    fontSize: '14@ms',
-    fontWeight: 'bold',
-  },
-  textLocation: {
-    paddingLeft: '30@s',
-    fontSize: '16@ms',
-  },
-  vehicleInfo: {
-    borderRadius: 5,
-    backgroundColor: theme.grey_dark,
-    paddingVertical: '3@vs',
-    paddingHorizontal: '5@s',
-    marginTop: '3@vs',
-  },
-  textVehicleInfo: {
-    fontSize: '14@ms',
-  },
-});
+const styles = ScaledSheet.create({});
 export default ListMyReservationUpComing;

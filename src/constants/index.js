@@ -17,5 +17,6 @@ const APP_NAME = {
   NOTIFICATION_DETAIL: 'NotificationDetailScreen',
   CAR_MANAGEMENT: 'CarManagement',
   REGISTER_CAR: 'RegisterCar',
+  TRIP_USER_DETAIL: 'TripUserDetail',
 };
 module.exports = APP_NAME;
