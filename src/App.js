@@ -18,27 +18,44 @@ import './tools/firebase';
 import {Provider} from 'react-redux';
 import store from './stores/configureStore';
 import messaging from '@react-native-firebase/messaging';
+import PushNotification, {Importance} from 'react-native-push-notification';
 
 function App() {
   useEffect(() => {
-    const setUp = async () => {
-      Geocoder.init('AIzaSyDyDhYNrrak9PXgIJRS6FAhLccCfJ2YgUI');
+    Geocoder.init('AIzaSyDyDhYNrrak9PXgIJRS6FAhLccCfJ2YgUI');
 
-      requestUserPermission();
-      console.log('xin chao 1');
-      await checkToken();
-      console.log('xin chao 2');
-      const unsubscribe = messaging().onMessage(async remoteMessage => {
-        Alert.alert(
-          'A new FCM message arrived!',
-          JSON.stringify(remoteMessage),
+    requestUserPermission();
+    checkToken();
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        console.log(
+          'Notification caused app to open from quit state:',
+          remoteMessage,
         );
       });
-      // return unsubscribe;
-    };
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage,
+      );
+    });
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('remoteMessage', remoteMessage);
+      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      PushNotification.localNotification({
+        channelId: 'FCM_FIREBASE_NOTIFICATION_DEFAULT_CHANNEL', // (required) channelId, if the channel doesn't exist, notification will not trigger.
+        ignoreInForeground: false,
+        title: remoteMessage.notification.title, // (optional)
+        message: remoteMessage.notification.body, // (required)
+        priority: 'high',
+        userInfo: {},
+        largeIcon: 'ic_stat_ic_notification', // (optional) default: "ic_launcher"
+        smallIcon: 'ic_stat_ic_notification',
+      });
+    });
 
-    setUp();
-    // return unsubcribe;
+    return unsubscribe;
   }, []);
 
   const requestUserPermission = async () => {
