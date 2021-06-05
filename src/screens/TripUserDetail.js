@@ -21,25 +21,19 @@ import {ScaledSheet} from 'react-native-size-matters';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import HeaderCustom from '../components/common/HeaderCustom';
 import theme from '../theme';
-import {Rating} from 'react-native-ratings';
 import moment from 'moment';
+import {Rating} from 'react-native-ratings';
 import {FORMAT} from '../constants/format';
-import {map} from 'lodash-es';
-import ItemUserTrip from '../components/MyReservation/ItemReservation/ItemUserTrip';
-
-export default class TripDetail extends Component {
+export default class TripUserDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      showTrip: false,
-    };
   }
   onGoBack = () => {
     this.props.navigation.goBack();
   };
   callDriver = phoneNumber => {
     const url = `tel:${phoneNumber}`;
-    Linking.canOpenURL(url).then(supported => {
+    Linking.canOpenURL(url).then(async supported => {
       if (supported) {
         return Linking.openURL(url).catch(() => null);
       }
@@ -48,16 +42,56 @@ export default class TripDetail extends Component {
   render() {
     const {goToMapScreen} = this.props;
     const {item} = this.props.route.params;
-    const {showTrip} = this.state;
     console.log(item);
     return (
       <Container style={styles.container}>
-        <HeaderCustom title="Thông tin chuyến đi" onGoBack={this.onGoBack} />
+        <HeaderCustom title="Thông tin chở khách" onGoBack={this.onGoBack} />
         <Content>
           <ScrollView style={styles.view}>
+            <View style={styles.bottom}>
+              <Row>
+                <Image
+                  style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: 50,
+                  }}
+                  source={{
+                    uri: item?.user?.Avatar,
+                  }}
+                />
+                <View style={styles.viewDriver}>
+                  <Text style={styles.title}>{item?.user?.FullName}</Text>
+                  <Text style={styles.name}>{item?.user?.Phone}</Text>
+                </View>
+              </Row>
+            </View>
+            <View style={styles.makeCall}>
+              <Button
+                small
+                danger
+                bordered
+                style={styles.btnCall}
+                onPress={() => this.callDriver(item?.user?.Phone)}>
+                <Icon
+                  name="phone"
+                  type="FontAwesome"
+                  style={{marginRight: 0}}
+                />
+                <Text>Gọi khách</Text>
+              </Button>
+              <Button small danger bordered style={styles.btnCall}>
+                <Icon
+                  name="message1"
+                  type="AntDesign"
+                  style={{marginRight: 0}}
+                />
+                <Text>Nhắn tin</Text>
+              </Button>
+            </View>
             <Item style={styles.item}>
               <Col>
-                <Text style={styles.name}>Điểm xuất phát:</Text>
+                <Text style={styles.name}>Điểm đón:</Text>
                 <Text style={styles.textLocation}>{item?.from}</Text>
               </Col>
             </Item>
@@ -69,14 +103,18 @@ export default class TripDetail extends Component {
             </Item>
             <Item style={styles.item}>
               <Left>
-                <Text style={styles.name}>Xe sử dụng:</Text>
+                <Text style={styles.name}>Loại dịch vụ:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>
-                  {' '}
-                  {item?.car.model} - {item?.car.color} -{' '}
-                  {item?.car.licensePlate}
-                </Text>
+                <Text style={styles.textValue}>Ghép người</Text>
+              </Right>
+            </Item>
+            <Item style={styles.item}>
+              <Left>
+                <Text style={styles.name}>Loại xe:</Text>
+              </Left>
+              <Right>
+                <Text style={styles.textValue}>5 chỗ</Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -85,7 +123,10 @@ export default class TripDetail extends Component {
               </Left>
               <Right>
                 <Text style={styles.textValue}>
-                  {moment.unix(item?.beginLeaveTime).format(FORMAT.TIME)} đến{' '}
+                  {' '}
+                  {moment
+                    .unix(item?.beginLeaveTime)
+                    .format(FORMAT.TIME)} đến{' '}
                   {moment.unix(item?.endLeaveTime).format(FORMAT.TIME)} ngày{' '}
                   {moment.unix(item?.beginLeaveTime).format(FORMAT.DATE)}
                 </Text>
@@ -96,94 +137,55 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Khoảng cách:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>5 km</Text>
+                <Text style={styles.textValue}>{item?.distance}</Text>
               </Right>
             </Item>
-
             <Item style={styles.item}>
               <Left>
-                <Text style={styles.name}>Tổng tiền:</Text>
+                <Text style={styles.name}>Trạng thái:</Text>
+              </Left>
+              <Right>
+                <Text style={styles.textValue}>
+                  {item?.state === 1
+                    ? 'Chờ tài xế xác nhận'
+                    : item?.state === 2
+                    ? 'Chờ xe đón'
+                    : item?.state === 3
+                    ? 'Chuyến đã hoàn thành'
+                    : 'Khách hàng đã hủy chuyến'}
+                </Text>
+              </Right>
+            </Item>
+            <Item style={styles.item}>
+              <Left>
+                <Text style={styles.name}>Tiền thu của khách:</Text>
               </Left>
               <Right>
                 <Text style={styles.price}>
-                  {item?.totalIncome?.toLocaleString('it-IT', {
+                  {item?.price?.toLocaleString('it-IT', {
                     style: 'currency',
                     currency: 'VND',
                   })}
                 </Text>
               </Right>
             </Item>
-            {item.userTrips ? (
-              <Item style={styles.item}>
-                <Left>
-                  <Text style={styles.name}>Tổng chuyến phải chạy:</Text>
-                </Left>
-                <Right>
-                  <Text style={styles.textValue}>
-                    {item?.userTrips?.length}
-                  </Text>
-                </Right>
-              </Item>
-            ) : (
-              <Row style={styles.item}>
-                <Body>
-                  <Text style={styles.danger}>
-                    Rất tiếc bạn chưa có hành khách nào đặt chuyến!
-                  </Text>
-                </Body>
-              </Row>
-            )}
-            {item.userTrips && (
-              <>
-                <Item style={styles.item}>
-                  <Left>
-                    <Text style={styles.name}>Danh sách chuyến phải chạy:</Text>
-                  </Left>
-                  <Right>
-                    <TouchableOpacity
-                      style={{padding: 4}}
-                      onPress={() =>
-                        this.setState({showTrip: !this.state.showTrip})
-                      }>
-                      {showTrip ? (
-                        <Icon
-                          name="up"
-                          type="AntDesign"
-                          style={{color: theme.thirdColor}}
-                        />
-                      ) : (
-                        <Icon
-                          name="down"
-                          type="AntDesign"
-                          style={{color: theme.thirdColor}}
-                        />
-                      )}
-                    </TouchableOpacity>
-                  </Right>
-                </Item>
-                {showTrip && (
-                  <View>
-                    {item.userTrips.map((user, index) => {
-                      return (
-                        <ItemUserTrip item={user} key={index.toString()} />
-                      );
-                    })}
-                  </View>
-                )}
-                <View style={styles.note}>
-                  <Text style={styles.title}>Lưu ý:</Text>
-                  <Text style={styles.textNote}>
-                    Giá trên CHƯA BAO GỒM các chi phí phát sinh (phí cầu đường,
-                    phí sân bay, phí đỗ xe,...)
-                  </Text>
-                  <Text style={styles.textNote}>
-                    Hành khách sẽ phải THANH TOÁN THÊM các loại phí này cho tài
-                    xế nếu có phát sinh trong quá trình di chuyển
-                  </Text>
-                </View>
-              </>
-            )}
+            <View style={styles.note}>
+              <Text style={styles.title}>Lưu ý:</Text>
+              <Text style={styles.textNote}>
+                Giá trên CHƯA BAO GỒM các chi phí phát sinh (phí cầu đường, phí
+                sân bay, phí đỗ xe,...)
+              </Text>
+              <Text style={styles.textNote}>
+                Hành khách sẽ phải THANH TOÁN THÊM các loại phí này cho tài xế
+                nếu có phát sinh trong quá trình di chuyển
+              </Text>
+            </View>
           </ScrollView>
+          {true && (
+            <Button full style={styles.btnConfirm}>
+              <Text>Hoàn Thành</Text>
+            </Button>
+          )}
         </Content>
       </Container>
     );
@@ -239,6 +241,7 @@ const styles = ScaledSheet.create({
     alignSelf: 'center',
     borderRadius: 8,
     marginVertical: '16@vs',
+    backgroundColor: theme.primaryColor,
   },
   item: {
     paddingVertical: '12@vs',
@@ -307,10 +310,5 @@ const styles = ScaledSheet.create({
   },
   textBtn: {
     color: theme.white,
-  },
-  danger: {
-    color: theme.primaryColor,
-    textAlign: 'center',
-    fontSize: '16@ms',
   },
 });

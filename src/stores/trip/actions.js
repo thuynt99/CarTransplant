@@ -1,9 +1,12 @@
 import {HTTP} from '../../constants/api';
-import {findTripApi} from '../../services/tripService';
+import {findTripApi, getListTripDriverApi} from '../../services/tripService';
 import {
   FIND_TRIP,
   FIND_TRIP_FAILED,
   FIND_TRIP_SUCCESS,
+  GET_LIST_TRIP_DRIVER,
+  GET_LIST_TRIP_DRIVER_FAILED,
+  GET_LIST_TRIP_DRIVER_SUCCESS,
 } from '../trip/action-types';
 
 export function findTrip(params) {
@@ -26,6 +29,35 @@ const processFindTrip = (dataJson, dispatch) => {
   } else {
     dispatch({
       type: FIND_TRIP_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function getListTripDriver(params) {
+  return dispatch => {
+    dispatch({
+      type: GET_LIST_TRIP_DRIVER,
+    });
+    const dataJson = getListTripDriverApi(params);
+    return dataJson.then(dataJson =>
+      processGetListTripDriver(dataJson, dispatch),
+    );
+  };
+}
+
+const processGetListTripDriver = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: GET_LIST_TRIP_DRIVER_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: GET_LIST_TRIP_DRIVER_FAILED,
       data: dataJson.data,
     });
     return dataJson;

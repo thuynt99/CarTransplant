@@ -8,12 +8,14 @@ import {
   TRIP_DETAIL,
   NOTIFICATION_DETAIL,
   REGISTER_CAR,
+  TRIP_USER_DETAIL,
 } from '../constants';
 import TabNavigator from './TabNavigator';
 import MapViewScreen from '../screens/MapViewScreen';
 import TripDetail from '../screens/TripDetail';
 import NotificationDetailScreen from '../screens/NotificationDetail';
 import RegisterCar from '../screens/RegisterCar';
+import TripUserDetail from '../screens/TripUserDetail';
 
 const Stack = createStackNavigator();
 
@@ -81,6 +83,14 @@ export default function DashboardStackNavigator() {
           title: '',
         }}
         component={RegisterCar}
+      />
+      <Stack.Screen
+        name={TRIP_USER_DETAIL}
+        options={{
+          headerShown: false,
+          title: '',
+        }}
+        component={TripUserDetail}
       />
     </Stack.Navigator>
   );
