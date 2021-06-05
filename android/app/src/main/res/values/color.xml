@@ -1,0 +1,9 @@
+<resources>
+	<color name="notificationColor">#000000</color>
+	<color name="ocean_green">#03a959</color>
+	<color name="black">#000000</color>
+	<color name="colorPrimary">#ef5350</color>
+	<color name="colorPrimaryDark">#03A959</color>
+	<color name="colorAccent">#FFBE2E</color>
+	<color name="white">#ffff</color>
+</resources>
