@@ -15,7 +15,6 @@ const requestPermission = () => {
     },
   }).then(granted => {
     if (!granted) {
-      console.log('request');
       RNLocation.requestPermission({
         ios: 'whenInUse', // or 'always'
         android: {
@@ -70,5 +69,4 @@ const getLocation = () => {
     });
   });
 };
-
 export {getCurrentPermission, requestPermission, checkPermission, getLocation};
