@@ -26,25 +26,25 @@ export default function Dialog(props) {
       onClosed={props.onClosed}>
       <Item style={styles.item}>
         <Body>
-          <Text style={styles.titlle}>{props.title}</Text>
+          <Text style={styles.titlle}>{props?.item?.title}</Text>
         </Body>
       </Item>
-      <Text style={styles.text}>{props.content}</Text>
-      {props.right ? (
+      <Text style={styles.text}>{props?.item?.content}</Text>
+      {props?.item?.right ? (
         <View style={styles.row}>
           <Button full style={styles.btnRight} onPress={props.onClickLeft}>
-            <Text style={styles.textLeft}>{props.left}</Text>
+            <Text style={styles.textLeft}>{props?.item?.left}</Text>
           </Button>
           <Button
             full
             style={[styles.btnRight, {backgroundColor: theme.primaryColor}]}
             onPress={props.onClickRight}>
-            <Text style={styles.textLeft}>{props.right}</Text>
+            <Text style={styles.textLeft}>{props?.item?.right}</Text>
           </Button>
         </View>
       ) : (
         <Button full style={styles.btnLeft} onPress={props.onClickLeft}>
-          <Text style={styles.textLeft}>{props.left}</Text>
+          <Text style={styles.textLeft}>{props?.item?.left}</Text>
         </Button>
       )}
     </Modal>
@@ -79,6 +79,7 @@ const styles = ScaledSheet.create({
     color: theme.black,
     fontSize: '14@ms',
     textAlign: 'center',
+    paddingHorizontal: '16@s',
   },
   titlle: {
     color: theme.primaryColor,

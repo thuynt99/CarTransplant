@@ -12,6 +12,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import ImagePicker from 'react-native-image-picker';
+import _ from 'lodash';
 
 import {CTX} from '../tools/context';
 import {
@@ -32,6 +33,8 @@ import Modal from 'react-native-modalbox';
 import Dialog from '../components/common/Dialog';
 import {CHANGE_PROFILE} from '../constants';
 import {useNavigation} from '@react-navigation/native';
+import {TYPE_DIALOG} from '../constants/data';
+
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
   title: 'Select Avatar',
@@ -45,6 +48,7 @@ const options = {
 export default function ProfileScreen() {
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [typeDialog, setTypeDialog] = useState(false);
   const authContext = useContext(CTX);
   const {_logout} = authContext;
   const navigation = useNavigation();
@@ -64,7 +68,8 @@ export default function ProfileScreen() {
       id: 1,
       title: 'Hỗ trợ',
       onPress: () => {
-        Linking.openURL(`tel:0356533048`);
+        setTypeDialog(2);
+        setIsOpen(true);
       },
     },
     {
@@ -117,6 +122,7 @@ export default function ProfileScreen() {
   }, []);
 
   function _onLogout() {
+    setIsOpen(false);
     // NOTE: context
     _logout();
 
@@ -247,6 +253,10 @@ export default function ProfileScreen() {
       alert(error.message);
     }
   };
+  const callSupport = () => {
+    setIsOpen(false);
+    Linking.openURL(`tel:0356533048`);
+  };
   return (
     <View style={styles.container}>
       <HeaderCustom title="Tài khoản" withoutBack />
@@ -317,7 +327,10 @@ export default function ProfileScreen() {
         </Card>
         <Button
           full
-          onPress={() => setIsOpen(true)}
+          onPress={() => {
+            setTypeDialog(1);
+            setIsOpen(true);
+          }}
           danger
           bordered
           style={styles.btnLogout}>
@@ -327,12 +340,9 @@ export default function ProfileScreen() {
       <Dialog
         isOpen={isOpen}
         onClosed={() => setIsOpen(false)}
-        title="Thông báo"
-        content="Cập nhật thông tin cá nhân thành công!"
-        left="Đóng"
+        item={_.find(TYPE_DIALOG, {id: typeDialog})}
         onClickLeft={() => setIsOpen(false)}
-        right="Đăng xuất"
-        onClickRight={_onLogout}
+        onClickRight={typeDialog === 1 ? _onLogout : callSupport}
         modalStyle={styles.modalStyle}
       />
     </View>
@@ -434,5 +444,8 @@ const styles = ScaledSheet.create({
   promotion: {
     height: '70@vs',
     width: '100%',
+  },
+  modalStyle: {
+    height: '220@vs',
   },
 });
