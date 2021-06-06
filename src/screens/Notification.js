@@ -1,4 +1,4 @@
-import {Container} from 'native-base';
+import {Container, Spinner} from 'native-base';
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -9,75 +9,52 @@ import {
   FlatList,
 } from 'react-native';
 import HeaderCustom from '../components/common/HeaderCustom';
+import {connect} from 'react-redux';
+import {getListNoti} from '../stores/notify/actions';
+import theme from '../theme';
+import moment from 'moment';
+import {FORMAT} from '../constants/format';
 
-export default class Notifications extends Component {
+class Notifications extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        {
-          id: 3,
-          title: 'March SoulLaComa',
-          text:
-            'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.',
-          attachment:
-            'https://static.toiimg.com/photo/msid-67586673/67586673.jpg?3918697',
-        },
-        {
-          id: 2,
-          title: 'John DoeLink',
-          text:
-            'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.',
-          attachment: 'https://via.placeholder.com/100x100/20B2AA/000000',
-        },
-        {
-          id: 4,
-          title: 'Finn DoRemiFaso',
-          text:
-            'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.',
-          attachment: '',
-        },
-        {
-          id: 5,
-          title: 'Maria More More',
-          text:
-            'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.',
-          attachment: '',
-        },
-        {
-          id: 1,
-          title: 'Frank Odalthh',
-          text:
-            'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.',
-          attachment:
-            'https://static.toiimg.com/photo/msid-67586673/67586673.jpg?3918697',
-        },
-        {
-          id: 6,
-          title: 'Clark June Boom!',
-          text:
-            'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.',
-          attachment: '',
-        },
-        {
-          id: 7,
-          title: 'The googler',
-          text:
-            'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.',
-          attachment: '',
-        },
-      ],
+      refreshing: false,
+      data: [],
+      loading: false,
     };
   }
-
+  componentDidMount() {
+    this.getListNoti();
+  }
+  getListNoti = async () => {
+    await this.props.getListNoti();
+    this.setState({data: this.props.notify.listNoti});
+  };
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {notify} = nextProps;
+    return {loading: notify.loading, data: notify.listNoti};
+  }
   render() {
     return (
       <Container>
         <HeaderCustom title="Thông báo" withoutBack />
+        {this.state.loading && (
+          <Spinner
+            color={theme.primaryColor}
+            style={{
+              alignSelf: 'center',
+              justifyContent: 'center',
+              flex: 1,
+            }}
+          />
+        )}
         <FlatList
           style={styles.root}
           data={this.state.data}
           extraData={this.state}
+          onRefresh={() => this.getListNoti()}
+          refreshing={this.state.refreshing}
           ItemSeparatorComponent={() => {
             return <View style={styles.separator} />;
           }}
@@ -89,12 +66,12 @@ export default class Notifications extends Component {
             let attachment = <View />;
 
             let mainContentStyle;
-            if (Notification.attachment) {
+            if (Notification.image) {
               mainContentStyle = styles.mainContent;
               attachment = (
                 <Image
                   style={styles.attachment}
-                  source={{uri: Notification.attachment}}
+                  source={{uri: Notification.image}}
                 />
               );
             }
@@ -113,10 +90,19 @@ export default class Notifications extends Component {
                   <View style={styles.content}>
                     <View style={mainContentStyle}>
                       <View style={styles.text}>
-                        <Text style={styles.name}>{Notification.title}</Text>
-                        <Text>{Notification.text}</Text>
+                        <Text
+                          style={styles.name}
+                          numberOfLines={2}
+                          ellipsizeMode={'tail'}>
+                          {Notification.title}
+                        </Text>
+                        <Text>{Notification.message}</Text>
                       </View>
-                      <Text style={styles.timeAgo}>2 hours ago</Text>
+                      <Text style={styles.timeAgo}>
+                        {moment(Notification.createdDate).format(
+                          FORMAT.TIME_DATE,
+                        )}
+                      </Text>
                     </View>
                     {attachment}
                   </View>
@@ -148,7 +134,6 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 5,
-    flexDirection: 'row',
     flexWrap: 'wrap',
   },
   content: {
@@ -180,6 +165,20 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    color: '#1E90FF',
+    fontWeight: 'bold',
+    color: theme.primaryColor,
+    width: '80%',
   },
 });
+const mapStateToProps = state => ({
+  notify: state.notify,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getListNoti: params => dispatch(getListNoti(params)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Notifications);
