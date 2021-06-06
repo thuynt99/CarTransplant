@@ -7,33 +7,23 @@ import {
   Image,
   Share,
   Linking,
+  TextInput,
+  SafeAreaView,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import ImagePicker from 'react-native-image-picker';
-import _ from 'lodash';
-
+import ChangeProfileSchema from '../validation/ChangeProfileSchema';
 import {CTX} from '../tools/context';
-import {
-  Button,
-  Card,
-  Icon,
-  Left,
-  List,
-  ListItem,
-  Right,
-  Row,
-} from 'native-base';
+import {Button} from 'native-base';
 import theme from '../theme';
 import {ScaledSheet} from 'react-native-size-matters';
 import HeaderCustom from '../components/common/HeaderCustom';
-import {ScrollView} from 'react-native-gesture-handler';
-import Modal from 'react-native-modalbox';
 import Dialog from '../components/common/Dialog';
-import {CHANGE_PROFILE} from '../constants';
+import {Formik} from 'formik';
 import {useNavigation} from '@react-navigation/native';
-import {TYPE_DIALOG} from '../constants/data';
+import {PROFILE} from '../constants';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -45,69 +35,21 @@ const options = {
   },
 };
 
-export default function ProfileScreen() {
+export default function ChangeProfile() {
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [typeDialog, setTypeDialog] = useState(false);
-  const authContext = useContext(CTX);
-  const {_logout} = authContext;
   const navigation = useNavigation();
-  const {navigate} = navigation;
 
   let unsubscribe = null;
 
-  const LIST_ITEM_USER_PROFILE = [
-    {
-      id: 1,
-      title: 'Chỉnh sửa thông tin cá nhân',
-      onPress: () => {
-        navigate(CHANGE_PROFILE);
-      },
-    },
-    {
-      id: 1,
-      title: 'Hỗ trợ',
-      onPress: () => {
-        setTypeDialog(2);
-        setIsOpen(true);
-      },
-    },
-    {
-      id: 2,
-      title: 'Liên hệ',
-      onPress: () => {
-        Linking.openURL('mailto:cartransplantvn@gmail.com');
-      },
-    },
-    {
-      id: 3,
-      title: 'Về chúng tôi',
-      onPress: () => {
-        Linking.openURL(`https://cartransplant.business.site/`);
-      },
-    },
-    {
-      id: 4,
-      title: 'Trở thành tài xế',
-      onPress: () => {},
-    },
-    {
-      id: 5,
-      title: 'Điều khoản và chính sách',
-      onPress: () => {},
-    },
-  ];
-
   useEffect(() => {
-    // console.log('componentDidMount');
-
     unsubscribe = firebase
       .firestore()
       .collection('users')
       .doc(_uid())
       .onSnapshot(
         doc => {
-          // console.log(doc.data());
+          console.log(doc.data());
           setUser(doc.data());
         },
         err => {
@@ -121,50 +63,26 @@ export default function ProfileScreen() {
     };
   }, []);
 
-  function _onLogout() {
-    setIsOpen(false);
-    // NOTE: context
-    _logout();
-
-    // NOTE: firebase
-    firebase.auth().signOut();
-  }
-
   function _uid() {
     return (firebase.auth().currentUser || {}).uid;
   }
 
-  function _pickImage() {
-    ImagePicker.launchImageLibrary(options, async response => {
-      // console.log('Response = ', response);
-      // Same code as in above section!
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        const source = {uri: response.uri};
-
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-        const remoteUri = await _uploadPhotoAsync(
-          source.uri,
-          `photos/${_uid()}/${Date.now()}`,
-        );
-
-        firebase
-          .firestore()
-          .collection('users')
-          .doc(_uid())
-          .update({
-            avatar: remoteUri,
-          })
-          .catch(err => console.log(err));
-      }
-    });
+  function _onSubmit(values) {
+    console.log('values', values);
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(_uid())
+      .update({
+        fullName: values.fullName,
+        phone: values.phone,
+        address: values.address,
+      })
+      .then(() => {
+        console.log('Document successfully written!');
+        setIsOpen(true);
+      })
+      .catch(err => console.log(err));
   }
 
   function _uploadPhotoAsync(localUri, path) {
@@ -230,36 +148,48 @@ export default function ProfileScreen() {
       );
     });
   }
+  function _pickImage() {
+    ImagePicker.launchImageLibrary(options, async response => {
+      // console.log('Response = ', response);
+      // Same code as in above section!
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = {uri: response.uri};
 
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        title: 'Car Transplant',
-        message:
-          'Tải App CarTransplant nhập mã giới thiệu:' +
-          user?.phone +
-          ' để hưởng ưu đãi !!!',
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
+        // You can also display the image using data:
+        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+        const remoteUri = await _uploadPhotoAsync(
+          source.uri,
+          `photos/${_uid()}/${Date.now()}`,
+        );
+
+        firebase
+          .firestore()
+          .collection('users')
+          .doc(_uid())
+          .update({
+            avatar: remoteUri,
+          })
+          .catch(err => console.log(err));
       }
-    } catch (error) {
-      alert(error.message);
-    }
+    });
+  }
+  const onGoBack = () => {
+    navigation.goBack();
   };
-  const callSupport = () => {
+  const _onCloseModal = () => {
     setIsOpen(false);
-    Linking.openURL(`tel:0356533048`);
+    navigation.navigate(PROFILE);
   };
   return (
     <View style={styles.container}>
-      <HeaderCustom title="Tài khoản" withoutBack />
+      <HeaderCustom title="Thông tin tài khoản" onGoBack={onGoBack} />
       <View style={styles.header}>
         <View
           style={{
@@ -285,64 +215,81 @@ export default function ProfileScreen() {
           <Text style={styles.name}>{user && user.phone}</Text>
         </View>
       </View>
-
-      <ScrollView style={styles.view}>
-        <Card style={styles.card}>
-          <List
-            dataArray={LIST_ITEM_USER_PROFILE}
-            renderItem={({item, index}) => {
-              return (
-                <ListItem selected key={index} noIndent onPress={item.onPress}>
-                  <Left>
-                    <Text>{item.title}</Text>
-                  </Left>
-                  <Right>
-                    <Icon
-                      name="right"
-                      type="AntDesign"
-                      style={{color: theme.primaryColor}}
-                    />
-                  </Right>
-                </ListItem>
-              );
-            }}
-          />
-        </Card>
-        <Card style={styles.card}>
-          <Image
-            source={{
-              uri:
-                'https://img.pikbest.com/png-images/qiantu/friends-share-bonus-activity-gift-box-gold-coin-coupon-combination-element_2738052.png!c1024wm0/compress/true/progressive/true/format/webp/fw/1024',
-            }}
-            style={styles.promotion}
-            resizeMode="cover"
-          />
-          <Text style={styles.textCode}>Giới thiệu bạn bè</Text>
-          <Text style={styles.text}>
-            Mã giới thiệu của bạn: {user && user.phone}
-          </Text>
-          <Button full onPress={onShare} danger style={styles.btnLogout}>
-            <Text style={styles.textShare}>Chia sẻ</Text>
-          </Button>
-        </Card>
-        <Button
-          full
-          onPress={() => {
-            setTypeDialog(1);
-            setIsOpen(true);
+      <SafeAreaView style={styles.container}>
+        <Formik
+          initialValues={{
+            fullName: '',
+            phone: '',
+            address: '',
           }}
-          danger
-          bordered
-          style={styles.btnLogout}>
-          <Text style={styles.textLogout}>Đăng xuất</Text>
-        </Button>
-      </ScrollView>
+          validationSchema={ChangeProfileSchema}
+          onSubmit={values => {
+            _onSubmit(values);
+          }}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
+            <View>
+              <View style={styles.form}>
+                <View>
+                  <Text style={styles.inputTitle}>Họ tên</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleChange('fullName')}
+                    onBlur={handleBlur('fullName')}
+                    value={values.fullName}
+                  />
+                  {errors.fullName && touched.fullName ? (
+                    <Text style={styles.error}>{errors.fullName}</Text>
+                  ) : null}
+                </View>
+                <View style={{marginTop: 32}}>
+                  <Text style={styles.inputTitle}>Số điện thoại</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleChange('phone')}
+                    onBlur={handleBlur('phone')}
+                    value={values.phone}
+                    keyboardType="phone-pad"
+                  />
+                  {errors.phone && touched.phone ? (
+                    <Text style={styles.error}>{errors.phone}</Text>
+                  ) : null}
+                </View>
+
+                <View style={{marginTop: 32}}>
+                  <Text style={styles.inputTitle}>Địa chỉ</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleChange('address')}
+                    onBlur={handleBlur('address')}
+                    value={values.address}
+                  />
+                </View>
+              </View>
+              <Button
+                full
+                onPress={handleSubmit}
+                danger
+                style={styles.btnLogout}>
+                <Text style={styles.textLogout}>Xác nhận</Text>
+              </Button>
+            </View>
+          )}
+        </Formik>
+      </SafeAreaView>
       <Dialog
         isOpen={isOpen}
         onClosed={() => setIsOpen(false)}
-        item={_.find(TYPE_DIALOG, {id: typeDialog})}
-        onClickLeft={() => setIsOpen(false)}
-        onClickRight={typeDialog === 1 ? _onLogout : callSupport}
+        title="Thông báo"
+        content="Cập nhật thông tin cá nhân thành công!"
+        left="Đóng"
+        onClickLeft={_onCloseModal}
         modalStyle={styles.modalStyle}
       />
     </View>
@@ -416,13 +363,14 @@ const styles = ScaledSheet.create({
     borderRadius: '16@ms',
   },
   textLogout: {
-    color: theme.primaryColor,
+    color: theme.white,
     fontSize: '14@ms',
     fontWeight: 'bold',
   },
   btnLogout: {
     marginVertical: '20@vs',
     borderRadius: 8,
+    marginHorizontal: '20@s',
   },
   textShare: {
     color: theme.white,
@@ -445,7 +393,34 @@ const styles = ScaledSheet.create({
     height: '70@vs',
     width: '100%',
   },
+  errorMessage: {
+    height: 72,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 30,
+  },
+  error: {
+    color: theme.primaryColor,
+    fontSize: 13,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  form: {
+    paddingVertical: 48,
+    marginHorizontal: 30,
+  },
+  inputTitle: {
+    color: '#8A8F9E',
+    fontSize: '14@ms',
+  },
+  input: {
+    borderBottomColor: '#8A8F9E',
+    borderBottomWidth: 1,
+    height: 40,
+    fontSize: 15,
+    color: '#161F3D',
+  },
   modalStyle: {
-    height: '220@vs',
+    height: '180@vs',
   },
 });

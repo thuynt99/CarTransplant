@@ -18,5 +18,6 @@ const APP_NAME = {
   CAR_MANAGEMENT: 'CarManagement',
   REGISTER_CAR: 'RegisterCar',
   TRIP_USER_DETAIL: 'TripUserDetail',
+  CHANGE_PROFILE: 'ChangeProfile',
 };
 module.exports = APP_NAME;
