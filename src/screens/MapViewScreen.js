@@ -82,6 +82,9 @@ class MapViewScreen extends React.Component {
       loading: false,
       itemCarSelected: {},
       seat: 1,
+      distance: 0,
+      price: 0,
+      duration: 0,
     };
     this.mapView = null;
   }
@@ -129,9 +132,14 @@ class MapViewScreen extends React.Component {
 
   onClickBtnNext = async () => {
     const {step} = this.state;
+    const {type} = this.props.route.params;
     if (step === STEP_MAP_VIEW.ENTER_DATE) {
-      await this.getTrip();
-      this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
+      if (type === PARAMS_FIND_TYPE.GO_ALONE) {
+        this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
+      } else {
+        await this.getTrip();
+        this.setState({step: STEP_MAP_VIEW.SELECT_CAR});
+      }
     } else if (step === STEP_MAP_VIEW.SELECT_CAR) {
       this.setState({step: STEP_MAP_VIEW.CONFIRM_TRIP});
     } else {
@@ -159,12 +167,7 @@ class MapViewScreen extends React.Component {
       },
       opt: 0,
       type: type,
-      seat:
-        type === PARAMS_FIND_TYPE.GO_SEND
-          ? 0
-          : type === PARAMS_FIND_TYPE.GO_ALONE
-          ? 1
-          : seat,
+      seat: type === PARAMS_FIND_TYPE.GO_SEND ? 0 : seat,
     };
     await this.props.findTrip(JSON.stringify(body)).then(res => {
       console.log('res', res);
@@ -261,7 +264,12 @@ class MapViewScreen extends React.Component {
               id: index,
             };
           });
-          this.setState({coordinates: arrayObj});
+          this.setState({
+            coordinates: arrayObj,
+            distance: dataTmp.distance,
+            price: dataTmp.price,
+            duration: dataTmp.duration,
+          });
         }
       });
     }
@@ -296,6 +304,7 @@ class MapViewScreen extends React.Component {
             ? 1
             : seat,
         driverTripID: itemCarSelected.driver_trip_id,
+        type,
       };
     } else {
       body = {
@@ -315,6 +324,7 @@ class MapViewScreen extends React.Component {
             : type === PARAMS_FIND_TYPE.GO_ALONE
             ? 1
             : seat,
+        type,
       };
     }
     this.props.takeTrip(JSON.stringify(body)).then(res => {
@@ -359,6 +369,9 @@ class MapViewScreen extends React.Component {
       loading,
       itemCarSelected,
       seat,
+      price,
+      distance,
+      duration,
     } = this.state;
     const {map} = this.props;
     const {type} = this.props.route.params;
@@ -375,7 +388,13 @@ class MapViewScreen extends React.Component {
           />
         ) : step === STEP_MAP_VIEW.CONFIRM_TRIP ? (
           <ConfirmTrip
-            goToMapScreen={() => this.goToMapScreen(STEP_MAP_VIEW.SELECT_CAR)}
+            goToMapScreen={() =>
+              this.goToMapScreen(
+                type === PARAMS_FIND_TYPE.GO_ALONE
+                  ? STEP_MAP_VIEW.ENTER_DATE
+                  : STEP_MAP_VIEW.SELECT_CAR,
+              )
+            }
             startStation={startStation}
             endStation={endStation}
             dateStart={dateStart}
@@ -383,6 +402,9 @@ class MapViewScreen extends React.Component {
             seat={seat}
             itemCarSelected={itemCarSelected}
             onClickConfirmTrip={this.onClickConfirmTrip}
+            distance={distance}
+            price={price}
+            duration={duration}
           />
         ) : (
           <>

@@ -22,6 +22,8 @@ import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import HeaderCustom from '../components/common/HeaderCustom';
 import theme from '../theme';
 import {Rating} from 'react-native-ratings';
+import moment from 'moment';
+import {FORMAT} from '../constants/format';
 export default class TripDetail extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +32,7 @@ export default class TripDetail extends Component {
     this.props.navigation.goBack();
   };
   callDriver = phoneNumber => {
-    const url = `telprompt:${phoneNumber}`;
+    const url = `tel:${phoneNumber}`;
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
         return Linking.openURL(url).catch(() => null);
@@ -66,7 +68,7 @@ export default class TripDetail extends Component {
                     style={{alignSelf: 'flex-start'}}
                   />
                   <Text style={styles.textVehicleInfo}>
-                    Biển số: {item?.car.licensePlate}
+                    Biển số: {item?.car?.licensePlate}
                   </Text>
                 </View>
               </Row>
@@ -127,7 +129,11 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Lịch trình:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>09:30 đến 11:00 15/05/2021</Text>
+                <Text style={styles.textValue}>
+                  {moment.unix(item?.beginLeaveTime).format(FORMAT.TIME)} đến{' '}
+                  {moment.unix(item?.endLeaveTime).format(FORMAT.TIME)} ngày{' '}
+                  {moment.unix(item?.beginLeaveTime).format(FORMAT.DATE)}
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -135,7 +141,10 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Khoảng cách:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>5 km</Text>
+                <Text style={styles.textValue}>
+                  {item?.distance.toLocaleString('it-IT') + ' '}
+                  km
+                </Text>
               </Right>
             </Item>
             {/* <Item style={styles.item}>
@@ -143,7 +152,11 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Thời gian dự kiến:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>1 giờ 12 phút</Text>
+                <Text style={styles.textValue}>
+                  {moment()
+                    .seconds(item?.duration)
+                    .format('hh:mm:ss')}
+                </Text>
               </Right>
             </Item> */}
             <Item style={styles.item}>
@@ -167,15 +180,7 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Mã chuyến đi:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>#CA31777</Text>
-              </Right>
-            </Item>
-            <Item style={styles.item}>
-              <Left>
-                <Text style={styles.name}>Bảo hiểm chuyến:</Text>
-              </Left>
-              <Right>
-                <Text style={styles.textValue}>DN40124568999</Text>
+                <Text style={styles.textValue}>{item.id}</Text>
               </Right>
             </Item>
             <Item style={styles.item}>

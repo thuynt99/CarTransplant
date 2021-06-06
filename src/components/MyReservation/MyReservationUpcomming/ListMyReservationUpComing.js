@@ -24,6 +24,7 @@ import ItemReservation from '../ItemReservation';
 
 class ListMyReservationUpComing extends Component {
   render() {
+    const {isPending} = this.props;
     return (
       <Container>
         <Content>
@@ -32,7 +33,7 @@ class ListMyReservationUpComing extends Component {
             renderItem={({item}) => {
               return (
                 <ListItem noBorder>
-                  <ItemReservation item={item} />
+                  <ItemReservation item={item} isPending={isPending} />
                 </ListItem>
               );
             }}

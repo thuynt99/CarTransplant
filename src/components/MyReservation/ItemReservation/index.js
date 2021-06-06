@@ -28,7 +28,7 @@ import {FORMAT} from '../../../constants/format';
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
-  const {isHistory, item} = props;
+  const {isHistory, item, isPending} = props;
   function onClick() {
     navigate(TRIP_DETAIL, {item: item});
   }
@@ -128,7 +128,7 @@ export const ItemReservation = props => {
             </Row>
           </>
         ) : (
-          <>
+          <TouchableOpacity>
             <Item style={styles.vehicleTypeView}>
               <Left>
                 <Text style={styles.subTitle}>
@@ -140,49 +140,51 @@ export const ItemReservation = props => {
                 <Text style={styles.subTitle}>Ghép người</Text>
               </Right>
             </Item>
-            <Row style={styles.bottom}>
-              <Left>
-                <Row>
-                  <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 50,
-                    }}
-                    source={{
-                      uri: item?.driver?.Avatar,
-                    }}
-                  />
-                  <View style={styles.viewDriver}>
-                    <Text style={styles.name}>{item?.driver?.FullName}</Text>
-                    <Rating ratingCount={5} imageSize={16} />
-                    <View style={styles.vehicleInfo}>
-                      <Text style={styles.textVehicleInfo}>
-                        {item?.car?.licensePlate}
-                      </Text>
+            {!isPending && (
+              <Row style={styles.bottom}>
+                <Left>
+                  <Row>
+                    <Image
+                      style={{
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                      }}
+                      source={{
+                        uri: item?.driver?.Avatar,
+                      }}
+                    />
+                    <View style={styles.viewDriver}>
+                      <Text style={styles.name}>{item?.driver?.FullName}</Text>
+                      <Rating ratingCount={5} imageSize={16} />
+                      <View style={styles.vehicleInfo}>
+                        <Text style={styles.textVehicleInfo}>
+                          {item?.car?.licensePlate}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </Row>
-              </Left>
-              <Right>
-                <Row>
-                  {/* <View>
+                  </Row>
+                </Left>
+                <Right>
+                  <Row>
+                    {/* <View>
                     <Text style={styles.subTitle}>Thời gian</Text>
                     <Text style={styles.value}>1.3h</Text>
                   </View> */}
-                  <View>
-                    <Text style={styles.subTitle}>Giá tiền</Text>
-                    <Text style={styles.value}>
-                      {item?.price?.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND',
-                      })}
-                    </Text>
-                  </View>
-                </Row>
-              </Right>
-            </Row>
-          </>
+                    <View>
+                      <Text style={styles.subTitle}>Giá tiền</Text>
+                      <Text style={styles.value}>
+                        {item?.price?.toLocaleString('it-IT', {
+                          style: 'currency',
+                          currency: 'VND',
+                        })}
+                      </Text>
+                    </View>
+                  </Row>
+                </Right>
+              </Row>
+            )}
+          </TouchableOpacity>
         )}
       </TouchableOpacity>
     </Card>

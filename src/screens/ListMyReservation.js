@@ -97,7 +97,7 @@ class ListMyReservation extends Component {
             }}
             activeTextStyle={{color: theme.primaryColor, fontWeight: 'bold'}}
             textStyle={{color: theme.grey_dark}}>
-            <ListMyReservationUpComing data={listTrip} />
+            <ListMyReservationUpComing data={listTrip} isPending={true} />
           </Tab>
           <Tab
             heading="Lịch sử"

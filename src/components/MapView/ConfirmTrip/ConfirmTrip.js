@@ -34,6 +34,9 @@ export default class ConfirmTrip extends Component {
       seat,
       onClickConfirmTrip,
       itemCarSelected,
+      distance,
+      duration,
+      price,
     } = this.props;
     const [start] = _.split(startStation?.display_name, ',').slice(-3);
     const [end] = _.split(endStation?.display_name, ',').slice(-3);
@@ -128,12 +131,15 @@ export default class ConfirmTrip extends Component {
                 </Text>
               </Right>
             </Item>
-            {/* <Item style={styles.item}>
+            <Item style={styles.item}>
               <Left>
                 <Text style={styles.subTitle}>Khoảng cách:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>5 km</Text>
+                <Text style={styles.textValue}>
+                  {distance.toLocaleString('it-IT') + ' '}
+                  km
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -141,19 +147,28 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Thời gian dự kiến:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>1 giờ 12 phút</Text>
+                <Text style={styles.textValue}>
+                  {moment()
+                    .seconds(duration)
+                    .format('hh:mm:ss')}
+                </Text>
               </Right>
-            </Item> */}
+            </Item>
             <Item style={styles.item}>
               <Left>
                 <Text style={styles.subTitle}>Tiền phải trả:</Text>
               </Left>
               <Right>
                 <Text style={styles.price}>
-                  {itemCarSelected?.price?.toLocaleString('it-IT', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {itemCarSelected?.price
+                    ? itemCarSelected?.price?.toLocaleString('it-IT', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })
+                    : price?.toLocaleString('it-IT', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })}
                 </Text>
               </Right>
             </Item>

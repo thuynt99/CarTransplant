@@ -1,5 +1,9 @@
 import {HTTP} from '../../constants/api';
-import {findTripApi, getListTripUserUApi} from '../../services/tripService';
+import {
+  findTripApi,
+  getListTripUserUApi,
+  takeTripApi,
+} from '../../services/tripService';
 import {
   FIND_TRIP,
   FIND_TRIP_FAILED,
@@ -43,7 +47,7 @@ export function takeTrip(params) {
     dispatch({
       type: TAKE_TRIP,
     });
-    const dataJson = findTripApi(params);
+    const dataJson = takeTripApi(params);
     return dataJson.then(dataJson => processTakeTrip(dataJson, dispatch));
   };
 }
