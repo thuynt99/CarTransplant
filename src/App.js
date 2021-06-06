@@ -69,7 +69,6 @@ function App() {
     }
   };
   const checkToken = async () => {
-    console.log('tao buon qua ma');
     const fcmToken = await messaging().getToken();
 
     if (fcmToken) {
