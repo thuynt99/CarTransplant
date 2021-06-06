@@ -4,4 +4,6 @@ export const FORMAT = {
   MONTH: 'MM',
   DAY: 'DD',
   YEAR: 'YYYY',
+  DATE_TIME: 'HH:mm DD/MM/YYYY',
+  TIME_DATE: 'DD/MM/YYYY HH:mm',
 };
