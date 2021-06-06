@@ -49,6 +49,7 @@ import {STEP_MAP_VIEW} from '../constants/data';
 import {findTrip, takeTrip} from '../stores/trip/actions';
 import axios from 'axios';
 import {LIST_MY_RESERVATION} from '../constants';
+import {PARAMS_FIND_TYPE} from '../constants/api';
 
 const {width, height} = Dimensions.get('window');
 
@@ -142,10 +143,12 @@ class MapViewScreen extends React.Component {
     this.setState({step: STEP_MAP_VIEW.DATE_TIME_SELECT});
   };
   getTrip = async () => {
-    const {startStation, endStation, dateStart, dateEnd} = this.state;
+    const {type} = this.props.route.params;
+    console.log('type', type);
+    const {startStation, endStation, dateStart, dateEnd, seat} = this.state;
     const body = {
-      begin_leave_time: dateStart.unix(),
-      end_leave_time: dateEnd.unix(),
+      beginLeaveTime: dateStart.unix(),
+      endLeaveTime: dateEnd.unix(),
       from: {
         latitude: startStation.latitude,
         longitude: startStation.longitude,
@@ -155,6 +158,13 @@ class MapViewScreen extends React.Component {
         longitude: endStation.longitude,
       },
       opt: 0,
+      type: type,
+      seat:
+        type === PARAMS_FIND_TYPE.GO_SEND
+          ? 0
+          : type === PARAMS_FIND_TYPE.GO_ALONE
+          ? 1
+          : seat,
     };
     await this.props.findTrip(JSON.stringify(body)).then(res => {
       console.log('res', res);
@@ -167,14 +177,14 @@ class MapViewScreen extends React.Component {
             [
               {
                 text: 'Cancel',
-                onPress: () =>
-                  this.setState({step: STEP_MAP_VIEW.ENTER_ADDRESS}),
+                onPress: () => {},
                 style: 'cancel',
               },
               {
                 text: 'OK',
-                onPress: () =>
-                  this.props.navigation.navigate(LIST_MY_RESERVATION),
+                onPress: () => {
+                  this.onClickConfirmTrip();
+                },
               },
             ],
           );
@@ -257,20 +267,56 @@ class MapViewScreen extends React.Component {
     }
   };
   onClickConfirmTrip = async () => {
-    const {startStation, endStation, dateStart, dateEnd, seat} = this.state;
-    const body = {
-      begin_leave_time: dateStart.unix(),
-      end_leave_time: dateEnd.unix(),
-      from: {
-        latitude: startStation.latitude,
-        longitude: startStation.longitude,
-      },
-      to: {
-        latitude: endStation.latitude,
-        longitude: endStation.longitude,
-      },
+    const {
+      startStation,
+      endStation,
+      dateStart,
+      dateEnd,
       seat,
-    };
+      itemCarSelected,
+    } = this.state;
+    const {type} = this.props.route.params;
+    let body = {};
+    if (itemCarSelected?.driverTripID) {
+      body = {
+        beginLeaveTime: dateStart.unix(),
+        endLeaveTime: dateEnd.unix(),
+        from: {
+          latitude: startStation.latitude,
+          longitude: startStation.longitude,
+        },
+        to: {
+          latitude: endStation.latitude,
+          longitude: endStation.longitude,
+        },
+        seat:
+          type === PARAMS_FIND_TYPE.GO_SEND
+            ? 0
+            : type === PARAMS_FIND_TYPE.GO_ALONE
+            ? 1
+            : seat,
+        driverTripID: itemCarSelected.driver_trip_id,
+      };
+    } else {
+      body = {
+        beginLeaveTime: dateStart.unix(),
+        endLeaveTime: dateEnd.unix(),
+        from: {
+          latitude: startStation.latitude,
+          longitude: startStation.longitude,
+        },
+        to: {
+          latitude: endStation.latitude,
+          longitude: endStation.longitude,
+        },
+        seat:
+          type === PARAMS_FIND_TYPE.GO_SEND
+            ? 0
+            : type === PARAMS_FIND_TYPE.GO_ALONE
+            ? 1
+            : seat,
+      };
+    }
     this.props.takeTrip(JSON.stringify(body)).then(res => {
       if (res.status) {
         Alert.alert('Đặt xe thành công', 'Đi đễn màn hình chuyến đi của bạn?', [
@@ -315,6 +361,7 @@ class MapViewScreen extends React.Component {
       seat,
     } = this.state;
     const {map} = this.props;
+    const {type} = this.props.route.params;
     return (
       <View style={styles.container}>
         {step === STEP_MAP_VIEW.SEARCH_ADDRESS ? (
@@ -407,38 +454,80 @@ class MapViewScreen extends React.Component {
             </View>
             <View style={styles.viewInput}>
               {step === STEP_MAP_VIEW.ENTER_ADDRESS ? (
-                <Form>
-                  <Item fixedLabel style={styles.textInput}>
-                    <Icon
-                      active
-                      name="location"
-                      type="Entypo"
-                      style={{fontSize: 24, color: theme.primaryColor}}
-                    />
-                    <Input
-                      rounded
-                      placeholder="Xin vui lòng nhập điểm đi"
-                      defaultValue={map.startLocation?.display_name}
-                      value={startStation?.display_name}
-                      onFocus={() => this.goToSearch('startStation')}
-                      ellipsizeMode="head"
-                    />
-                  </Item>
-                  <Item fixedLabel style={styles.textInput}>
-                    <Icon
-                      active
-                      name="md-add"
-                      type="Ionicons"
-                      style={{fontSize: 24, color: theme.primaryColor}}
-                    />
-                    <Input
-                      rounded
-                      placeholder="Xin vui lòng nhập điểm đến"
-                      value={endStation?.display_name}
-                      onFocus={() => this.goToSearch('endStation')}
-                    />
-                  </Item>
-                </Form>
+                <>
+                  {type === PARAMS_FIND_TYPE.GO_TOGETHER && (
+                    <Item>
+                      <Left>
+                        <Text style={styles.textTitleCar}>Số người</Text>
+                      </Left>
+                      <Right>
+                        <View style={styles.row}>
+                          {seat > 1 && (
+                            <TouchableOpacity
+                              style={styles.btnPlus}
+                              onPress={() =>
+                                this.setState({
+                                  seat: seat - 1,
+                                })
+                              }>
+                              <Icon
+                                name="minus"
+                                type="Entypo"
+                                style={{color: theme.primaryColor}}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          <Text style={styles.textSeat}>{seat}</Text>
+                          <TouchableOpacity
+                            style={styles.btnPlus}
+                            onPress={() =>
+                              this.setState({
+                                seat: seat + 1,
+                              })
+                            }>
+                            <Icon
+                              name="plus"
+                              type="Entypo"
+                              style={{color: theme.primaryColor}}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </Right>
+                    </Item>
+                  )}
+                  <Form>
+                    <Item fixedLabel style={styles.textInput}>
+                      <Icon
+                        active
+                        name="location"
+                        type="Entypo"
+                        style={{fontSize: 24, color: theme.primaryColor}}
+                      />
+                      <Input
+                        rounded
+                        placeholder="Xin vui lòng nhập điểm đi"
+                        defaultValue={map.startLocation?.display_name}
+                        value={startStation?.display_name}
+                        onFocus={() => this.goToSearch('startStation')}
+                        ellipsizeMode="head"
+                      />
+                    </Item>
+                    <Item fixedLabel style={styles.textInput}>
+                      <Icon
+                        active
+                        name="md-add"
+                        type="Ionicons"
+                        style={{fontSize: 24, color: theme.primaryColor}}
+                      />
+                      <Input
+                        rounded
+                        placeholder="Xin vui lòng nhập điểm đến"
+                        value={endStation?.display_name}
+                        onFocus={() => this.goToSearch('endStation')}
+                      />
+                    </Item>
+                  </Form>
+                </>
               ) : step === STEP_MAP_VIEW.ENTER_DATE ? (
                 <View style={styles.date}>
                   <Text style={styles.textTitle}>Lịch trình chuyến đi</Text>
@@ -490,50 +579,19 @@ class MapViewScreen extends React.Component {
                 </ScrollView>
               ) : (
                 <ScrollView style={styles.date}>
-                  <Row>
-                    <Left>
-                      <Text style={styles.textTitleCar}>Số người</Text>
-                    </Left>
-                    <Right>
-                      <View style={styles.row}>
-                        {seat > 1 && (
-                          <TouchableOpacity
-                            style={styles.btnPlus}
-                            onPress={() =>
-                              this.setState({
-                                seat: seat - 1,
-                              })
-                            }>
-                            <Icon
-                              name="minus"
-                              type="Entypo"
-                              style={{color: theme.primaryColor}}
-                            />
-                          </TouchableOpacity>
-                        )}
-                        <Text style={styles.textSeat}>{seat}</Text>
-                        <TouchableOpacity
-                          style={styles.btnPlus}
-                          onPress={() =>
-                            this.setState({
-                              seat: seat + 1,
-                            })
-                          }>
-                          <Icon
-                            name="plus"
-                            type="Entypo"
-                            style={{color: theme.primaryColor}}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </Right>
-                  </Row>
-                  {!_.isEmpty(listVehicle) && (
+                  {!_.isEmpty(listVehicle) ? (
                     <ListBookingCar
                       listVehicle={listVehicle}
                       onSelectCar={this.onSelectCar}
                       itemCarSelected={itemCarSelected}
                     />
+                  ) : (
+                    <View>
+                      <Text style={styles.textNull}>
+                        Rất tiếc không có xe nào đang rảnh, hãy thử đặt lại vào
+                        giờ khác nhé!
+                      </Text>
+                    </View>
                   )}
                 </ScrollView>
               )}
@@ -541,7 +599,12 @@ class MapViewScreen extends React.Component {
                 block
                 danger
                 style={styles.btnNext}
-                onPress={this.onClickBtnNext}>
+                onPress={this.onClickBtnNext}
+                disabled={
+                  !startStation?.display_name ||
+                  !endStation?.display_name ||
+                  (_.isEmpty(listVehicle) && step === STEP_MAP_VIEW.SELECT_CAR)
+                }>
                 <Text>
                   {step !== STEP_MAP_VIEW.SELECT_CAR ? 'Tiếp theo' : 'Xác nhận'}
                 </Text>
@@ -579,7 +642,7 @@ const styles = ScaledSheet.create({
   },
   viewInput: {
     width: '100%',
-    height: responsiveHeight(30),
+    height: responsiveHeight(35),
     backgroundColor: 'white',
     borderRadius: 20,
     paddingHorizontal: responsiveWidth(2),
@@ -628,13 +691,19 @@ const styles = ScaledSheet.create({
   date: {
     paddingTop: 8,
     paddingBottom: 20,
-    // justifyContent: 'space-evenly',
   },
   textDate: {
     color: theme.primaryColor,
     paddingHorizontal: 20,
     justifyContent: 'center',
     paddingTop: 5,
+  },
+  textNull: {
+    color: theme.primaryColor,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    paddingTop: '40@vs',
+    textAlign: 'center',
   },
   text: {
     fontSize: '14@ms',
@@ -664,6 +733,7 @@ const styles = ScaledSheet.create({
     fontSize: '14@ms',
     fontWeight: 'bold',
     paddingLeft: '16@s',
+    paddingBottom: '8@vs',
   },
   textSeat: {
     fontSize: '16@ms',
@@ -673,6 +743,7 @@ const styles = ScaledSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: '8@vs',
   },
 });
 const mapStateToProps = state => ({

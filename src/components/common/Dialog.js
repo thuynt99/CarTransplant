@@ -11,11 +11,9 @@ import {
 } from 'native-base';
 import React from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import Modal from 'react-native-modalbox';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../theme';
-import ImageIcon from './ImageIcon';
 
 export default function Dialog(props) {
   return (

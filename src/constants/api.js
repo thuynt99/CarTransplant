@@ -10,3 +10,9 @@ export const PARAMS_LIST_TRIP = {
   CANCELED: 4,
   HISTORY: -1,
 };
+
+export const PARAMS_FIND_TYPE = {
+  GO_ALONE: 1,
+  GO_TOGETHER: 2,
+  GO_SEND: 3,
+};
