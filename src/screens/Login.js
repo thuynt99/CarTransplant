@@ -13,10 +13,13 @@ import {Formik} from 'formik';
 import SafeAreaView from 'react-native-safe-area-view';
 import firebase from 'firebase';
 import {useNavigation} from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 
 // import {CTX} from '../tools/context';
 import LoginSchema from '../validation/Login';
 import {primaryColor} from '../theme';
+import store from '../stores/configureStore';
+import {registerTokenPush} from '../stores/notify/actions';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -37,6 +40,9 @@ export default function LoginScreen() {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
+      .then(async () => {
+        await checkToken();
+      })
       .catch(error => setErrorMessage(error.message));
 
     // NOTE: context
@@ -47,7 +53,13 @@ export default function LoginScreen() {
     //   setErrorMessage('Email or Password is not correct.');
     // }
   }
-
+  const checkToken = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log('fcmToken', fcmToken);
+      store.dispatch(registerTokenPush(fcmToken));
+    }
+  };
   function _navigateForgot() {
     navigate('Forgot');
   }
