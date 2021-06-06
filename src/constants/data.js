@@ -53,3 +53,21 @@ export const STEP_MAP_VIEW = {
   SEARCH_ADDRESS: 4,
   CONFIRM_TRIP: 5,
 };
+
+export const TYPE_DIALOG = [
+  {
+    id: 1,
+    title: 'Đăng xuất',
+    content: 'Bạn có chắc chắn muốn đăng xuất khỏi ứng dụng!',
+    left: 'Đóng',
+    right: 'Đăng xuất',
+  },
+  {
+    id: 2,
+    title: 'Thông báo!',
+    content:
+      'Bạn có chắc chắn muốn thực hiện cuộc gọi đến trung tâm khách hàng cả chúng tôi!',
+    left: 'Đóng',
+    right: 'Gọi ngay',
+  },
+];
