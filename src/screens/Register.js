@@ -41,12 +41,6 @@ export default function RegisterScreen() {
           .catch(error => setErrorMessage(error.message));
       })
       .catch(error => setErrorMessage(error.message));
-
-    // if (phone !== '0704498756') {
-    //   navigate('Login');
-    // } else {
-    //   setErrorMessage('Phone has already existed.');
-    // }
   }
 
   function _navigateLogin() {
@@ -123,6 +117,7 @@ export default function RegisterScreen() {
                   onChangeText={handleChange('phone')}
                   onBlur={handleBlur('phone')}
                   value={values.phone}
+                  keyboardType="phone-pad"
                 />
                 {errors.phone && touched.phone ? (
                   <Text style={styles.error}>{errors.phone}</Text>
