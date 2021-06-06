@@ -15,5 +15,6 @@ const APP_NAME = {
   MAP_VIEW: 'MapViewScreen',
   TRIP_DETAIL: 'TripDetail',
   NOTIFICATION_DETAIL: 'NotificationDetailScreen',
+  CHANGE_PROFILE: 'ChangeProfile',
 };
 module.exports = APP_NAME;
