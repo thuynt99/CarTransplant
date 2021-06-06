@@ -4,6 +4,8 @@ import {Card} from 'native-base';
 import HeaderCustom from '../components/common/HeaderCustom';
 import {s, ScaledSheet} from 'react-native-size-matters';
 import theme from '../theme';
+import moment from 'moment';
+import {FORMAT} from '../constants/format';
 
 class NotificationDetailScreen extends React.Component {
   constructor(props) {
@@ -28,17 +30,16 @@ class NotificationDetailScreen extends React.Component {
               <Text style={styles.subTitle}>cartransplantvn@gmail.com</Text>
             </View>
             <View>
-              <Text style={styles.time}>25/05/2021 12:44</Text>
+              <Text style={styles.time}>
+                {moment(Notification.createdDate).format(FORMAT.TIME_DATE)}
+              </Text>
             </View>
           </View>
           <View style={styles.body}>
-            {item.attachment ? (
-              <Image
-                style={styles.attachment}
-                source={{uri: item.attachment}}
-              />
+            {item.image ? (
+              <Image style={styles.attachment} source={{uri: item.image}} />
             ) : null}
-            <Text style={styles.textBody}>{item.text}</Text>
+            <Text style={styles.textBody}>{item.message}</Text>
           </View>
         </Card>
       </View>
