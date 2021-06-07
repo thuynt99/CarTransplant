@@ -23,6 +23,7 @@ import theme from '../../../theme';
 import {ScrollView} from 'react-native-gesture-handler';
 import _ from 'lodash';
 import {FORMAT} from '../../../constants/format';
+import {PARAMS_FIND_TYPE} from '../../../constants/api';
 export default class ConfirmTrip extends Component {
   render() {
     const {
@@ -37,10 +38,16 @@ export default class ConfirmTrip extends Component {
       distance,
       duration,
       price,
+      type,
     } = this.props;
     const [start] = _.split(startStation?.display_name, ',').slice(-3);
     const [end] = _.split(endStation?.display_name, ',').slice(-3);
-
+    const typeName =
+      type === PARAMS_FIND_TYPE.GO_ALONE
+        ? 'Đi riêng'
+        : type === PARAMS_FIND_TYPE.GO_SEND
+        ? ' Chở hàng'
+        : 'Đi ghép';
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Xác nhận đặt chuyến" onGoBack={goToMapScreen} />
@@ -99,25 +106,28 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Loại dịch vụ:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>Ghép người</Text>
+                <Text style={styles.textValue}>{typeName}</Text>
               </Right>
             </Item>
-            <Item style={styles.item}>
-              <Left>
-                <Text style={styles.subTitle}>Số người:</Text>
-              </Left>
-              <Right>
-                <Text style={styles.textValue}>{seat}</Text>
-              </Right>
-            </Item>
-            <Item style={styles.item}>
+            {type === PARAMS_FIND_TYPE.GO_TOGETHER && (
+              <Item style={styles.item}>
+                <Left>
+                  <Text style={styles.subTitle}>Số người:</Text>
+                </Left>
+                <Right>
+                  <Text style={styles.textValue}>{seat}</Text>
+                </Right>
+              </Item>
+            )}
+
+            {/* <Item style={styles.item}>
               <Left>
                 <Text style={styles.subTitle}>Loại xe:</Text>
               </Left>
               <Right>
                 <Text style={styles.textValue}>5 chỗ</Text>
               </Right>
-            </Item>
+            </Item> */}
 
             <Item style={styles.item}>
               <Left>
@@ -148,9 +158,8 @@ export default class ConfirmTrip extends Component {
               </Left>
               <Right>
                 <Text style={styles.textValue}>
-                  {moment()
-                    .seconds(duration)
-                    .format('hh:mm:ss')}
+                  {moment.duration(Number(duration), 'seconds').hours()} giờ +{' '}
+                  {moment.duration(Number(duration), 'seconds').minutes()} phút
                 </Text>
               </Right>
             </Item>

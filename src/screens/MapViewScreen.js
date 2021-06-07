@@ -405,6 +405,7 @@ class MapViewScreen extends React.Component {
             distance={distance}
             price={price}
             duration={duration}
+            type={type}
           />
         ) : (
           <>
