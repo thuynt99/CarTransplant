@@ -169,7 +169,11 @@ export default class TripDetail extends Component {
                   <View>
                     {item.userTrips.map((user, index) => {
                       return (
-                        <ItemUserTrip item={user} key={index.toString()} />
+                        <ItemUserTrip
+                          item={user}
+                          key={index.toString()}
+                          state={item.state}
+                        />
                       );
                     })}
                   </View>

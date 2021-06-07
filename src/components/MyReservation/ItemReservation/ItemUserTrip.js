@@ -23,6 +23,7 @@ import theme from '../../../theme';
 import {useNavigation} from '@react-navigation/native';
 import {TRIP_USER_DETAIL} from '../../../constants';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {PARAMS_LIST_TRIP} from '../../../constants/api';
 
 const ItemUserTrip = props => {
   const navigation = useNavigation();
@@ -35,9 +36,9 @@ const ItemUserTrip = props => {
       }
     });
   };
-  const {item} = props;
+  const {item, state} = props;
   const goToDetail = () => {
-    navigate(TRIP_USER_DETAIL, {item: item});
+    navigate(TRIP_USER_DETAIL, {item: item, state: state});
   };
 
   return (
@@ -47,14 +48,20 @@ const ItemUserTrip = props => {
           <Thumbnail source={{uri: item?.user?.Avatar}} />
           <View style={styles.left}>
             <Text style={styles.title}>{item?.user?.FullName}</Text>
-            <Button
-              small
-              danger
-              style={styles.btnCall}
-              onPress={() => callDriver(item?.user?.Phone)}>
-              <Icon name="phone" type="FontAwesome" style={{marginRight: 0}} />
-              <Text>Gọi khách</Text>
-            </Button>
+            {state === PARAMS_LIST_TRIP.UPCOMING && (
+              <Button
+                small
+                danger
+                style={styles.btnCall}
+                onPress={() => callDriver(item?.user?.Phone)}>
+                <Icon
+                  name="phone"
+                  type="FontAwesome"
+                  style={{marginRight: 0}}
+                />
+                <Text>Gọi khách</Text>
+              </Button>
+            )}
           </View>
         </Left>
         <Body />

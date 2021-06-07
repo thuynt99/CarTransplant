@@ -37,7 +37,6 @@ class ListMyReservation extends Component {
     return {loading: trip.loading};
   }
   async componentDidMount() {
-    console.log('he lo');
     this.getListTripDriver();
     this.focusListener = this.props.navigation.addListener('focus', () => {
       // The screen is focused
@@ -57,11 +56,7 @@ class ListMyReservation extends Component {
     console.log('listTrip', this.state.listTrip);
     const {currentTab} = this.state;
     const params =
-      currentTab === 0
-        ? PARAMS_LIST_TRIP.UPCOMING
-        : currentTab === 1
-        ? PARAMS_LIST_TRIP.PENDING
-        : PARAMS_LIST_TRIP.HISTORY;
+      currentTab === 0 ? PARAMS_LIST_TRIP.UPCOMING : PARAMS_LIST_TRIP.HISTORY;
     await this.props.getListTripDriver(params);
     this.setState({listTrip: this.props.trip.listTrip});
   };

@@ -31,6 +31,7 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import {TYPE_DIALOG} from '../constants/data';
 import {LIST_MY_RESERVATION} from '../constants';
+import {PARAMS_LIST_TRIP} from '../constants/api';
 
 class TripUserDetail extends Component {
   constructor(props) {
@@ -70,7 +71,7 @@ class TripUserDetail extends Component {
   };
   render() {
     const {goToMapScreen} = this.props;
-    const {item} = this.props.route.params;
+    const {item, state} = this.props.route.params;
     console.log(item);
     const {idModal, showModal} = this.state;
     return (
@@ -92,33 +93,35 @@ class TripUserDetail extends Component {
                 />
                 <View style={styles.viewDriver}>
                   <Text style={styles.title}>{item?.user?.FullName}</Text>
-                  <Text style={styles.name}>{item?.user?.Phone}</Text>
+                  <Text style={styles.name}>{item?.user?.Email}</Text>
                 </View>
               </Row>
             </View>
-            <View style={styles.makeCall}>
-              <Button
-                small
-                danger
-                bordered
-                style={styles.btnCall}
-                onPress={() => this.callDriver(item?.user?.Phone)}>
-                <Icon
-                  name="phone"
-                  type="FontAwesome"
-                  style={{marginRight: 0}}
-                />
-                <Text>Gọi khách</Text>
-              </Button>
-              <Button small danger bordered style={styles.btnCall}>
-                <Icon
-                  name="message1"
-                  type="AntDesign"
-                  style={{marginRight: 0}}
-                />
-                <Text>Nhắn tin</Text>
-              </Button>
-            </View>
+            {!state === PARAMS_LIST_TRIP.HISTORY && (
+              <View style={styles.makeCall}>
+                <Button
+                  small
+                  danger
+                  bordered
+                  style={styles.btnCall}
+                  onPress={() => this.callDriver(item?.user?.Phone)}>
+                  <Icon
+                    name="phone"
+                    type="FontAwesome"
+                    style={{marginRight: 0}}
+                  />
+                  <Text>Gọi khách</Text>
+                </Button>
+                <Button small danger bordered style={styles.btnCall}>
+                  <Icon
+                    name="message1"
+                    type="AntDesign"
+                    style={{marginRight: 0}}
+                  />
+                  <Text>Nhắn tin</Text>
+                </Button>
+              </View>
+            )}
             <Item style={styles.item}>
               <Col>
                 <Text style={styles.name}>Điểm đón:</Text>
@@ -213,7 +216,7 @@ class TripUserDetail extends Component {
               </Text>
             </View>
           </ScrollView>
-          {true && (
+          {state === PARAMS_LIST_TRIP.UPCOMING && (
             <Button full style={styles.btnConfirm} onPress={this.maskDoneTrip}>
               <Text>Xác Nhận Hoàn Thành</Text>
             </Button>
