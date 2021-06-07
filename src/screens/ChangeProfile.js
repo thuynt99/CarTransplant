@@ -24,6 +24,7 @@ import Dialog from '../components/common/Dialog';
 import {Formik} from 'formik';
 import {useNavigation} from '@react-navigation/native';
 import {PROFILE} from '../constants';
+import {TYPE_DIALOG} from '../constants/data';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -286,9 +287,7 @@ export default function ChangeProfile() {
       <Dialog
         isOpen={isOpen}
         onClosed={() => setIsOpen(false)}
-        title="Thông báo"
-        content="Cập nhật thông tin cá nhân thành công!"
-        left="Đóng"
+        item={_.find(TYPE_DIALOG, {id: 3})}
         onClickLeft={_onCloseModal}
         modalStyle={styles.modalStyle}
       />
