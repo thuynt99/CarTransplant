@@ -72,7 +72,6 @@ class TripUserDetail extends Component {
   render() {
     const {goToMapScreen} = this.props;
     const {item, state} = this.props.route.params;
-    console.log(item);
     const {idModal, showModal} = this.state;
     return (
       <Container style={styles.container}>
@@ -97,7 +96,7 @@ class TripUserDetail extends Component {
                 </View>
               </Row>
             </View>
-            {!state === PARAMS_LIST_TRIP.HISTORY && (
+            {state !== PARAMS_LIST_TRIP.HISTORY && (
               <View style={styles.makeCall}>
                 <Button
                   small
@@ -144,10 +143,10 @@ class TripUserDetail extends Component {
             </Item>
             <Item style={styles.item}>
               <Left>
-                <Text style={styles.name}>Loại xe:</Text>
+                <Text style={styles.name}>Số người:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>5 chỗ</Text>
+                <Text style={styles.textValue}>{item.seat}</Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -169,11 +168,13 @@ class TripUserDetail extends Component {
               <Left>
                 <Text style={styles.name}>Khoảng cách:</Text>
               </Left>
-              <Right>
-                <Text style={styles.textValue}>
-                  {item?.distance.toLocaleString('it-IT')} km
-                </Text>
-              </Right>
+              {item?.distance && (
+                <Right>
+                  <Text style={styles.textValue}>
+                    {item?.distance.toLocaleString('it-IT')} km
+                  </Text>
+                </Right>
+              )}
             </Item>
             <Item style={styles.item}>
               <Left>
@@ -195,6 +196,7 @@ class TripUserDetail extends Component {
               <Left>
                 <Text style={styles.name}>Tiền thu của khách:</Text>
               </Left>
+
               <Right>
                 <Text style={styles.price}>
                   {item?.price?.toLocaleString('it-IT', {
@@ -216,9 +218,14 @@ class TripUserDetail extends Component {
               </Text>
             </View>
           </ScrollView>
-          {state === PARAMS_LIST_TRIP.UPCOMING && (
+          {(state === PARAMS_LIST_TRIP.UPCOMING ||
+            state === PARAMS_LIST_TRIP.PENDING) && (
             <Button full style={styles.btnConfirm} onPress={this.maskDoneTrip}>
-              <Text>Xác Nhận Hoàn Thành</Text>
+              <Text>
+                {state === PARAMS_LIST_TRIP.UPCOMING
+                  ? 'Xác Nhận Hoàn Thành'
+                  : 'Nhận chuyến'}
+              </Text>
             </Button>
           )}
         </Content>
@@ -263,6 +270,7 @@ const styles = ScaledSheet.create({
     marginHorizontal: '15@s',
     borderRadius: 8,
     marginTop: '16@vs',
+    marginBottom: '10@vs',
     borderColor: theme.grey_light,
     borderWidth: 1,
     backgroundColor: theme.warning,

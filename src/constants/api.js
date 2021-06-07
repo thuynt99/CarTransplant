@@ -7,5 +7,5 @@ export const PARAMS_LIST_TRIP = {
   DONE: 2,
   CANCELED: 3,
   HISTORY: -1,
-  PENDING: -1,
+  PENDING: 99,
 };

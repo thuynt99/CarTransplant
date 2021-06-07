@@ -48,7 +48,7 @@ const ItemUserTrip = props => {
           <Thumbnail source={{uri: item?.user?.Avatar}} />
           <View style={styles.left}>
             <Text style={styles.title}>{item?.user?.FullName}</Text>
-            {state === PARAMS_LIST_TRIP.UPCOMING && (
+            {(!state === PARAMS_LIST_TRIP.HISTORY || item?.state === 1) && (
               <Button
                 small
                 danger
@@ -110,14 +110,14 @@ const ItemUserTrip = props => {
         <Left>
           <Row>
             {/* <Row>
-                <Icon
-                  active
-                  name="event-seat"
-                  type="MaterialIcons"
-                  style={{fontSize: 20, color: theme.grey_dark_30}}
-                />
-                <Text>Xe 5 chỗ</Text>
-              </Row> */}
+              <Icon
+                active
+                name="event-seat"
+                type="MaterialIcons"
+                style={{fontSize: 20, color: theme.grey_dark_30}}
+              />
+              <Text>Xe 5 chỗ</Text>
+            </Row> */}
             <Row>
               <Icon
                 active
@@ -125,19 +125,17 @@ const ItemUserTrip = props => {
                 type="MaterialIcons"
                 style={{fontSize: 20, color: theme.grey_dark_30}}
               />
-              <Text style={styles.subTitle}> 2 người</Text>
+              <Text style={styles.subTitle}>{item?.seat}</Text>
             </Row>
           </Row>
         </Left>
-        {/* <Right>
-          <Button
-            small
-            danger
-            style={styles.btnCall}
-            onPress={() => callDriver(item.user.Phone)}>
-            <Text>Nhận chuyến</Text>
-          </Button>
-        </Right> */}
+        {state === PARAMS_LIST_TRIP.PENDING && (
+          <Right>
+            <Button small danger style={styles.btnCall} onPress={goToDetail}>
+              <Text>Nhận chuyến</Text>
+            </Button>
+          </Right>
+        )}
       </Row>
     </Card>
   );

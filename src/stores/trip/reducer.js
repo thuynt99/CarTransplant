@@ -17,7 +17,7 @@ import {
 const initialState = {
   loading: false,
   listTrip: [],
-  listPending: [],
+  listTripPending: [],
 };
 
 export default function tripReducer(state = initialState, action = {}) {
@@ -50,7 +50,7 @@ export default function tripReducer(state = initialState, action = {}) {
       return {
         ...state,
         loading: false,
-        listTrip: action.data,
+        listTripPending: action.data.userTrip,
       };
     default:
       return state;

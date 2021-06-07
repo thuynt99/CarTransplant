@@ -10,6 +10,7 @@ import {
   REGISTER_CAR,
   TRIP_USER_DETAIL,
   CHANGE_PROFILE,
+  CAR_MANAGEMENT,
 } from '../constants';
 import TabNavigator from './TabNavigator';
 import MapViewScreen from '../screens/MapViewScreen';
@@ -18,6 +19,7 @@ import NotificationDetailScreen from '../screens/NotificationDetail';
 import RegisterCar from '../screens/RegisterCar';
 import TripUserDetail from '../screens/TripUserDetail';
 import ChangeProfile from '../screens/ChangeProfile';
+import CarManagement from '../screens/CarManagement';
 
 const Stack = createStackNavigator();
 
@@ -101,6 +103,14 @@ export default function DashboardStackNavigator() {
           title: '',
         }}
         component={ChangeProfile}
+      />
+      <Stack.Screen
+        name={CAR_MANAGEMENT}
+        options={{
+          headerShown: false,
+          title: '',
+        }}
+        component={CarManagement}
       />
     </Stack.Navigator>
   );

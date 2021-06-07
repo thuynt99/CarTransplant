@@ -11,6 +11,7 @@ import {
   NOTIFICATION,
   PROFILE,
   CAR_MANAGEMENT,
+  LIST_TRIP_PENDING,
 } from '../constants';
 import {primaryColor} from '../theme';
 import HomeScreen from '../screens/Home';
@@ -18,6 +19,7 @@ import NotificationScreen from '../screens/Notification';
 import ProfileScreen from '../screens/Profile';
 import ListMyReservation from '../screens/ListMyReservation';
 import CarManagement from '../screens/CarManagement';
+import ListTripPending from '../screens/ListTripPending';
 
 // import {AddButton} from '../components/AddButton';
 
@@ -44,13 +46,13 @@ export default function TabNavigator(props) {
         children={() => <HomeScreen {...props} />}
       />
       <Tab.Screen
-        name={CAR_MANAGEMENT}
+        name={LIST_TRIP_PENDING}
         options={{
           tabBarIcon: ({color, size}) => (
             <FontAwesome5 name={'car-alt'} color={color} size={size} />
           ),
         }}
-        children={() => <CarManagement {...props} />}
+        children={() => <ListTripPending {...props} />}
       />
       <Tab.Screen
         name={LIST_MY_RESERVATION}

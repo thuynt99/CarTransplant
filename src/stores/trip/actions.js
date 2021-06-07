@@ -1,6 +1,7 @@
 import {HTTP} from '../../constants/api';
 import {
   findTripApi,
+  getListPendingApi,
   getListTripDriverApi,
   markDoneTripApi,
 } from '../../services/tripService';
@@ -108,7 +109,7 @@ export function getListTripPending(params) {
     dispatch({
       type: GET_LIST_TRIP_PENDING,
     });
-    const dataJson = getListTripDriverApi(params);
+    const dataJson = getListPendingApi(params);
     return dataJson.then(dataJson =>
       processGetListTripPending(dataJson, dispatch),
     );
