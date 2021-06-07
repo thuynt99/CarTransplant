@@ -22,6 +22,9 @@ import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import HeaderCustom from '../components/common/HeaderCustom';
 import theme from '../theme';
 import {Rating} from 'react-native-ratings';
+import moment from 'moment';
+import {FORMAT} from '../constants/format';
+import {PARAMS_FIND_TYPE} from '../constants/api';
 export default class TripDetail extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +33,7 @@ export default class TripDetail extends Component {
     this.props.navigation.goBack();
   };
   callDriver = phoneNumber => {
-    const url = `telprompt:${phoneNumber}`;
+    const url = `tel:${phoneNumber}`;
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
         return Linking.openURL(url).catch(() => null);
@@ -38,7 +41,6 @@ export default class TripDetail extends Component {
     });
   };
   render() {
-    const {goToMapScreen} = this.props;
     const {item} = this.props.route.params;
     console.log(item);
     return (
@@ -46,54 +48,60 @@ export default class TripDetail extends Component {
         <HeaderCustom title="Thông tin chuyến đi" onGoBack={this.onGoBack} />
         <Content>
           <ScrollView style={styles.view}>
-            <View style={styles.bottom}>
-              <Row>
-                <Image
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 50,
-                  }}
-                  source={{
-                    uri: item?.driver?.Avatar,
-                  }}
-                />
-                <View style={styles.viewDriver}>
-                  <Text style={styles.name}>{item?.driver?.FullName}</Text>
-                  <Rating
-                    ratingCount={5}
-                    imageSize={16}
-                    style={{alignSelf: 'flex-start'}}
-                  />
-                  <Text style={styles.textVehicleInfo}>
-                    Biển số: {item?.car.licensePlate}
-                  </Text>
+            {item?.driver?.name && (
+              <>
+                <View style={styles.bottom}>
+                  <Row>
+                    <Image
+                      style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 50,
+                      }}
+                      source={{
+                        uri: item?.driver?.Avatar,
+                      }}
+                    />
+                    <View style={styles.viewDriver}>
+                      <Text style={styles.name}>{item?.driver?.FullName}</Text>
+                      <Rating
+                        ratingCount={5}
+                        imageSize={16}
+                        style={{alignSelf: 'flex-start'}}
+                      />
+                      <Text style={styles.textVehicleInfo}>
+                        Biển số: {item?.car?.licensePlate}
+                      </Text>
+                    </View>
+                  </Row>
                 </View>
-              </Row>
-            </View>
-            <View style={styles.makeCall}>
-              <Button
-                small
-                danger
-                bordered
-                style={styles.btnCall}
-                onPress={() => this.callDriver(item?.driver?.Phone)}>
-                <Icon
-                  name="phone"
-                  type="FontAwesome"
-                  style={{marginRight: 0}}
-                />
-                <Text>Gọi tài xế</Text>
-              </Button>
-              <Button small danger bordered style={styles.btnCall}>
-                <Icon
-                  name="message1"
-                  type="AntDesign"
-                  style={{marginRight: 0}}
-                />
-                <Text>Nhắn tin</Text>
-              </Button>
-            </View>
+
+                <View style={styles.makeCall}>
+                  <Button
+                    small
+                    danger
+                    bordered
+                    style={styles.btnCall}
+                    onPress={() => this.callDriver(item?.driver?.Phone)}>
+                    <Icon
+                      name="phone"
+                      type="FontAwesome"
+                      style={{marginRight: 0}}
+                    />
+                    <Text>Gọi tài xế</Text>
+                  </Button>
+                  <Button small danger bordered style={styles.btnCall}>
+                    <Icon
+                      name="message1"
+                      type="AntDesign"
+                      style={{marginRight: 0}}
+                    />
+                    <Text>Nhắn tin</Text>
+                  </Button>
+                </View>
+              </>
+            )}
+
             <Item style={styles.item}>
               <Col>
                 <Text style={styles.name}>Điểm đón:</Text>
@@ -106,20 +114,29 @@ export default class TripDetail extends Component {
                 <Text style={styles.textLocation}>{item?.to}</Text>
               </Col>
             </Item>
-            <Item style={styles.item}>
-              <Left>
-                <Text style={styles.name}>Loại dịch vụ:</Text>
-              </Left>
-              <Right>
-                <Text style={styles.textValue}>Ghép người</Text>
-              </Right>
-            </Item>
+            {item?.type && (
+              <Item style={styles.item}>
+                <Left>
+                  <Text style={styles.name}>Loại dịch vụ:</Text>
+                </Left>
+                <Right>
+                  <Text style={styles.textValue}>
+                    {item?.type === PARAMS_FIND_TYPE.GO_ALONE
+                      ? 'Đi riêng'
+                      : type === PARAMS_FIND_TYPE.GO_SEND
+                      ? ' Chở hàng'
+                      : 'Đi ghép'}
+                  </Text>
+                </Right>
+              </Item>
+            )}
+
             <Item style={styles.item}>
               <Left>
                 <Text style={styles.name}>Loại xe:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>5 chỗ</Text>
+                <Text style={styles.textValue}>xe {item?.car?.seat} chỗ</Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -127,7 +144,11 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Lịch trình:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>09:30 đến 11:00 15/05/2021</Text>
+                <Text style={styles.textValue}>
+                  {moment.unix(item?.beginLeaveTime).format(FORMAT.TIME)} đến{' '}
+                  {moment.unix(item?.endLeaveTime).format(FORMAT.TIME)} ngày{' '}
+                  {moment.unix(item?.beginLeaveTime).format(FORMAT.DATE)}
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -135,17 +156,25 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Khoảng cách:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>5 km</Text>
+                <Text style={styles.textValue}>
+                  {item?.distance.toLocaleString('it-IT') + ' '}
+                  km
+                </Text>
               </Right>
             </Item>
-            {/* <Item style={styles.item}>
+            <Item style={styles.item}>
               <Left>
                 <Text style={styles.name}>Thời gian dự kiến:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>1 giờ 12 phút</Text>
+                <Text style={styles.textValue}>
+                  {moment.duration(Number(item?.duration), 'seconds').hours()}{' '}
+                  giờ{' '}
+                  {moment.duration(Number(item?.duration), 'seconds').minutes()}{' '}
+                  phút
+                </Text>
               </Right>
-            </Item> */}
+            </Item>
             <Item style={styles.item}>
               <Left>
                 <Text style={styles.name}>Trạng thái:</Text>
@@ -167,15 +196,7 @@ export default class TripDetail extends Component {
                 <Text style={styles.name}>Mã chuyến đi:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>#CA31777</Text>
-              </Right>
-            </Item>
-            <Item style={styles.item}>
-              <Left>
-                <Text style={styles.name}>Bảo hiểm chuyến:</Text>
-              </Left>
-              <Right>
-                <Text style={styles.textValue}>DN40124568999</Text>
+                <Text style={styles.textValue}>{item.id}</Text>
               </Right>
             </Item>
             <Item style={styles.item}>

@@ -28,7 +28,7 @@ import {FORMAT} from '../../../constants/format';
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
-  const {isHistory, item} = props;
+  const {isHistory, item, isPending} = props;
   function onClick() {
     navigate(TRIP_DETAIL, {item: item});
   }
@@ -105,7 +105,16 @@ export const ItemReservation = props => {
                 <Row>
                   <View>
                     <Text style={styles.subTitle}>Thời gian</Text>
-                    <Text style={styles.value}>1.3h</Text>
+                    <Text style={styles.value}>
+                      {moment
+                        .duration(Number(item?.duration), 'seconds')
+                        .hours()}{' '}
+                      giờ{' '}
+                      {moment
+                        .duration(Number(item?.duration), 'seconds')
+                        .minutes()}{' '}
+                      phút
+                    </Text>
                   </View>
                   <View>
                     <Text style={styles.subTitle}>Giá tiền</Text>
@@ -128,7 +137,7 @@ export const ItemReservation = props => {
             </Row>
           </>
         ) : (
-          <>
+          <TouchableOpacity>
             <Item style={styles.vehicleTypeView}>
               <Left>
                 <Text style={styles.subTitle}>
@@ -136,53 +145,72 @@ export const ItemReservation = props => {
                   <Text style={styles.value}> {item?.id}</Text>
                 </Text>
               </Left>
-              <Right>
-                <Text style={styles.subTitle}>Ghép người</Text>
-              </Right>
+              {item?.type && (
+                <Right>
+                  <Text style={styles.subTitle}>
+                    {item?.type === PARAMS_FIND_TYPE.GO_ALONE
+                      ? 'Đi riêng'
+                      : type === PARAMS_FIND_TYPE.GO_SEND
+                      ? ' Chở hàng'
+                      : 'Đi ghép'}
+                  </Text>
+                </Right>
+              )}
             </Item>
-            <Row style={styles.bottom}>
-              <Left>
-                <Row>
-                  <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 50,
-                    }}
-                    source={{
-                      uri: item?.driver?.Avatar,
-                    }}
-                  />
-                  <View style={styles.viewDriver}>
-                    <Text style={styles.name}>{item?.driver?.FullName}</Text>
-                    <Rating ratingCount={5} imageSize={16} />
-                    <View style={styles.vehicleInfo}>
-                      <Text style={styles.textVehicleInfo}>
-                        {item?.car?.licensePlate}
+            {!isPending && (
+              <Row style={styles.bottom}>
+                <Left>
+                  <Row>
+                    <Image
+                      style={{
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                      }}
+                      source={{
+                        uri: item?.driver?.Avatar,
+                      }}
+                    />
+                    <View style={styles.viewDriver}>
+                      <Text style={styles.name}>{item?.driver?.FullName}</Text>
+                      <Rating ratingCount={5} imageSize={16} />
+                      <View style={styles.vehicleInfo}>
+                        <Text style={styles.textVehicleInfo}>
+                          {item?.car?.licensePlate}
+                        </Text>
+                      </View>
+                    </View>
+                  </Row>
+                </Left>
+                <Right>
+                  <Row>
+                    <View>
+                      <Text style={styles.subTitle}>Thời gian</Text>
+                      <Text style={styles.value}>
+                        {moment
+                          .duration(Number(item?.duration), 'seconds')
+                          .hours()}{' '}
+                        giờ{' '}
+                        {moment
+                          .duration(Number(item?.duration), 'seconds')
+                          .minutes()}{' '}
+                        phút
                       </Text>
                     </View>
-                  </View>
-                </Row>
-              </Left>
-              <Right>
-                <Row>
-                  {/* <View>
-                    <Text style={styles.subTitle}>Thời gian</Text>
-                    <Text style={styles.value}>1.3h</Text>
-                  </View> */}
-                  <View>
-                    <Text style={styles.subTitle}>Giá tiền</Text>
-                    <Text style={styles.value}>
-                      {item?.price?.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND',
-                      })}
-                    </Text>
-                  </View>
-                </Row>
-              </Right>
-            </Row>
-          </>
+                    <View>
+                      <Text style={styles.subTitle}>Giá tiền</Text>
+                      <Text style={styles.value}>
+                        {item?.price?.toLocaleString('it-IT', {
+                          style: 'currency',
+                          currency: 'VND',
+                        })}
+                      </Text>
+                    </View>
+                  </Row>
+                </Right>
+              </Row>
+            )}
+          </TouchableOpacity>
         )}
       </TouchableOpacity>
     </Card>
