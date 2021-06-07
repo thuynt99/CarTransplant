@@ -15,20 +15,38 @@ import {
   Button,
   Row,
   Col,
+  Spinner,
 } from 'native-base';
-import {Image, Linking} from 'react-native';
+import {ActivityIndicator, Image, Linking, Modal} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import HeaderCustom from '../components/common/HeaderCustom';
+import LoadingCustom from '../components/common/LoadingCustom';
 import theme from '../theme';
 import {Rating} from 'react-native-ratings';
 import moment from 'moment';
 import {FORMAT} from '../constants/format';
 import {PARAMS_FIND_TYPE} from '../constants/api';
-export default class TripDetail extends Component {
+import {cancelTrip} from '../stores/trip/actions';
+import {connect} from 'react-redux';
+import Dialog from '../components/common/Dialog';
+import _ from 'lodash';
+import {TYPE_DIALOG} from '../constants/data';
+import {LIST_MY_RESERVATION} from '../constants';
+class TripDetail extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loading: false,
+      showModal: false,
+      idModal: 4,
+    };
   }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {trip} = nextProps;
+    return {loading: trip.loading};
+  }
+
   onGoBack = () => {
     this.props.navigation.goBack();
   };
@@ -40,12 +58,30 @@ export default class TripDetail extends Component {
       }
     });
   };
+  cancelTrip = async () => {
+    const {item} = this.props.route.params;
+    this.closeModal();
+    await this.props.cancelTrip(item.id).then(res => {
+      if (res.status) {
+        this.setState({showModal: true, idModal: 5});
+      } else {
+        this.setState({showModal: true, idModal: 6});
+      }
+    });
+  };
+  closeModal = () => {
+    this.setState({showModal: false});
+  };
+  goToListTrip = () => {
+    this.props.navigation.goBack();
+  };
   render() {
     const {item} = this.props.route.params;
-    console.log(item);
+    const {idModal, showModal} = this.state;
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Thông tin chuyến đi" onGoBack={this.onGoBack} />
+        <LoadingCustom loading={this.state.loading} />
         <Content>
           <ScrollView style={styles.view}>
             {item?.driver?.name && (
@@ -123,22 +159,24 @@ export default class TripDetail extends Component {
                   <Text style={styles.textValue}>
                     {item?.type === PARAMS_FIND_TYPE.GO_ALONE
                       ? 'Đi riêng'
-                      : type === PARAMS_FIND_TYPE.GO_SEND
+                      : item?.type === PARAMS_FIND_TYPE.GO_SEND
                       ? ' Chở hàng'
                       : 'Đi ghép'}
                   </Text>
                 </Right>
               </Item>
             )}
+            {item?.car?.seat && (
+              <Item style={styles.item}>
+                <Left>
+                  <Text style={styles.name}>Loại xe:</Text>
+                </Left>
+                <Right>
+                  <Text style={styles.textValue}>xe {item?.car?.seat} chỗ</Text>
+                </Right>
+              </Item>
+            )}
 
-            <Item style={styles.item}>
-              <Left>
-                <Text style={styles.name}>Loại xe:</Text>
-              </Left>
-              <Right>
-                <Text style={styles.textValue}>xe {item?.car?.seat} chỗ</Text>
-              </Right>
-            </Item>
             <Item style={styles.item}>
               <Left>
                 <Text style={styles.name}>Lịch trình:</Text>
@@ -225,11 +263,23 @@ export default class TripDetail extends Component {
             </View>
           </ScrollView>
           {(item.state === 1 || item.state === 2) && (
-            <Button light full style={styles.btnConfirm}>
+            <Button
+              light
+              full
+              style={styles.btnConfirm}
+              onPress={() => this.setState({showModal: true, idModal: 4})}>
               <Text>HUỶ CHUYẾN</Text>
             </Button>
           )}
         </Content>
+        <Dialog
+          isOpen={showModal}
+          onClosed={this.closeModal}
+          item={_.find(TYPE_DIALOG, {id: idModal})}
+          onClickLeft={idModal === 5 ? this.goToListTrip : this.closeModal}
+          onClickRight={this.cancelTrip}
+          modalStyle={styles.modalStyle}
+        />
       </Container>
     );
   }
@@ -353,4 +403,20 @@ const styles = ScaledSheet.create({
   textBtn: {
     color: theme.white,
   },
+  modalStyle: {
+    height: '180@vs',
+  },
 });
+
+const mapStateToProps = state => ({
+  trip: state.trip,
+});
+
+const mapDispatchToProps = dispatch => ({
+  cancelTrip: params => dispatch(cancelTrip(params)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TripDetail);

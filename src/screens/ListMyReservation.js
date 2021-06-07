@@ -36,11 +36,15 @@ class ListMyReservation extends Component {
     return {loading: trip.loading};
   }
   componentDidMount() {
-    this.getListTripUser();
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.getListTripUser();
+    });
+  }
+  componentWillUnmount() {
+    this._unsubscribe();
   }
   onChangeTab = i => {
     this.setState({currentTab: i, listTrip: []}, this.getListTripUser);
-    console.log(i);
   };
   getListTripUser = async () => {
     const {currentTab} = this.state;
