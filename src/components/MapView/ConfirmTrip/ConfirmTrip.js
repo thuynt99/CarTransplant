@@ -158,7 +158,7 @@ export default class ConfirmTrip extends Component {
               </Left>
               <Right>
                 <Text style={styles.textValue}>
-                  {moment.duration(Number(duration), 'seconds').hours()} giờ +{' '}
+                  {moment.duration(Number(duration), 'seconds').hours()} giờ{' '}
                   {moment.duration(Number(duration), 'seconds').minutes()} phút
                 </Text>
               </Right>

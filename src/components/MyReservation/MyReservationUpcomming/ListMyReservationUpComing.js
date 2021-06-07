@@ -16,18 +16,30 @@ import {
   Card,
   View,
 } from 'native-base';
-import {Image} from 'react-native';
+import {Image, RefreshControl} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../../theme';
 import {Rating} from 'react-native-ratings';
 import ItemReservation from '../ItemReservation';
 
 class ListMyReservationUpComing extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      refreshing: false,
+    };
+  }
   render() {
-    const {isPending} = this.props;
+    const {isPending, getListTripUser} = this.props;
     return (
       <Container>
-        <Content>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={getListTripUser}
+            />
+          }>
           <List
             dataArray={this.props.data}
             renderItem={({item}) => {

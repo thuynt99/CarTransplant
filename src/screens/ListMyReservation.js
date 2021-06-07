@@ -33,13 +33,13 @@ class ListMyReservation extends Component {
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     const {trip} = nextProps;
-    return {loading: trip.loading, listTrip: trip.listTrip};
+    return {loading: trip.loading};
   }
   componentDidMount() {
     this.getListTripUser();
   }
   onChangeTab = i => {
-    this.setState({currentTab: i}, this.getListTripUser);
+    this.setState({currentTab: i, listTrip: []}, this.getListTripUser);
     console.log(i);
   };
   getListTripUser = async () => {
@@ -85,7 +85,10 @@ class ListMyReservation extends Component {
             }}
             activeTextStyle={{color: theme.primaryColor, fontWeight: 'bold'}}
             textStyle={{color: theme.grey_dark}}>
-            <ListMyReservationUpComing data={listTrip} />
+            <ListMyReservationUpComing
+              data={listTrip}
+              getListTripUser={this.getListTripUser}
+            />
           </Tab>
           <Tab
             heading="Đang chờ"
@@ -97,7 +100,11 @@ class ListMyReservation extends Component {
             }}
             activeTextStyle={{color: theme.primaryColor, fontWeight: 'bold'}}
             textStyle={{color: theme.grey_dark}}>
-            <ListMyReservationUpComing data={listTrip} isPending={true} />
+            <ListMyReservationUpComing
+              data={listTrip}
+              isPending={true}
+              getListTripUser={this.getListTripUser}
+            />
           </Tab>
           <Tab
             heading="Lịch sử"
@@ -109,7 +116,10 @@ class ListMyReservation extends Component {
             }}
             activeTextStyle={{color: theme.primaryColor, fontWeight: 'bold'}}
             textStyle={{color: theme.grey_dark}}>
-            <ListMyReservationHistory data={listTrip} />
+            <ListMyReservationHistory
+              data={listTrip}
+              getListTripUser={this.getListTripUser}
+            />
           </Tab>
         </Tabs>
         {loading && (
@@ -118,6 +128,7 @@ class ListMyReservation extends Component {
             style={{
               alignSelf: 'center',
               justifyContent: 'center',
+              flex: 1,
             }}
           />
         )}

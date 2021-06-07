@@ -105,7 +105,16 @@ export const ItemReservation = props => {
                 <Row>
                   <View>
                     <Text style={styles.subTitle}>Thời gian</Text>
-                    <Text style={styles.value}>1.3h</Text>
+                    <Text style={styles.value}>
+                      {moment
+                        .duration(Number(item?.duration), 'seconds')
+                        .hours()}{' '}
+                      giờ{' '}
+                      {moment
+                        .duration(Number(item?.duration), 'seconds')
+                        .minutes()}{' '}
+                      phút
+                    </Text>
                   </View>
                   <View>
                     <Text style={styles.subTitle}>Giá tiền</Text>
@@ -136,9 +145,17 @@ export const ItemReservation = props => {
                   <Text style={styles.value}> {item?.id}</Text>
                 </Text>
               </Left>
-              <Right>
-                <Text style={styles.subTitle}>Ghép người</Text>
-              </Right>
+              {item?.type && (
+                <Right>
+                  <Text style={styles.subTitle}>
+                    {item?.type === PARAMS_FIND_TYPE.GO_ALONE
+                      ? 'Đi riêng'
+                      : type === PARAMS_FIND_TYPE.GO_SEND
+                      ? ' Chở hàng'
+                      : 'Đi ghép'}
+                  </Text>
+                </Right>
+              )}
             </Item>
             {!isPending && (
               <Row style={styles.bottom}>
@@ -167,10 +184,19 @@ export const ItemReservation = props => {
                 </Left>
                 <Right>
                   <Row>
-                    {/* <View>
-                    <Text style={styles.subTitle}>Thời gian</Text>
-                    <Text style={styles.value}>1.3h</Text>
-                  </View> */}
+                    <View>
+                      <Text style={styles.subTitle}>Thời gian</Text>
+                      <Text style={styles.value}>
+                        {moment
+                          .duration(Number(item?.duration), 'seconds')
+                          .hours()}{' '}
+                        giờ{' '}
+                        {moment
+                          .duration(Number(item?.duration), 'seconds')
+                          .minutes()}{' '}
+                        phút
+                      </Text>
+                    </View>
                     <View>
                       <Text style={styles.subTitle}>Giá tiền</Text>
                       <Text style={styles.value}>
