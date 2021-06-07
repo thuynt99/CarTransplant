@@ -1,4 +1,7 @@
 import {
+  CANCEL_TRIP,
+  CANCEL_TRIP_FAILED,
+  CANCEL_TRIP_SUCCESS,
   FIND_TRIP,
   FIND_TRIP_FAILED,
   FIND_TRIP_SUCCESS,
@@ -20,6 +23,7 @@ export default function tripReducer(state = initialState, action = {}) {
     case FIND_TRIP:
     case TAKE_TRIP:
     case GET_LIST_TRIP_USER:
+    case CANCEL_TRIP:
       return {
         ...state,
         loading: true,
@@ -35,6 +39,8 @@ export default function tripReducer(state = initialState, action = {}) {
     case TAKE_TRIP_SUCCESS:
     case TAKE_TRIP_FAILED:
     case GET_LIST_TRIP_USER_FAILED:
+    case CANCEL_TRIP_SUCCESS:
+    case CANCEL_TRIP_FAILED:
       return {
         ...state,
         loading: false,

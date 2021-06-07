@@ -1,10 +1,14 @@
 import {HTTP} from '../../constants/api';
 import {
+  cancelTripApi,
   findTripApi,
   getListTripUserUApi,
   takeTripApi,
 } from '../../services/tripService';
 import {
+  CANCEL_TRIP,
+  CANCEL_TRIP_FAILED,
+  CANCEL_TRIP_SUCCESS,
   FIND_TRIP,
   FIND_TRIP_FAILED,
   FIND_TRIP_SUCCESS,
@@ -91,6 +95,33 @@ const processGetListTripUser = (dataJson, dispatch) => {
   } else {
     dispatch({
       type: GET_LIST_TRIP_USER_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function cancelTrip(params) {
+  return dispatch => {
+    dispatch({
+      type: CANCEL_TRIP,
+    });
+    const dataJson = cancelTripApi(params);
+    return dataJson.then(dataJson => processCancelTrip(dataJson, dispatch));
+  };
+}
+
+const processCancelTrip = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: CANCEL_TRIP_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: CANCEL_TRIP_FAILED,
       data: dataJson.data,
     });
     return dataJson;

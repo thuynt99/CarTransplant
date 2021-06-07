@@ -64,10 +64,35 @@ export const TYPE_DIALOG = [
   },
   {
     id: 2,
-    title: 'Thông báo!',
+    title: 'Thông báo',
     content:
       'Bạn có chắc chắn muốn thực hiện cuộc gọi đến trung tâm khách hàng cả chúng tôi!',
     left: 'Đóng',
     right: 'Gọi ngay',
+  },
+  {
+    id: 3,
+    title: 'Thông báo',
+    content: 'Cập nhật trang cá nhân thành công',
+    left: 'OK',
+  },
+  {
+    id: 4,
+    title: 'Bạn đang huỷ chuyến!',
+    content: 'Bạn có chắc chắn muốn huỷ chuyến xe này?',
+    left: 'Huỷ',
+    right: 'OK',
+  },
+  {
+    id: 5,
+    title: 'Thông báo',
+    content: 'Huỷ chuyến thành công quay lại màn hình chuyến đi của bạn',
+    left: 'OK',
+  },
+  {
+    id: 6,
+    title: 'Thông báo',
+    content: 'Huỷ chuyến thất bại!',
+    left: 'OK',
   },
 ];

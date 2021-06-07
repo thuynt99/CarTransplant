@@ -25,6 +25,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {FORMAT} from '../../../constants/format';
+import {PARAMS_FIND_TYPE} from '../../../constants/api';
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
@@ -77,57 +78,6 @@ export const ItemReservation = props => {
         </Item>
         {isHistory ? (
           <>
-            <Item style={styles.bottom}>
-              <Left>
-                <Row>
-                  <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 50,
-                    }}
-                    source={{
-                      uri: item?.driver?.Avatar,
-                    }}
-                  />
-                  <View style={styles.viewDriver}>
-                    <Text style={styles.name}>{item?.driver?.FullName}</Text>
-                    <Rating ratingCount={5} imageSize={16} />
-                    <View style={styles.vehicleInfo}>
-                      <Text style={styles.textVehicleInfo}>
-                        {item?.car?.licensePlate}
-                      </Text>
-                    </View>
-                  </View>
-                </Row>
-              </Left>
-              <Right>
-                <Row>
-                  <View>
-                    <Text style={styles.subTitle}>Thời gian</Text>
-                    <Text style={styles.value}>
-                      {moment
-                        .duration(Number(item?.duration), 'seconds')
-                        .hours()}{' '}
-                      giờ{' '}
-                      {moment
-                        .duration(Number(item?.duration), 'seconds')
-                        .minutes()}{' '}
-                      phút
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={styles.subTitle}>Giá tiền</Text>
-                    <Text style={styles.value}>
-                      {item?.price?.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND',
-                      })}
-                    </Text>
-                  </View>
-                </Row>
-              </Right>
-            </Item>
             <Row style={styles.stateView}>
               <Text style={styles.state}>
                 {item?.state === 3
@@ -150,14 +100,14 @@ export const ItemReservation = props => {
                   <Text style={styles.subTitle}>
                     {item?.type === PARAMS_FIND_TYPE.GO_ALONE
                       ? 'Đi riêng'
-                      : type === PARAMS_FIND_TYPE.GO_SEND
+                      : item?.type === PARAMS_FIND_TYPE.GO_SEND
                       ? ' Chở hàng'
                       : 'Đi ghép'}
                   </Text>
                 </Right>
               )}
             </Item>
-            {!isPending && (
+            {!isPending && !isHistory && (
               <Row style={styles.bottom}>
                 <Left>
                   <Row>
@@ -184,7 +134,7 @@ export const ItemReservation = props => {
                 </Left>
                 <Right>
                   <Row>
-                    <View>
+                    {/* <View>
                       <Text style={styles.subTitle}>Thời gian</Text>
                       <Text style={styles.value}>
                         {moment
@@ -196,7 +146,7 @@ export const ItemReservation = props => {
                           .minutes()}{' '}
                         phút
                       </Text>
-                    </View>
+                    </View> */}
                     <View>
                       <Text style={styles.subTitle}>Giá tiền</Text>
                       <Text style={styles.value}>
