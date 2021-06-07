@@ -85,5 +85,57 @@ const api = {
       }
     });
   },
+  put: async (endpoint, params) => {
+    console.log('------PUT-----', endpoint);
+    console.log('------params-----', params);
+    await getHeader();
+    apiGlobal.setHeaders(HEADERS);
+    console.log('-------header-----', HEADERS);
+    return apiGlobal.put(endpoint, params).then(response => {
+      console.log(response);
+      if (response.status) {
+        return response.data;
+      }
+      let errorCode = '';
+      switch (response.problem) {
+        case TIMEOUT_ERROR:
+        case NETWORK_ERROR:
+          errorCode = HTTP.ERROR_INTERNET;
+          Toast.show({
+            text: 'Please try again',
+            type: 'danger',
+          });
+          break;
+        default:
+          errorCode = '';
+      }
+    });
+  },
+  delete: async (endpoint, params) => {
+    console.log('------POST-----', endpoint);
+    console.log('------params-----', params);
+    await getHeader();
+    apiGlobal.setHeaders(HEADERS);
+    console.log('-------header-----', HEADERS);
+    return apiGlobal.delete(endpoint, params).then(response => {
+      console.log(response);
+      if (response.status) {
+        return response.data;
+      }
+      let errorCode = '';
+      switch (response.problem) {
+        case TIMEOUT_ERROR:
+        case NETWORK_ERROR:
+          errorCode = HTTP.ERROR_INTERNET;
+          Toast.show({
+            text: 'Please try again',
+            type: 'danger',
+          });
+          break;
+        default:
+          errorCode = '';
+      }
+    });
+  },
 };
 export {api};
