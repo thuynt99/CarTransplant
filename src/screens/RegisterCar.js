@@ -99,7 +99,7 @@ class RegisterCar extends Component {
       {
         id: 5,
         label: 'Số chỗ',
-        value: 'bookingType',
+        value: 'seat',
       },
     ];
     const {loading} = this.state;
@@ -139,6 +139,7 @@ class RegisterCar extends Component {
                           onChangeText={handleChange(item.value)}
                           onBlur={handleBlur(item.value)}
                           value={values[item.value]}
+                          keyboardType={item.id === 5 ? 'numeric' : 'default'}
                         />
                         {errors[item.value] && touched[item.value] ? (
                           <Text style={styles.error}>{errors[item.value]}</Text>

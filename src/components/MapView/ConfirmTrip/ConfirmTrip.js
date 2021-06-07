@@ -36,6 +36,8 @@ export default class ConfirmTrip extends Component {
       fee_each_km,
       itemCarSelected,
       onClickConfirmTrip,
+      distance,
+      duration,
     } = this.props;
     const [start] = _.split(startStation?.display_name, ',').slice(-3);
     const [end] = _.split(endStation?.display_name, ',').slice(-3);
@@ -75,7 +77,7 @@ export default class ConfirmTrip extends Component {
                       type="MaterialIcons"
                       style={{color: 'green', fontSize: 28}}
                     />
-                    <Text style={styles.subTitle}>Điểm đón:</Text>
+                    <Text style={styles.subTitle}>Điểm xuất phát:</Text>
                   </View>
                   <Text style={styles.textLocation}>
                     {startStation?.display_name}
@@ -98,15 +100,7 @@ export default class ConfirmTrip extends Component {
             </Item>
             <Item style={styles.item}>
               <Left>
-                <Text style={styles.subTitle}>Loại dịch vụ:</Text>
-              </Left>
-              <Right>
-                <Text style={styles.textValue}>Ghép người</Text>
-              </Right>
-            </Item>
-            <Item style={styles.item}>
-              <Left>
-                <Text style={styles.subTitle}>Số người:</Text>
+                <Text style={styles.subTitle}>Số chỗ còn trống :</Text>
               </Left>
               <Right>
                 <Text style={styles.textValue}>{seat}</Text>
@@ -150,7 +144,10 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Khoảng cách:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>5 km</Text>
+                <Text style={styles.textValue}>
+                  {distance.toLocaleString('it-IT') + ' '}
+                  km
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -158,7 +155,10 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Thời gian dự kiến:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>1 giờ 12 phút</Text>
+                <Text style={styles.textValue}>
+                  {moment.duration(Number(duration), 'seconds').hours()} giờ{' '}
+                  {moment.duration(Number(duration), 'seconds').minutes()} phút
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -188,12 +188,12 @@ export default class ConfirmTrip extends Component {
                 nếu có phát sinh trong quá trình di chuyển
               </Text>
             </View>
-            <Textarea
+            {/* <Textarea
               rowSpan={5}
               bordered
               placeholder="Ghi chú thêm..."
               style={styles.input}
-            />
+            /> */}
           </ScrollView>
           <Button
             danger
