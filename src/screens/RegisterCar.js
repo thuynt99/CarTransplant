@@ -40,7 +40,11 @@ class RegisterCar extends Component {
   };
   onSubmit = values => {
     console.log('values', values);
-    this.props.registerCar(JSON.stringify(values)).then(res => {
+    const body = {
+      ...values,
+      seat: parseInt(values.seat),
+    };
+    this.props.registerCar(JSON.stringify(body)).then(res => {
       console.log('res', res);
       if (res.status) {
         this.props.getListMyCar({

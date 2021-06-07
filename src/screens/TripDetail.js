@@ -26,6 +26,7 @@ import moment from 'moment';
 import {FORMAT} from '../constants/format';
 import {map} from 'lodash-es';
 import ItemUserTrip from '../components/MyReservation/ItemReservation/ItemUserTrip';
+import _ from 'lodash';
 
 export default class TripDetail extends Component {
   constructor(props) {

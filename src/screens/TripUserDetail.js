@@ -24,9 +24,22 @@ import theme from '../theme';
 import moment from 'moment';
 import {Rating} from 'react-native-ratings';
 import {FORMAT} from '../constants/format';
-export default class TripUserDetail extends Component {
+import {maskDoneTrip} from '../stores/trip/actions';
+import LoadingCustom from '../components/common/LoadingCustom';
+import Dialog from '../components/common/Dialog';
+import {connect} from 'react-redux';
+import _ from 'lodash';
+import {TYPE_DIALOG} from '../constants/data';
+import {LIST_MY_RESERVATION} from '../constants';
+
+class TripUserDetail extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loading: false,
+      showModal: false,
+      idModal: 4,
+    };
   }
   onGoBack = () => {
     this.props.navigation.goBack();
@@ -39,10 +52,27 @@ export default class TripUserDetail extends Component {
       }
     });
   };
+  maskDoneTrip = () => {
+    const {item} = this.props.route.params;
+    this.props.maskDoneTrip(item.id).then(res => {
+      if (res.status) {
+        this.setState({showModal: true, idModal: 5});
+      } else {
+        this.setState({showModal: true, idModal: 6});
+      }
+    });
+  };
+  closeModal = () => {
+    this.setState({showModal: false});
+  };
+  goToListTrip = () => {
+    this.props.navigation.goBack();
+  };
   render() {
     const {goToMapScreen} = this.props;
     const {item} = this.props.route.params;
     console.log(item);
+    const {idModal, showModal} = this.state;
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Thông tin chở khách" onGoBack={this.onGoBack} />
@@ -137,7 +167,9 @@ export default class TripUserDetail extends Component {
                 <Text style={styles.name}>Khoảng cách:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>{item?.distance}</Text>
+                <Text style={styles.textValue}>
+                  {item?.distance.toLocaleString('it-IT')} km
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -182,11 +214,20 @@ export default class TripUserDetail extends Component {
             </View>
           </ScrollView>
           {true && (
-            <Button full style={styles.btnConfirm}>
-              <Text>Hoàn Thành</Text>
+            <Button full style={styles.btnConfirm} onPress={this.maskDoneTrip}>
+              <Text>Xác Nhận Hoàn Thành</Text>
             </Button>
           )}
         </Content>
+        <LoadingCustom loading={this.state.loading} />
+        <Dialog
+          isOpen={showModal}
+          onClosed={this.closeModal}
+          item={_.find(TYPE_DIALOG, {id: idModal})}
+          onClickLeft={idModal === 5 ? this.goToListTrip : this.closeModal}
+          onClickRight={this.cancelTrip}
+          modalStyle={styles.modalStyle}
+        />
       </Container>
     );
   }
@@ -312,3 +353,15 @@ const styles = ScaledSheet.create({
     color: theme.white,
   },
 });
+const mapStateToProps = state => ({
+  trip: state.trip,
+});
+
+const mapDispatchToProps = dispatch => ({
+  maskDoneTrip: params => dispatch(maskDoneTrip(params)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TripUserDetail);

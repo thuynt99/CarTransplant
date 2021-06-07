@@ -1,5 +1,9 @@
 import {HTTP} from '../../constants/api';
-import {findTripApi, getListTripDriverApi} from '../../services/tripService';
+import {
+  findTripApi,
+  getListTripDriverApi,
+  markDoneTripApi,
+} from '../../services/tripService';
 import {
   FIND_TRIP,
   FIND_TRIP_FAILED,
@@ -7,6 +11,9 @@ import {
   GET_LIST_TRIP_DRIVER,
   GET_LIST_TRIP_DRIVER_FAILED,
   GET_LIST_TRIP_DRIVER_SUCCESS,
+  MARK_DONE_TRIP,
+  MARK_DONE_TRIP_FAILED,
+  MARK_DONE_TRIP_SUCCESS,
 } from '../trip/action-types';
 
 export function findTrip(params) {
@@ -58,6 +65,35 @@ const processGetListTripDriver = (dataJson, dispatch) => {
   } else {
     dispatch({
       type: GET_LIST_TRIP_DRIVER_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function maskDoneTrip(params) {
+  return dispatch => {
+    dispatch({
+      type: MARK_DONE_TRIP,
+    });
+    const dataJson = markDoneTripApi(params);
+    return dataJson.then(dataJson =>
+      processMarkDoneTripApi(dataJson, dispatch),
+    );
+  };
+}
+
+const processMarkDoneTripApi = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: MARK_DONE_TRIP_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: MARK_DONE_TRIP_FAILED,
       data: dataJson.data,
     });
     return dataJson;

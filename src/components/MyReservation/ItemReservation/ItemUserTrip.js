@@ -122,7 +122,7 @@ const ItemUserTrip = props => {
             </Row>
           </Row>
         </Left>
-        <Right>
+        {/* <Right>
           <Button
             small
             danger
@@ -130,7 +130,7 @@ const ItemUserTrip = props => {
             onPress={() => callDriver(item.user.Phone)}>
             <Text>Nhận chuyến</Text>
           </Button>
-        </Right>
+        </Right> */}
       </Row>
     </Card>
   );

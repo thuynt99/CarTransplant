@@ -71,4 +71,22 @@ export const TYPE_DIALOG = [
     left: 'Đóng',
     right: 'Gọi ngay',
   },
+  {
+    id: 3,
+    title: 'Thông báo',
+    content: 'Cập nhật trang cá nhân thành công',
+    left: 'OK',
+  },
+  {
+    id: 5,
+    title: 'Thông báo',
+    content: 'Hoàn thành chuyến thành công quay lại màn hình chuyến đi của bạn',
+    left: 'OK',
+  },
+  {
+    id: 6,
+    title: 'Thông báo',
+    content: 'Hoàn thành chuyến thất bại!\n Hãy thử lại!',
+    left: 'OK',
+  },
 ];

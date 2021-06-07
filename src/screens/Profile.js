@@ -107,7 +107,7 @@ export default function ProfileScreen() {
       .doc(_uid())
       .onSnapshot(
         doc => {
-          // console.log(doc.data());
+          console.log('userdata', doc.data());
           setUser(doc.data());
         },
         err => {
@@ -292,7 +292,11 @@ export default function ProfileScreen() {
             dataArray={LIST_ITEM_USER_PROFILE}
             renderItem={({item, index}) => {
               return (
-                <ListItem selected key={index} noIndent onPress={item.onPress}>
+                <ListItem
+                  selected
+                  key={item.id}
+                  noIndent
+                  onPress={item.onPress}>
                   <Left>
                     <Text>{item.title}</Text>
                   </Left>

@@ -16,7 +16,7 @@ import {
   Card,
   View,
 } from 'native-base';
-import {Image} from 'react-native';
+import {Image, RefreshControl} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../../theme';
 import {Rating} from 'react-native-ratings';
@@ -25,11 +25,18 @@ import _ from 'lodash';
 import ImageIcon from '../../common/ImageIcon';
 
 class ListMyReservationHistory extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      refreshing: false,
+    };
+  }
   render() {
     const {data} = this.props;
     const sum = _.sumBy(data, function(o) {
       return o.totalIncome;
     });
+    const {getListTripDriver} = this.props;
     return (
       <Container>
         <View style={styles.inLine}>
@@ -54,12 +61,18 @@ class ListMyReservationHistory extends Component {
           </Card>
         </View>
 
-        <Content>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={getListTripDriver}
+            />
+          }>
           <List
             dataArray={data}
             renderItem={({item}) => {
               return (
-                <ListItem noBorder>
+                <ListItem noBorder key={item?.id}>
                   <ItemReservation isHistory item={item} />
                 </ListItem>
               );
