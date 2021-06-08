@@ -32,6 +32,7 @@ import _ from 'lodash';
 import {TYPE_DIALOG} from '../constants/data';
 import {LIST_MY_RESERVATION} from '../constants';
 import {PARAMS_LIST_TRIP} from '../constants/api';
+import ModalReceivedTrip from '../components/TripPending/ModalReceivedTrip';
 
 class TripUserDetail extends Component {
   constructor(props) {
@@ -238,6 +239,8 @@ class TripUserDetail extends Component {
           onClickRight={this.cancelTrip}
           modalStyle={styles.modalStyle}
         />
+
+        <ModalReceivedTrip />
       </Container>
     );
   }

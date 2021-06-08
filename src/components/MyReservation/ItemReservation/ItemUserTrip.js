@@ -67,10 +67,12 @@ const ItemUserTrip = props => {
         <Body />
         <Right>
           <Text style={styles.price}>
-            {item?.price.toLocaleString('it-IT', {
-              style: 'currency',
-              currency: 'VND',
-            })}
+            {item?.price
+              ? item?.price.toLocaleString('it-IT', {
+                  style: 'currency',
+                  currency: 'VND',
+                })
+              : 'Thương lượng'}
           </Text>
           <Text style={styles.subTitle}>{item?.distance} km</Text>
         </Right>
@@ -109,24 +111,13 @@ const ItemUserTrip = props => {
       <Row style={styles.bottom}>
         <Left>
           <Row>
-            {/* <Row>
-              <Icon
-                active
-                name="event-seat"
-                type="MaterialIcons"
-                style={{fontSize: 20, color: theme.grey_dark_30}}
-              />
-              <Text>Xe 5 chỗ</Text>
-            </Row> */}
-            <Row>
-              <Icon
-                active
-                name="person"
-                type="MaterialIcons"
-                style={{fontSize: 20, color: theme.grey_dark_30}}
-              />
-              <Text style={styles.subTitle}>{item?.seat}</Text>
-            </Row>
+            <Icon
+              active
+              name="person"
+              type="MaterialIcons"
+              style={{fontSize: 20, color: theme.grey_dark_30}}
+            />
+            <Text style={styles.subTitle}>{item?.seat}</Text>
           </Row>
         </Left>
         {state === PARAMS_LIST_TRIP.PENDING && (
