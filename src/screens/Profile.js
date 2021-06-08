@@ -34,6 +34,7 @@ import Dialog from '../components/common/Dialog';
 import {CAR_MANAGEMENT, CHANGE_PROFILE} from '../constants';
 import {useNavigation} from '@react-navigation/native';
 import {TYPE_DIALOG} from '../constants/data';
+import FastImage from 'react-native-fast-image';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -277,7 +278,7 @@ export default function ProfileScreen() {
           <TouchableOpacity
             style={styles.avatarPlaceholder}
             onPress={_pickImage}>
-            <Image
+            <FastImage
               source={
                 user && user.avatar
                   ? {uri: user.avatar}

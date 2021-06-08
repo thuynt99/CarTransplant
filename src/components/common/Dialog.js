@@ -16,6 +16,7 @@ import Modal from 'react-native-modalbox';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../theme';
 import _ from 'lodash';
+import FastImage from 'react-native-fast-image';
 
 export default function Dialog(props) {
   return (
@@ -30,7 +31,7 @@ export default function Dialog(props) {
         </Body>
       </Item>
       {!_.isEmpty(props?.imageUrl) && (
-        <Image
+        <FastImage
           style={[Styles.iconAlert, props.customStyles.iconAlert]}
           source={{uri: props.imageUrl}}
           resizeMode={FastImage.resizeMode.contain}
