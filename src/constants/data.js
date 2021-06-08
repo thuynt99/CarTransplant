@@ -89,4 +89,17 @@ export const TYPE_DIALOG = [
     content: 'Hoàn thành chuyến thất bại!\n Hãy thử lại!',
     left: 'OK',
   },
+  {
+    id: 7,
+    title: 'Thông báo',
+    content:
+      'Nhận chuyến thành công!\n Đến màn hình chuyến đi của bạn để thực hiện đón khách!',
+    left: 'OK',
+  },
+  {
+    id: 8,
+    title: 'Thông báo',
+    content: 'Nhận chuyến thất bại!\n Hãy thử lại!',
+    left: 'OK',
+  },
 ];

@@ -70,9 +70,6 @@ class ListTripPending extends Component {
             <ItemUserTrip item={item} state={PARAMS_LIST_TRIP.PENDING} />
           )}
         />
-        <TouchableOpacity onPress={this.onRegister} style={styles.btnAdd}>
-          <ImageIcon uri="https://img.icons8.com/plasticine/100/000000/plus.png" />
-        </TouchableOpacity>
       </Container>
     );
   }

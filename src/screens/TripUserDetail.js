@@ -24,7 +24,7 @@ import theme from '../theme';
 import moment from 'moment';
 import {Rating} from 'react-native-ratings';
 import {FORMAT} from '../constants/format';
-import {maskDoneTrip} from '../stores/trip/actions';
+import {maskDoneTrip, takeTripUser} from '../stores/trip/actions';
 import LoadingCustom from '../components/common/LoadingCustom';
 import Dialog from '../components/common/Dialog';
 import {connect} from 'react-redux';
@@ -33,6 +33,7 @@ import {TYPE_DIALOG} from '../constants/data';
 import {LIST_MY_RESERVATION} from '../constants';
 import {PARAMS_LIST_TRIP} from '../constants/api';
 import ModalReceivedTrip from '../components/TripPending/ModalReceivedTrip';
+import {getListMyCar} from '../stores/cars/actions';
 
 class TripUserDetail extends Component {
   constructor(props) {
@@ -41,7 +42,12 @@ class TripUserDetail extends Component {
       loading: false,
       showModal: false,
       idModal: 4,
+      listVehicle: [],
+      showConfirm: false,
     };
+  }
+  componentDidMount() {
+    this.getListMyCar();
   }
   onGoBack = () => {
     this.props.navigation.goBack();
@@ -70,10 +76,51 @@ class TripUserDetail extends Component {
   goToListTrip = () => {
     this.props.navigation.goBack();
   };
-  render() {
-    const {goToMapScreen} = this.props;
+  goToListMyTrip = () => {
+    this.props.navigation.navigate(LIST_MY_RESERVATION);
+  };
+  getListMyCar = async () => {
+    await this.props
+      .getListMyCar({
+        limit: 20,
+      })
+      .then(res => {
+        this.setState({listVehicle: this.props.car.listMyCar});
+      });
+  };
+  showModalConfirm = () => {
+    this.setState({showConfirm: true});
+  };
+  hideModalConfirm = () => {
+    this.setState({showConfirm: false});
+  };
+  takeTripUser = (
+    carID,
+    remainingSeat,
+    priceEachKm,
+    userTripPrice,
+    maxDistance,
+  ) => {
+    this.hideModalConfirm();
     const {item, state} = this.props.route.params;
-    const {idModal, showModal} = this.state;
+    const body = {
+      carID,
+      remainingSeat,
+      priceEachKm: parseFloat(priceEachKm),
+      userTripID: item?.id,
+      userTripPrice: parseInt(userTripPrice),
+      maxDistance: parseFloat(maxDistance),
+    };
+    console.log(body);
+    this.props.takeTripUser(JSON.stringify(body)).then(res => {
+      console.log('res', res);
+      const id = res.status ? 7 : 8;
+      this.setState({showModal: true, idModal: id});
+    });
+  };
+  render() {
+    const {item, state} = this.props.route.params;
+    const {idModal, showModal, listVehicle, showConfirm} = this.state;
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Thông tin chở khách" onGoBack={this.onGoBack} />
@@ -221,7 +268,14 @@ class TripUserDetail extends Component {
           </ScrollView>
           {(state === PARAMS_LIST_TRIP.UPCOMING ||
             state === PARAMS_LIST_TRIP.PENDING) && (
-            <Button full style={styles.btnConfirm} onPress={this.maskDoneTrip}>
+            <Button
+              full
+              style={styles.btnConfirm}
+              onPress={
+                state === PARAMS_LIST_TRIP.UPCOMING
+                  ? this.maskDoneTrip
+                  : this.showModalConfirm
+              }>
               <Text>
                 {state === PARAMS_LIST_TRIP.UPCOMING
                   ? 'Xác Nhận Hoàn Thành'
@@ -235,12 +289,24 @@ class TripUserDetail extends Component {
           isOpen={showModal}
           onClosed={this.closeModal}
           item={_.find(TYPE_DIALOG, {id: idModal})}
-          onClickLeft={idModal === 5 ? this.goToListTrip : this.closeModal}
+          onClickLeft={
+            idModal === 5
+              ? this.goToListTrip
+              : idModal === 7
+              ? this.goToListMyTrip
+              : this.closeModal
+          }
           onClickRight={this.cancelTrip}
           modalStyle={styles.modalStyle}
         />
 
-        <ModalReceivedTrip />
+        <ModalReceivedTrip
+          listVehicle={listVehicle}
+          price={item?.price}
+          hideModalConfirm={this.hideModalConfirm}
+          showConfirm={showConfirm}
+          takeTripUser={this.takeTripUser}
+        />
       </Container>
     );
   }
@@ -369,10 +435,13 @@ const styles = ScaledSheet.create({
 });
 const mapStateToProps = state => ({
   trip: state.trip,
+  car: state.car,
 });
 
 const mapDispatchToProps = dispatch => ({
   maskDoneTrip: params => dispatch(maskDoneTrip(params)),
+  getListMyCar: params => dispatch(getListMyCar(params)),
+  takeTripUser: params => dispatch(takeTripUser(params)),
 });
 
 export default connect(

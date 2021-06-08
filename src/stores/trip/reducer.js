@@ -12,6 +12,9 @@ import {
   MARK_DONE_TRIP,
   MARK_DONE_TRIP_FAILED,
   MARK_DONE_TRIP_SUCCESS,
+  TAKE_TRIP_USER,
+  TAKE_TRIP_USER_FAILED,
+  TAKE_TRIP_USER_SUCCESS,
 } from '../trip/action-types';
 
 const initialState = {
@@ -26,6 +29,7 @@ export default function tripReducer(state = initialState, action = {}) {
     case GET_LIST_TRIP_DRIVER:
     case MARK_DONE_TRIP:
     case GET_LIST_TRIP_PENDING:
+    case TAKE_TRIP_USER:
       return {
         ...state,
         loading: true,
@@ -36,6 +40,8 @@ export default function tripReducer(state = initialState, action = {}) {
     case MARK_DONE_TRIP_SUCCESS:
     case MARK_DONE_TRIP_FAILED:
     case GET_LIST_TRIP_PENDING_FAILED:
+    case TAKE_TRIP_USER_SUCCESS:
+    case TAKE_TRIP_USER_FAILED:
       return {
         ...state,
         loading: false,

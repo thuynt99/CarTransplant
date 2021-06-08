@@ -48,7 +48,6 @@ import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
 import ConfirmTrip from '../components/MapView/ConfirmTrip/ConfirmTrip';
 import {STEP_MAP_VIEW} from '../constants/data';
 import {findTrip} from '../stores/trip/actions';
-import axios from 'axios';
 import {getListMyCar, registerTripDriver} from '../stores/cars/actions';
 import {LIST_MY_RESERVATION} from '../constants';
 

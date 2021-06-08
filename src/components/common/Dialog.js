@@ -15,7 +15,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Modal from 'react-native-modalbox';
 import {ScaledSheet} from 'react-native-size-matters';
 import theme from '../../theme';
-import ImageIcon from './ImageIcon';
+import _ from 'lodash';
 
 export default function Dialog(props) {
   return (
@@ -29,6 +29,13 @@ export default function Dialog(props) {
           <Text style={styles.titlle}>{props?.item?.title}</Text>
         </Body>
       </Item>
+      {!_.isEmpty(props?.imageUrl) && (
+        <Image
+          style={[Styles.iconAlert, props.customStyles.iconAlert]}
+          source={{uri: props.imageUrl}}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      )}
       <Text style={styles.text}>{props?.item?.content}</Text>
       {props?.item?.right ? (
         <View style={styles.row}>

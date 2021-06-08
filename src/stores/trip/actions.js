@@ -4,6 +4,7 @@ import {
   getListPendingApi,
   getListTripDriverApi,
   markDoneTripApi,
+  takeTripUserApi,
 } from '../../services/tripService';
 import {
   FIND_TRIP,
@@ -18,6 +19,9 @@ import {
   MARK_DONE_TRIP,
   MARK_DONE_TRIP_FAILED,
   MARK_DONE_TRIP_SUCCESS,
+  TAKE_TRIP_USER,
+  TAKE_TRIP_USER_FAILED,
+  TAKE_TRIP_USER_SUCCESS,
 } from '../trip/action-types';
 
 export function findTrip(params) {
@@ -127,6 +131,33 @@ const processGetListTripPending = (dataJson, dispatch) => {
   } else {
     dispatch({
       type: GET_LIST_TRIP_PENDING_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function takeTripUser(params) {
+  return dispatch => {
+    dispatch({
+      type: TAKE_TRIP_USER,
+    });
+    const dataJson = takeTripUserApi(params);
+    return dataJson.then(dataJson => processTakeTripUser(dataJson, dispatch));
+  };
+}
+
+const processTakeTripUser = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: TAKE_TRIP_USER_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: TAKE_TRIP_USER_FAILED,
       data: dataJson.data,
     });
     return dataJson;
