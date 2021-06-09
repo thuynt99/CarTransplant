@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Item, Icon, Input} from 'native-base';
 import {StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -11,6 +11,9 @@ const SearchInput = props => {
 
   const navigator = useNavigation();
 
+  useEffect(() => {
+    setText('');
+  });
   const {autoFocus, onSearchText} = props;
   return (
     <Item rounded style={styles.searchInput}>
