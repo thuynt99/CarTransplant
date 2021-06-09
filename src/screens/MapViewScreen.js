@@ -85,6 +85,7 @@ class MapViewScreen extends React.Component {
       distance: 0,
       price: 0,
       duration: 0,
+      note: '',
     };
     this.mapView = null;
   }
@@ -355,6 +356,9 @@ class MapViewScreen extends React.Component {
       }
     });
   };
+  onChangeNote = text => {
+    this.setState({note: text});
+  };
   render() {
     const {
       step,
@@ -372,6 +376,7 @@ class MapViewScreen extends React.Component {
       price,
       distance,
       duration,
+      note,
     } = this.state;
     const {map} = this.props;
     const {type} = this.props.route.params;
@@ -406,6 +411,8 @@ class MapViewScreen extends React.Component {
             price={price}
             duration={duration}
             type={type}
+            note={note}
+            onChangeNote={this.onChangeNote}
           />
         ) : (
           <>
@@ -626,7 +633,8 @@ class MapViewScreen extends React.Component {
                 disabled={
                   !startStation?.display_name ||
                   !endStation?.display_name ||
-                  (_.isEmpty(listVehicle) && step === STEP_MAP_VIEW.SELECT_CAR)
+                  (_.isEmpty(itemCarSelected) &&
+                    step === STEP_MAP_VIEW.SELECT_CAR)
                 }>
                 <Text>
                   {step !== STEP_MAP_VIEW.SELECT_CAR ? 'Tiếp theo' : 'Xác nhận'}

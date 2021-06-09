@@ -39,6 +39,8 @@ export default class ConfirmTrip extends Component {
       duration,
       price,
       type,
+      note,
+      onChangeNote,
     } = this.props;
     const [start] = _.split(startStation?.display_name, ',').slice(-3);
     const [end] = _.split(endStation?.display_name, ',').slice(-3);
@@ -197,6 +199,8 @@ export default class ConfirmTrip extends Component {
               bordered
               placeholder="Ghi chú cho tài xế..."
               style={styles.input}
+              value={note}
+              onChangeText={text => onChangeNote(text)}
             />
           </ScrollView>
           <Button
