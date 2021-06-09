@@ -48,7 +48,6 @@ import SearchAddress from '../components/MapView/SearchAddress/SearchAddress';
 import ConfirmTrip from '../components/MapView/ConfirmTrip/ConfirmTrip';
 import {STEP_MAP_VIEW} from '../constants/data';
 import {findTrip} from '../stores/trip/actions';
-import axios from 'axios';
 import {getListMyCar, registerTripDriver} from '../stores/cars/actions';
 import {LIST_MY_RESERVATION} from '../constants';
 
@@ -85,6 +84,9 @@ class MapViewScreen extends React.Component {
       seat: 1,
       max_distance: '',
       fee_each_km: '',
+      distance: 0,
+      price: 0,
+      duration: 0,
     };
     this.mapView = null;
   }
@@ -251,7 +253,12 @@ class MapViewScreen extends React.Component {
               id: index,
             };
           });
-          this.setState({coordinates: arrayObj});
+          this.setState({
+            coordinates: arrayObj,
+            distance: dataTmp.distance,
+            price: dataTmp.price,
+            duration: dataTmp.duration,
+          });
         }
       });
     }
@@ -339,6 +346,9 @@ class MapViewScreen extends React.Component {
       seat,
       max_distance,
       fee_each_km,
+      price,
+      distance,
+      duration,
     } = this.state;
     const {map} = this.props;
     return (
@@ -364,6 +374,8 @@ class MapViewScreen extends React.Component {
             fee_each_km={fee_each_km}
             itemCarSelected={itemCarSelected}
             onClickConfirmTrip={this.onClickConfirmTrip}
+            distance={distance}
+            duration={duration}
           />
         ) : (
           <>
@@ -503,7 +515,7 @@ class MapViewScreen extends React.Component {
                         active
                         name="close"
                         type="EvilIcons"
-                        style={{fontSize: 24, color: 'dark'}}
+                        style={{fontSize: 24, color: theme.black}}
                       />
                     </TouchableOpacity>
                     <Text style={styles.textTitle}>
@@ -522,7 +534,7 @@ class MapViewScreen extends React.Component {
                 <ScrollView style={styles.date}>
                   <Row>
                     <Left>
-                      <Text style={styles.textTitleCar}>Số người</Text>
+                      <Text style={styles.textTitleCar}>Số chỗ còn trống</Text>
                     </Left>
                     <Right>
                       <View style={styles.row}>
@@ -598,7 +610,13 @@ class MapViewScreen extends React.Component {
                   block
                   danger
                   style={styles.btnNext}
-                  onPress={this.onClickBtnNext}>
+                  onPress={this.onClickBtnNext}
+                  disabled={
+                    !startStation?.display_name ||
+                    !endStation?.display_name ||
+                    (_.isEmpty(itemCarSelected) &&
+                      step === STEP_MAP_VIEW.SELECT_CAR)
+                  }>
                   <Text>
                     {step === STEP_MAP_VIEW.ENTER_KM ? 'Xác nhận' : 'Tiếp theo'}
                   </Text>

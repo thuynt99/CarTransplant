@@ -20,10 +20,7 @@ const color = Yup.string()
   .max(50, 'Fullname too Long!')
   .required('Fullname is required');
 
-const bookingType = Yup.string()
-  .min(1, 'Fullname too Short!')
-  .max(50, 'Fullname too Long!')
-  .required('Fullname is required');
+const seat = Yup.number().required('Fullname is required');
 
 const phoneRegExp = /^0\d{9}$/;
 
@@ -36,7 +33,7 @@ const RegisterCarSchema = Yup.object().shape({
   model,
   licensePlate,
   color,
-  bookingType,
+  seat,
 });
 
 export default RegisterCarSchema;

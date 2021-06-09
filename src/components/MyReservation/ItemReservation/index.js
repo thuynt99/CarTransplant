@@ -77,62 +77,32 @@ export const ItemReservation = props => {
           </Left>
         </Item>
         {isHistory ? (
-          <>
-            <Item style={styles.bottom}>
-              <Left>
-                <Row>
-                  <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 50,
-                    }}
-                    source={{
-                      uri: item?.driver?.Avatar,
-                    }}
-                  />
-                  <View style={styles.viewDriver}>
-                    <Text style={styles.name}>{item?.driver?.FullName}</Text>
-                    <Rating ratingCount={5} imageSize={16} />
-                    <View style={styles.vehicleInfo}>
-                      <Text style={styles.textVehicleInfo}>
-                        {item?.car?.licensePlate}
-                      </Text>
-                    </View>
-                  </View>
-                </Row>
-              </Left>
-              <Right>
-                <Row>
-                  <View>
-                    <Text style={styles.subTitle}>Thời gian</Text>
-                    <Text style={styles.value}>1.3h</Text>
-                  </View>
-                  <View>
-                    <Text style={styles.subTitle}>Giá tiền</Text>
-                    <Text style={styles.value}>
-                      {item?.price?.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND',
-                      })}
-                    </Text>
-                  </View>
-                </Row>
-              </Right>
-            </Item>
-            <Row style={styles.stateView}>
-              <Text style={styles.state}>
-                {item?.state === 3
-                  ? 'Chuyến đã hoàn thành'
-                  : 'Khách hàng đã hủy chuyến'}
+          <Row style={styles.vehicleTypeView}>
+            <Left>
+              <Text style={styles.subTitle}>
+                Xe sử dụng:
+                <Text style={styles.value}>
+                  {' '}
+                  {item?.car.model} - {item?.car.color} -{' '}
+                  {item?.car.licensePlate}
+                </Text>
               </Text>
-            </Row>
-          </>
+            </Left>
+            <Right>
+              <Text style={styles.subTitle}>Tổng tiền:</Text>
+              <Text style={styles.price}>
+                {item?.totalIncome?.toLocaleString('it-IT', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
+            </Right>
+          </Row>
         ) : (
           <>
             <Item style={styles.vehicleTypeView}>
               <Left>
-                <Text style={styles.subTitle}>Số chỗ còn trống:</Text>
+                <Text style={styles.subTitle}>Tổng số chỗ:</Text>
               </Left>
               <Right>
                 <Text style={styles.value}>

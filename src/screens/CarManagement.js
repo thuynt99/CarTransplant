@@ -81,9 +81,9 @@ class CarManagement extends Component {
       <Container>
         <HeaderCustom
           title="Quản lý xe"
-          withoutBack
           iconRight
           onClickBtnRight={this.removeCar}
+          onGoBack={() => this.props.navigation.goBack()}
         />
         {loading && (
           <Spinner

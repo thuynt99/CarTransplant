@@ -24,9 +24,30 @@ import theme from '../theme';
 import moment from 'moment';
 import {Rating} from 'react-native-ratings';
 import {FORMAT} from '../constants/format';
-export default class TripUserDetail extends Component {
+import {maskDoneTrip, takeTripUser} from '../stores/trip/actions';
+import LoadingCustom from '../components/common/LoadingCustom';
+import Dialog from '../components/common/Dialog';
+import {connect} from 'react-redux';
+import _ from 'lodash';
+import {TYPE_DIALOG} from '../constants/data';
+import {LIST_MY_RESERVATION} from '../constants';
+import {PARAMS_LIST_TRIP} from '../constants/api';
+import ModalReceivedTrip from '../components/TripPending/ModalReceivedTrip';
+import {getListMyCar} from '../stores/cars/actions';
+
+class TripUserDetail extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loading: false,
+      showModal: false,
+      idModal: 4,
+      listVehicle: [],
+      showConfirm: false,
+    };
+  }
+  componentDidMount() {
+    this.getListMyCar();
   }
   onGoBack = () => {
     this.props.navigation.goBack();
@@ -39,10 +60,67 @@ export default class TripUserDetail extends Component {
       }
     });
   };
-  render() {
-    const {goToMapScreen} = this.props;
+  maskDoneTrip = () => {
     const {item} = this.props.route.params;
-    console.log(item);
+    this.props.maskDoneTrip(item.id).then(res => {
+      if (res.status) {
+        this.setState({showModal: true, idModal: 5});
+      } else {
+        this.setState({showModal: true, idModal: 6});
+      }
+    });
+  };
+  closeModal = () => {
+    this.setState({showModal: false});
+  };
+  goToListTrip = () => {
+    this.props.navigation.goBack();
+  };
+  goToListMyTrip = () => {
+    this.props.navigation.navigate(LIST_MY_RESERVATION);
+  };
+  getListMyCar = async () => {
+    await this.props
+      .getListMyCar({
+        limit: 20,
+      })
+      .then(res => {
+        this.setState({listVehicle: this.props.car.listMyCar});
+      });
+  };
+  showModalConfirm = () => {
+    this.setState({showConfirm: true});
+  };
+  hideModalConfirm = () => {
+    this.setState({showConfirm: false});
+  };
+  takeTripUser = (
+    carID,
+    remainingSeat,
+    priceEachKm,
+    userTripPrice,
+    maxDistance,
+  ) => {
+    this.hideModalConfirm();
+    const {item, state} = this.props.route.params;
+    const body = {
+      carID,
+      remainingSeat,
+      priceEachKm: parseFloat(priceEachKm),
+      userTripID: item?.id,
+      userTripPrice: parseInt(userTripPrice),
+      maxDistance: parseFloat(maxDistance),
+    };
+    console.log(body);
+    this.props.takeTripUser(JSON.stringify(body)).then(res => {
+      console.log('res', res);
+      const id = res.status ? 7 : 8;
+      this.setState({showModal: true, idModal: id});
+    });
+  };
+  render() {
+    const {item, state} = this.props.route.params;
+    const {idModal, showModal, listVehicle, showConfirm} = this.state;
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Thông tin chở khách" onGoBack={this.onGoBack} />
@@ -62,33 +140,35 @@ export default class TripUserDetail extends Component {
                 />
                 <View style={styles.viewDriver}>
                   <Text style={styles.title}>{item?.user?.FullName}</Text>
-                  <Text style={styles.name}>{item?.user?.Phone}</Text>
+                  <Text style={styles.name}>{item?.user?.Email}</Text>
                 </View>
               </Row>
             </View>
-            <View style={styles.makeCall}>
-              <Button
-                small
-                danger
-                bordered
-                style={styles.btnCall}
-                onPress={() => this.callDriver(item?.user?.Phone)}>
-                <Icon
-                  name="phone"
-                  type="FontAwesome"
-                  style={{marginRight: 0}}
-                />
-                <Text>Gọi khách</Text>
-              </Button>
-              <Button small danger bordered style={styles.btnCall}>
-                <Icon
-                  name="message1"
-                  type="AntDesign"
-                  style={{marginRight: 0}}
-                />
-                <Text>Nhắn tin</Text>
-              </Button>
-            </View>
+            {state !== PARAMS_LIST_TRIP.HISTORY && (
+              <View style={styles.makeCall}>
+                <Button
+                  small
+                  danger
+                  bordered
+                  style={styles.btnCall}
+                  onPress={() => this.callDriver(item?.user?.Phone)}>
+                  <Icon
+                    name="phone"
+                    type="FontAwesome"
+                    style={{marginRight: 0}}
+                  />
+                  <Text>Gọi khách</Text>
+                </Button>
+                <Button small danger bordered style={styles.btnCall}>
+                  <Icon
+                    name="message1"
+                    type="AntDesign"
+                    style={{marginRight: 0}}
+                  />
+                  <Text>Nhắn tin</Text>
+                </Button>
+              </View>
+            )}
             <Item style={styles.item}>
               <Col>
                 <Text style={styles.name}>Điểm đón:</Text>
@@ -111,10 +191,10 @@ export default class TripUserDetail extends Component {
             </Item>
             <Item style={styles.item}>
               <Left>
-                <Text style={styles.name}>Loại xe:</Text>
+                <Text style={styles.name}>Số người:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>5 chỗ</Text>
+                <Text style={styles.textValue}>{item.seat}</Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -136,9 +216,13 @@ export default class TripUserDetail extends Component {
               <Left>
                 <Text style={styles.name}>Khoảng cách:</Text>
               </Left>
-              <Right>
-                <Text style={styles.textValue}>{item?.distance}</Text>
-              </Right>
+              {item?.distance && (
+                <Right>
+                  <Text style={styles.textValue}>
+                    {item?.distance.toLocaleString('it-IT')} km
+                  </Text>
+                </Right>
+              )}
             </Item>
             <Item style={styles.item}>
               <Left>
@@ -160,6 +244,7 @@ export default class TripUserDetail extends Component {
               <Left>
                 <Text style={styles.name}>Tiền thu của khách:</Text>
               </Left>
+
               <Right>
                 <Text style={styles.price}>
                   {item?.price?.toLocaleString('it-IT', {
@@ -181,12 +266,47 @@ export default class TripUserDetail extends Component {
               </Text>
             </View>
           </ScrollView>
-          {true && (
-            <Button full style={styles.btnConfirm}>
-              <Text>Hoàn Thành</Text>
+          {(state === PARAMS_LIST_TRIP.UPCOMING ||
+            state === PARAMS_LIST_TRIP.PENDING) && (
+            <Button
+              full
+              style={styles.btnConfirm}
+              onPress={
+                state === PARAMS_LIST_TRIP.UPCOMING
+                  ? this.maskDoneTrip
+                  : this.showModalConfirm
+              }>
+              <Text>
+                {state === PARAMS_LIST_TRIP.UPCOMING
+                  ? 'Xác Nhận Hoàn Thành'
+                  : 'Nhận chuyến'}
+              </Text>
             </Button>
           )}
         </Content>
+        <LoadingCustom loading={this.state.loading} />
+        <Dialog
+          isOpen={showModal}
+          onClosed={this.closeModal}
+          item={_.find(TYPE_DIALOG, {id: idModal})}
+          onClickLeft={
+            idModal === 5
+              ? this.goToListTrip
+              : idModal === 7
+              ? this.goToListMyTrip
+              : this.closeModal
+          }
+          onClickRight={this.cancelTrip}
+          modalStyle={styles.modalStyle}
+        />
+
+        <ModalReceivedTrip
+          listVehicle={listVehicle}
+          price={item?.price}
+          hideModalConfirm={this.hideModalConfirm}
+          showConfirm={showConfirm}
+          takeTripUser={this.takeTripUser}
+        />
       </Container>
     );
   }
@@ -219,6 +339,7 @@ const styles = ScaledSheet.create({
     marginHorizontal: '15@s',
     borderRadius: 8,
     marginTop: '16@vs',
+    marginBottom: '10@vs',
     borderColor: theme.grey_light,
     borderWidth: 1,
     backgroundColor: theme.warning,
@@ -312,3 +433,18 @@ const styles = ScaledSheet.create({
     color: theme.white,
   },
 });
+const mapStateToProps = state => ({
+  trip: state.trip,
+  car: state.car,
+});
+
+const mapDispatchToProps = dispatch => ({
+  maskDoneTrip: params => dispatch(maskDoneTrip(params)),
+  getListMyCar: params => dispatch(getListMyCar(params)),
+  takeTripUser: params => dispatch(takeTripUser(params)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TripUserDetail);

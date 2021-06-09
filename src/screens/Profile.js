@@ -31,9 +31,10 @@ import HeaderCustom from '../components/common/HeaderCustom';
 import {ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modalbox';
 import Dialog from '../components/common/Dialog';
-import {CHANGE_PROFILE} from '../constants';
+import {CAR_MANAGEMENT, CHANGE_PROFILE} from '../constants';
 import {useNavigation} from '@react-navigation/native';
 import {TYPE_DIALOG} from '../constants/data';
+import FastImage from 'react-native-fast-image';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -58,14 +59,22 @@ export default function ProfileScreen() {
 
   const LIST_ITEM_USER_PROFILE = [
     {
+      id: 7,
+      title: 'Quản lý xe',
+      onPress: () => {
+        navigate(CAR_MANAGEMENT);
+      },
+    },
+    {
       id: 1,
       title: 'Chỉnh sửa thông tin cá nhân',
       onPress: () => {
         navigate(CHANGE_PROFILE);
       },
     },
+
     {
-      id: 1,
+      id: 6,
       title: 'Hỗ trợ',
       onPress: () => {
         setTypeDialog(2);
@@ -107,7 +116,7 @@ export default function ProfileScreen() {
       .doc(_uid())
       .onSnapshot(
         doc => {
-          // console.log(doc.data());
+          console.log('userdata', doc.data());
           setUser(doc.data());
         },
         err => {
@@ -269,7 +278,7 @@ export default function ProfileScreen() {
           <TouchableOpacity
             style={styles.avatarPlaceholder}
             onPress={_pickImage}>
-            <Image
+            <FastImage
               source={
                 user && user.avatar
                   ? {uri: user.avatar}
@@ -289,10 +298,39 @@ export default function ProfileScreen() {
       <ScrollView style={styles.view}>
         <Card style={styles.card}>
           <List
-            dataArray={LIST_ITEM_USER_PROFILE}
+            dataArray={_.take(LIST_ITEM_USER_PROFILE, 2)}
             renderItem={({item, index}) => {
               return (
-                <ListItem selected key={index} noIndent onPress={item.onPress}>
+                <ListItem
+                  selected
+                  key={item.id}
+                  noIndent
+                  onPress={item.onPress}>
+                  <Left>
+                    <Text>{item.title}</Text>
+                  </Left>
+                  <Right>
+                    <Icon
+                      name="right"
+                      type="AntDesign"
+                      style={{color: theme.primaryColor}}
+                    />
+                  </Right>
+                </ListItem>
+              );
+            }}
+          />
+        </Card>
+        <Card style={styles.card}>
+          <List
+            dataArray={_.takeRight(LIST_ITEM_USER_PROFILE, 5)}
+            renderItem={({item, index}) => {
+              return (
+                <ListItem
+                  selected
+                  key={item.id}
+                  noIndent
+                  onPress={item.onPress}>
                   <Left>
                     <Text>{item.title}</Text>
                   </Left>

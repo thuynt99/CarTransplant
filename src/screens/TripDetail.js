@@ -26,6 +26,7 @@ import moment from 'moment';
 import {FORMAT} from '../constants/format';
 import {map} from 'lodash-es';
 import ItemUserTrip from '../components/MyReservation/ItemReservation/ItemUserTrip';
+import _ from 'lodash';
 
 export default class TripDetail extends Component {
   constructor(props) {
@@ -73,7 +74,6 @@ export default class TripDetail extends Component {
               </Left>
               <Right>
                 <Text style={styles.textValue}>
-                  {' '}
                   {item?.car.model} - {item?.car.color} -{' '}
                   {item?.car.licensePlate}
                 </Text>
@@ -95,9 +95,13 @@ export default class TripDetail extends Component {
               <Left>
                 <Text style={styles.name}>Khoảng cách:</Text>
               </Left>
-              <Right>
-                <Text style={styles.textValue}>5 km</Text>
-              </Right>
+              {item?.distance && (
+                <Right>
+                  <Text style={styles.textValue}>
+                    {item?.distance.toLocaleString('it-IT') + ' '} km
+                  </Text>
+                </Right>
+              )}
             </Item>
 
             <Item style={styles.item}>
@@ -165,7 +169,11 @@ export default class TripDetail extends Component {
                   <View>
                     {item.userTrips.map((user, index) => {
                       return (
-                        <ItemUserTrip item={user} key={index.toString()} />
+                        <ItemUserTrip
+                          item={user}
+                          key={index.toString()}
+                          state={item.state}
+                        />
                       );
                     })}
                   </View>

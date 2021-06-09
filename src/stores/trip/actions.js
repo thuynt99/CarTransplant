@@ -1,5 +1,11 @@
 import {HTTP} from '../../constants/api';
-import {findTripApi, getListTripDriverApi} from '../../services/tripService';
+import {
+  findTripApi,
+  getListPendingApi,
+  getListTripDriverApi,
+  markDoneTripApi,
+  takeTripUserApi,
+} from '../../services/tripService';
 import {
   FIND_TRIP,
   FIND_TRIP_FAILED,
@@ -7,6 +13,15 @@ import {
   GET_LIST_TRIP_DRIVER,
   GET_LIST_TRIP_DRIVER_FAILED,
   GET_LIST_TRIP_DRIVER_SUCCESS,
+  GET_LIST_TRIP_PENDING,
+  GET_LIST_TRIP_PENDING_FAILED,
+  GET_LIST_TRIP_PENDING_SUCCESS,
+  MARK_DONE_TRIP,
+  MARK_DONE_TRIP_FAILED,
+  MARK_DONE_TRIP_SUCCESS,
+  TAKE_TRIP_USER,
+  TAKE_TRIP_USER_FAILED,
+  TAKE_TRIP_USER_SUCCESS,
 } from '../trip/action-types';
 
 export function findTrip(params) {
@@ -58,6 +73,91 @@ const processGetListTripDriver = (dataJson, dispatch) => {
   } else {
     dispatch({
       type: GET_LIST_TRIP_DRIVER_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function maskDoneTrip(params) {
+  return dispatch => {
+    dispatch({
+      type: MARK_DONE_TRIP,
+    });
+    const dataJson = markDoneTripApi(params);
+    return dataJson.then(dataJson =>
+      processMarkDoneTripApi(dataJson, dispatch),
+    );
+  };
+}
+
+const processMarkDoneTripApi = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: MARK_DONE_TRIP_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: MARK_DONE_TRIP_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function getListTripPending(params) {
+  return dispatch => {
+    dispatch({
+      type: GET_LIST_TRIP_PENDING,
+    });
+    const dataJson = getListPendingApi(params);
+    return dataJson.then(dataJson =>
+      processGetListTripPending(dataJson, dispatch),
+    );
+  };
+}
+
+const processGetListTripPending = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: GET_LIST_TRIP_PENDING_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: GET_LIST_TRIP_PENDING_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function takeTripUser(params) {
+  return dispatch => {
+    dispatch({
+      type: TAKE_TRIP_USER,
+    });
+    const dataJson = takeTripUserApi(params);
+    return dataJson.then(dataJson => processTakeTripUser(dataJson, dispatch));
+  };
+}
+
+const processTakeTripUser = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: TAKE_TRIP_USER_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: TAKE_TRIP_USER_FAILED,
       data: dataJson.data,
     });
     return dataJson;

@@ -40,7 +40,11 @@ class RegisterCar extends Component {
   };
   onSubmit = values => {
     console.log('values', values);
-    this.props.registerCar(JSON.stringify(values)).then(res => {
+    const body = {
+      ...values,
+      seat: parseInt(values.seat),
+    };
+    this.props.registerCar(JSON.stringify(body)).then(res => {
       console.log('res', res);
       if (res.status) {
         this.props.getListMyCar({
@@ -99,7 +103,7 @@ class RegisterCar extends Component {
       {
         id: 5,
         label: 'Số chỗ',
-        value: 'bookingType',
+        value: 'seat',
       },
     ];
     const {loading} = this.state;
@@ -139,6 +143,7 @@ class RegisterCar extends Component {
                           onChangeText={handleChange(item.value)}
                           onBlur={handleBlur(item.value)}
                           value={values[item.value]}
+                          keyboardType={item.id === 5 ? 'numeric' : 'default'}
                         />
                         {errors[item.value] && touched[item.value] ? (
                           <Text style={styles.error}>{errors[item.value]}</Text>

@@ -6,17 +6,30 @@ import {
   GET_LIST_TRIP_DRIVER,
   GET_LIST_TRIP_DRIVER_FAILED,
   GET_LIST_TRIP_DRIVER_SUCCESS,
+  GET_LIST_TRIP_PENDING,
+  GET_LIST_TRIP_PENDING_FAILED,
+  GET_LIST_TRIP_PENDING_SUCCESS,
+  MARK_DONE_TRIP,
+  MARK_DONE_TRIP_FAILED,
+  MARK_DONE_TRIP_SUCCESS,
+  TAKE_TRIP_USER,
+  TAKE_TRIP_USER_FAILED,
+  TAKE_TRIP_USER_SUCCESS,
 } from '../trip/action-types';
 
 const initialState = {
   loading: false,
   listTrip: [],
+  listTripPending: [],
 };
 
 export default function tripReducer(state = initialState, action = {}) {
   switch (action.type) {
     case FIND_TRIP:
     case GET_LIST_TRIP_DRIVER:
+    case MARK_DONE_TRIP:
+    case GET_LIST_TRIP_PENDING:
+    case TAKE_TRIP_USER:
       return {
         ...state,
         loading: true,
@@ -24,6 +37,11 @@ export default function tripReducer(state = initialState, action = {}) {
     case FIND_TRIP_SUCCESS:
     case FIND_TRIP_FAILED:
     case GET_LIST_TRIP_DRIVER_FAILED:
+    case MARK_DONE_TRIP_SUCCESS:
+    case MARK_DONE_TRIP_FAILED:
+    case GET_LIST_TRIP_PENDING_FAILED:
+    case TAKE_TRIP_USER_SUCCESS:
+    case TAKE_TRIP_USER_FAILED:
       return {
         ...state,
         loading: false,
@@ -33,6 +51,12 @@ export default function tripReducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         listTrip: action.data,
+      };
+    case GET_LIST_TRIP_PENDING_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        listTripPending: action.data.userTrip,
       };
     default:
       return state;
