@@ -49,7 +49,7 @@ export default function RegisterScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.greeting}>Sign up to get started</Text>
+      <Text style={styles.greeting}>Đăng kí để bắt đầu</Text>
 
       {/* <TouchableOpacity
         style={styles.back}
@@ -99,7 +99,7 @@ export default function RegisterScreen() {
           <View>
             <View style={styles.form}>
               <View>
-                <Text style={styles.inputTitle}>Fullname</Text>
+                <Text style={styles.inputTitle}>Họ tên</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={handleChange('fullName')}
@@ -111,7 +111,7 @@ export default function RegisterScreen() {
                 ) : null}
               </View>
               <View style={{marginTop: 32}}>
-                <Text style={styles.inputTitle}>Phone Number</Text>
+                <Text style={styles.inputTitle}>Số điện thoại</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={handleChange('phone')}
@@ -136,7 +136,7 @@ export default function RegisterScreen() {
                 ) : null}
               </View>
               <View style={{marginTop: 32}}>
-                <Text style={styles.inputTitle}>Password</Text>
+                <Text style={styles.inputTitle}>Mật khẩu</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={handleChange('password')}
@@ -150,7 +150,7 @@ export default function RegisterScreen() {
               </View>
             </View>
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Sign Up</Text>
+              <Text style={styles.buttonText}>Đăng kí</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -161,9 +161,9 @@ export default function RegisterScreen() {
           alignSelf: 'center',
           marginTop: 32,
         }}>
-        <Text style={{color: '#414959'}}>Already an account? </Text>
+        <Text style={{color: '#414959'}}>Bạn đã có tài khoản? </Text>
         <TouchableOpacity onPress={_navigateLogin}>
-          <Text style={styles.signInText}>Sign In</Text>
+          <Text style={styles.signInText}>Đăng nhập</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
