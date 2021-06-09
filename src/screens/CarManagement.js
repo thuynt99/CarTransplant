@@ -27,6 +27,7 @@ import HeaderCustom from '../components/common/HeaderCustom';
 import {connect} from 'react-redux';
 import {deteleListCar, getListMyCar} from '../stores/cars/actions';
 import carReducer from '../stores/cars/reducer';
+import LoadingCustom from '../components/common/LoadingCustom';
 
 class CarManagement extends Component {
   constructor(props) {
@@ -85,15 +86,14 @@ class CarManagement extends Component {
           onClickBtnRight={this.removeCar}
           onGoBack={() => this.props.navigation.goBack()}
         />
-        {loading && (
-          <Spinner
-            color={theme.primaryColor}
-            style={{
-              alignSelf: 'center',
-              justifyContent: 'center',
-            }}
-          />
-        )}
+        <LoadingCustom
+          color={theme.primaryColor}
+          style={{
+            alignSelf: 'center',
+            justifyContent: 'center',
+          }}
+          loading={loading}
+        />
         <FlatList
           style={styles.list}
           data={listMyCar}
