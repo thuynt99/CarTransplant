@@ -110,15 +110,6 @@ class RegisterCar extends Component {
     return (
       <Container>
         <HeaderCustom title="Thêm xe mới" onGoBack={this.onGoBack} />
-        {loading && (
-          <Spinner
-            color={theme.primaryColor}
-            style={{
-              alignSelf: 'center',
-              justifyContent: 'center',
-            }}
-          />
-        )}
         <Content>
           <Formik
             initialValues={{}}

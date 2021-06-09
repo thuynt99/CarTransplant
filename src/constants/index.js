@@ -20,5 +20,6 @@ const APP_NAME = {
   TRIP_USER_DETAIL: 'TripUserDetail',
   CHANGE_PROFILE: 'ChangeProfile',
   LIST_TRIP_PENDING: 'ListTripPending',
+  ACTIVE_REGISTRATION: 'ActiveRegistration',
 };
 module.exports = APP_NAME;

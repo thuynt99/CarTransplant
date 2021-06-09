@@ -23,6 +23,7 @@ import {getListTripPending} from '../stores/trip/actions';
 import LoadingCustom from '../components/common/LoadingCustom';
 import ItemUserTrip from '../components/MyReservation/ItemReservation/ItemUserTrip';
 import {PARAMS_LIST_TRIP} from '../constants/api';
+import {ACTIVE_REGISTRATION} from '../constants';
 
 class ListTripPending extends Component {
   constructor(props) {
@@ -50,12 +51,26 @@ class ListTripPending extends Component {
         console.log(this.props.trip.listTripPending);
       });
   };
+
   render() {
     const {listTripPending, refreshing, loading} = this.state;
     return (
-      <Container>
+      <View style={styles.container}>
         <HeaderCustom title="Tìm chuyến có sẵn" withoutBack />
         <LoadingCustom loading={loading} />
+        {listTripPending.length > 0 && (
+          <Card style={styles.card}>
+            <Icon
+              name="local-car-wash"
+              type="MaterialIcons"
+              style={{color: theme.primaryColor, alignSelf: 'center'}}
+            />
+            <Text style={styles.textReq}>
+              Bạn có {listTripPending.length} yêu cầu mới.
+            </Text>
+          </Card>
+        )}
+
         <FlatList
           style={styles.list}
           data={listTripPending}
@@ -70,12 +85,72 @@ class ListTripPending extends Component {
             <ItemUserTrip item={item} state={PARAMS_LIST_TRIP.PENDING} />
           )}
         />
-      </Container>
+        <View style={{flex: 1, position: 'absolute', right: 0, bottom: 0}}>
+          <TouchableOpacity
+            style={styles.btnAdd}
+            onPress={() => this.props.navigation.navigate(ACTIVE_REGISTRATION)}>
+            <Icon
+              name="notifications"
+              type="MaterialIcons"
+              style={{color: theme.white, alignSelf: 'center'}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnFilter}>
+            <Icon
+              name="filter-list"
+              type="MaterialIcons"
+              style={{color: theme.white, alignSelf: 'center'}}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
 }
 
-const styles = ScaledSheet.create({});
+const styles = ScaledSheet.create({
+  container: {
+    flex: 1,
+  },
+  floatingBtn: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+  },
+  btnAdd: {
+    marginBottom: '16@vs',
+    width: '50@ms',
+    height: '50@ms',
+    backgroundColor: theme.blue_medium,
+    alignSelf: 'flex-end',
+    borderRadius: '40@ms',
+    justifyContent: 'center',
+    marginRight: '16@s',
+  },
+  btnFilter: {
+    marginBottom: '16@vs',
+    width: '50@ms',
+    height: '50@ms',
+    backgroundColor: theme.subPrimaryColor,
+    alignSelf: 'flex-end',
+    borderRadius: '40@ms',
+    justifyContent: 'center',
+    marginRight: '16@s',
+  },
+  card: {
+    paddingVertical: '8@vs',
+    paddingHorizontal: '16@s',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textReq: {
+    fontWeight: 'bold',
+    color: theme.primaryColor,
+    fontSize: '16@ms',
+    paddingLeft: '16@s',
+  },
+});
 
 const mapStateToProps = state => ({
   trip: state.trip,

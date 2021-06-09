@@ -1,15 +1,19 @@
 import {HTTP} from '../../constants/api';
 import {
   findTripApi,
+  getListActiveZoneApi,
   getListPendingApi,
   getListTripDriverApi,
   markDoneTripApi,
+  postListActiveZoneApi,
   takeTripUserApi,
 } from '../../services/tripService';
 import {
   FIND_TRIP,
   FIND_TRIP_FAILED,
   FIND_TRIP_SUCCESS,
+  GET_LIST_ACTIVE_ZONE,
+  GET_LIST_ACTIVE_ZONE_SUCCESS,
   GET_LIST_TRIP_DRIVER,
   GET_LIST_TRIP_DRIVER_FAILED,
   GET_LIST_TRIP_DRIVER_SUCCESS,
@@ -19,6 +23,9 @@ import {
   MARK_DONE_TRIP,
   MARK_DONE_TRIP_FAILED,
   MARK_DONE_TRIP_SUCCESS,
+  POST_LIST_ACTIVE_ZONE,
+  POST_LIST_ACTIVE_ZONE_FAILED,
+  POST_LIST_ACTIVE_ZONE_SUCCESS,
   TAKE_TRIP_USER,
   TAKE_TRIP_USER_FAILED,
   TAKE_TRIP_USER_SUCCESS,
@@ -158,6 +165,62 @@ const processTakeTripUser = (dataJson, dispatch) => {
   } else {
     dispatch({
       type: TAKE_TRIP_USER_FAILED,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function getListActiveZone(params) {
+  return dispatch => {
+    dispatch({
+      type: GET_LIST_ACTIVE_ZONE,
+    });
+    const dataJson = getListActiveZoneApi(params);
+    return dataJson.then(dataJson =>
+      processGetListActiveZone(dataJson, dispatch),
+    );
+  };
+}
+
+const processGetListActiveZone = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: GET_LIST_ACTIVE_ZONE_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: GET_LIST_ACTIVE_ZONE_SUCCESS,
+      data: dataJson.data,
+    });
+    return dataJson;
+  }
+};
+
+export function postListActiveZone(params) {
+  return dispatch => {
+    dispatch({
+      type: POST_LIST_ACTIVE_ZONE,
+    });
+    const dataJson = postListActiveZoneApi(params);
+    return dataJson.then(dataJson => processPostListActive(dataJson, dispatch));
+  };
+}
+
+const processPostListActive = (dataJson, dispatch) => {
+  if (dataJson.status) {
+    dispatch({
+      type: POST_LIST_ACTIVE_ZONE_SUCCESS,
+      data: dataJson.data,
+    });
+    console.log('dataJson', dataJson);
+    return dataJson;
+  } else {
+    dispatch({
+      type: POST_LIST_ACTIVE_ZONE_FAILED,
       data: dataJson.data,
     });
     return dataJson;

@@ -27,12 +27,12 @@ import HeaderCustom from '../components/common/HeaderCustom';
 import {connect} from 'react-redux';
 import {deteleListCar, getListMyCar} from '../stores/cars/actions';
 import carReducer from '../stores/cars/reducer';
+import LoadingCustom from '../components/common/LoadingCustom';
 
 class CarManagement extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
       selectedCarId: [],
       listMyCar: [],
       refreshing: false,
@@ -85,15 +85,14 @@ class CarManagement extends Component {
           onClickBtnRight={this.removeCar}
           onGoBack={() => this.props.navigation.goBack()}
         />
-        {loading && (
-          <Spinner
-            color={theme.primaryColor}
-            style={{
-              alignSelf: 'center',
-              justifyContent: 'center',
-            }}
-          />
-        )}
+        <LoadingCustom
+          color={theme.primaryColor}
+          style={{
+            alignSelf: 'center',
+            justifyContent: 'center',
+          }}
+          loading={loading}
+        />
         <FlatList
           style={styles.list}
           data={listMyCar}
@@ -103,9 +102,9 @@ class CarManagement extends Component {
               onRefresh={this.getListMyCar}
             />
           }
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => item.id.toString()}
           renderItem={({item, index}) => (
-            <Card key={index} style={styles.item}>
+            <Card key={item.id} style={styles.item}>
               <CardItem>
                 <Image
                   style={{

@@ -102,7 +102,7 @@ export const ItemReservation = props => {
           <>
             <Item style={styles.vehicleTypeView}>
               <Left>
-                <Text style={styles.subTitle}>Tổng số chỗ:</Text>
+                <Text style={styles.subTitle}>Tổng số chỗ còn trống:</Text>
               </Left>
               <Right>
                 <Text style={styles.value}>

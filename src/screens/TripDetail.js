@@ -93,12 +93,16 @@ export default class TripDetail extends Component {
             </Item>
             <Item style={styles.item}>
               <Left>
-                <Text style={styles.name}>Khoảng cách:</Text>
+                <Text style={styles.name}>Giá tiền mỗi km:</Text>
               </Left>
-              {item?.distance && (
+              {item?.priceEachKm && (
                 <Right>
                   <Text style={styles.textValue}>
-                    {item?.distance.toLocaleString('it-IT') + ' '} km
+                    {item?.priceEachKm.toLocaleString('it-IT', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                    /km
                   </Text>
                 </Right>
               )}
