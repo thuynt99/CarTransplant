@@ -56,19 +56,21 @@ class ActiveRegistration extends Component {
     this.onGetListActiveZone();
   }
   onGetListActiveZone = async () => {
-    await this.props.getListActiveZone();
+    await this.props.getListActiveZone().then(res => {
+      if (res.status) {
+        this.setState({selectedCarId: this.props.trip.listActiveZone});
+      }
+    });
+
     console.log(this.props.trip.listActiveZone);
   };
   onPostListActiveZone = async () => {
     const {selectedCarId} = this.state;
     await this.props
-      .postListActiveZone(JSON.stringify(selectedCarId))
+      .postListActiveZone(JSON.stringify({provinces: selectedCarId}))
       .then(res => {
         console.log('res', res);
       });
-  };
-  onRegister = () => {
-    this.props.navigation.navigate(REGISTER_CAR);
   };
   onCheckBoxPress = id => {
     let tmp = this.state.selectedCarId;
@@ -81,6 +83,7 @@ class ActiveRegistration extends Component {
     this.setState({
       selectedCarId: tmp,
     });
+    this.onPostListActiveZone(tmp);
   };
   onChangeTab = i => {
     this.setState({currentTab: i});
@@ -153,9 +156,9 @@ class ActiveRegistration extends Component {
                   onRefresh={this.getListMyCar}
                 />
               }
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => (
-                <Item key={index} style={styles.item}>
+              keyExtractor={item => item.id.toString()}
+              renderItem={({item}) => (
+                <Item key={item.id} style={styles.item}>
                   <View styles={styles.left}>
                     <Text style={styles.textPrice}>{item.name}</Text>
                   </View>
@@ -194,9 +197,9 @@ class ActiveRegistration extends Component {
                   onRefresh={this.getListMyCar}
                 />
               }
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => (
-                <Item key={index} style={styles.item}>
+              keyExtractor={item => item.id.toString()}
+              renderItem={({item}) => (
+                <Item key={item.id} style={styles.item}>
                   <View styles={styles.left}>
                     <Text style={styles.textPrice}>{item.name}</Text>
                   </View>

@@ -102,9 +102,9 @@ class CarManagement extends Component {
               onRefresh={this.getListMyCar}
             />
           }
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => item.id.toString()}
           renderItem={({item, index}) => (
-            <Card key={index} style={styles.item}>
+            <Card key={item.id} style={styles.item}>
               <CardItem>
                 <Image
                   style={{

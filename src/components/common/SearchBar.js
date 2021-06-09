@@ -15,7 +15,7 @@ const SearchInput = props => {
   return (
     <Item rounded style={styles.searchInput}>
       <Input
-        placeholder="Nhập để tìm kiếm sách"
+        placeholder="Nhập để tìm kiếm tỉnh/thành phố"
         autoFocus={autoFocus}
         onChangeText={text => {
           setText(text);

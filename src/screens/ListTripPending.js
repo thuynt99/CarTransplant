@@ -58,6 +58,19 @@ class ListTripPending extends Component {
       <View style={styles.container}>
         <HeaderCustom title="Tìm chuyến có sẵn" withoutBack />
         <LoadingCustom loading={loading} />
+        {listTripPending.length > 0 && (
+          <Card style={styles.card}>
+            <Icon
+              name="local-car-wash"
+              type="MaterialIcons"
+              style={{color: theme.primaryColor, alignSelf: 'center'}}
+            />
+            <Text style={styles.textReq}>
+              Bạn có {listTripPending.length} yêu cầu mới.
+            </Text>
+          </Card>
+        )}
+
         <FlatList
           style={styles.list}
           data={listTripPending}
@@ -123,6 +136,19 @@ const styles = ScaledSheet.create({
     borderRadius: '40@ms',
     justifyContent: 'center',
     marginRight: '16@s',
+  },
+  card: {
+    paddingVertical: '8@vs',
+    paddingHorizontal: '16@s',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textReq: {
+    fontWeight: 'bold',
+    color: theme.primaryColor,
+    fontSize: '16@ms',
+    paddingLeft: '16@s',
   },
 });
 
