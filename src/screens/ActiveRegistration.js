@@ -33,6 +33,7 @@ import LoadingCustom from '../components/common/LoadingCustom';
 import {DEPARTMENT} from '../constants/department';
 import SearchInput from '../components/common/SearchBar';
 import _ from 'lodash';
+import {getListActiveZone, postListActiveZone} from '../stores/trip/actions';
 
 class ActiveRegistration extends Component {
   constructor(props) {
@@ -44,15 +45,28 @@ class ActiveRegistration extends Component {
       refreshing: false,
       currentTab: 0,
       text: '',
+      listActiveZone: [],
     };
   }
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {car} = nextProps;
-    return {loading: car.loading};
+    const {trip} = nextProps;
+    return {loading: trip.loading};
   }
   componentDidMount() {
-    // this.getListMyCar();
+    this.onGetListActiveZone();
   }
+  onGetListActiveZone = async () => {
+    await this.props.getListActiveZone();
+    console.log(this.props.trip.listActiveZone);
+  };
+  onPostListActiveZone = async () => {
+    const {selectedCarId} = this.state;
+    await this.props
+      .postListActiveZone(JSON.stringify(selectedCarId))
+      .then(res => {
+        console.log('res', res);
+      });
+  };
   onRegister = () => {
     this.props.navigation.navigate(REGISTER_CAR);
   };
@@ -249,11 +263,12 @@ const styles = ScaledSheet.create({
 });
 
 const mapStateToProps = state => ({
-  car: state.car,
+  trip: state.trip,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getListMyCar: params => dispatch(getListMyCar(params)),
+  getListActiveZone: params => dispatch(getListActiveZone(params)),
+  postListActiveZone: params => dispatch(postListActiveZone(params)),
 });
 export default connect(
   mapStateToProps,
