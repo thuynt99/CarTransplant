@@ -33,7 +33,6 @@ class CarManagement extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
       selectedCarId: [],
       listMyCar: [],
       refreshing: false,

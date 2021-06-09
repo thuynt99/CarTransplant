@@ -42,8 +42,8 @@ class ActiveRegistration extends Component {
       selectedCarId: [],
       data: DEPARTMENT,
       refreshing: false,
-      loading: false,
       currentTab: 0,
+      text: '',
     };
   }
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -72,7 +72,7 @@ class ActiveRegistration extends Component {
     this.setState({currentTab: i});
     console.log(i);
     if (i === 0) {
-      this.setState({data: DEPARTMENT});
+      this.onSearchText(this.state.text);
     } else {
       const result = _.intersectionWith(
         DEPARTMENT,
@@ -83,6 +83,7 @@ class ActiveRegistration extends Component {
     }
   };
   onSearchText = text => {
+    this.setState({text: text});
     if (text) {
       if (text.length >= 1) {
         const result = DEPARTMENT.filter((item, i) =>

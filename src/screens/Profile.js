@@ -278,7 +278,7 @@ export default function ProfileScreen() {
           <TouchableOpacity
             style={styles.avatarPlaceholder}
             onPress={_pickImage}>
-            <FastImage
+            <Image
               source={
                 user && user.avatar
                   ? {uri: user.avatar}

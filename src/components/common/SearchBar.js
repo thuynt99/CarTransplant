@@ -11,9 +11,6 @@ const SearchInput = props => {
 
   const navigator = useNavigation();
 
-  useEffect(() => {
-    setText('');
-  });
   const {autoFocus, onSearchText} = props;
   return (
     <Item rounded style={styles.searchInput}>
