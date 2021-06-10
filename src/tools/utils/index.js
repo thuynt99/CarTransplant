@@ -75,7 +75,6 @@ function formatCash(num) {
   const arr = str.split('.');
   const str1 = arr[0];
   const str2 = arr[1];
-
   if (str2) {
     return (
       str1

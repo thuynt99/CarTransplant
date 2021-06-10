@@ -27,7 +27,6 @@ import moment from 'moment';
 import {FORMAT} from '../../../constants/format';
 import {PARAMS_FIND_TYPE} from '../../../constants/api';
 import {formatCash} from '../../../tools/utils';
-
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
