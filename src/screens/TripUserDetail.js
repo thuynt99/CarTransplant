@@ -164,12 +164,16 @@ class TripUserDetail extends Component {
                   />
                   <Text>Gọi khách</Text>
                 </Button>
-                <Button small danger bordered style={styles.btnCall}>
+                <Button
+                  small
+                  danger
+                  bordered
+                  style={styles.btnCall}
+                  onPress={() => this.openMessage(item?.user?.Phone)}>
                   <Icon
                     name="message1"
                     type="AntDesign"
                     style={{marginRight: 0}}
-                    onPress={() => this.openMessage(item?.user?.Phone)}
                   />
                   <Text>Nhắn tin</Text>
                 </Button>
@@ -253,7 +257,9 @@ class TripUserDetail extends Component {
 
               <Right>
                 <Text style={styles.price}>
-                  {formatCash(item?.price) + ' VND'}
+                  {item?.price
+                    ? formatCash(item?.price) + ' VND'
+                    : 'Thương lượng'}
                 </Text>
               </Right>
             </Item>

@@ -4,7 +4,7 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import {CTX} from '../tools/context';
-import {primaryColor} from '../theme';
+import theme, {primaryColor} from '../theme';
 import {useNavigation} from '@react-navigation/native';
 
 const slides = [
@@ -18,17 +18,19 @@ const slides = [
   },
   {
     key: 'somethun-dos',
-    title: 'Giúp bạn có thể tiết kiệm chi phí!',
+    title: 'Tiết Kiệm Chi Phí!',
     color: '#000',
-    text: '',
+    text:
+      'Bản chất là ứng dụng đặt xe tiện chuyến nên cả khách hàng và tài xế đều có lợi nên giá thành của Car Transplant thực sự rẻ chỉ bằng 60% dịch vụ xe con thông thường.',
     image: require('../assets/onboarding/image7.gif'),
     backgroundColor: '#FFDEDE',
   },
   {
     key: 'somethun1',
-    title: 'Hãy trải nghiệm và cảm nhận',
+    title: 'Đặt Lịch Tiện Chuyến!',
     color: '#000',
-    text: '',
+    text:
+      'Đặt trước lịch đường dài để chúng tôi có thể hỗ trợ tìm tài xế thân thiện cho bạn cùng chia sẻ cước phí tuyến đường.',
     image: require('../assets/onboarding/image8.gif'),
     backgroundColor: '#FFFFFF',
   },
@@ -48,7 +50,7 @@ export default function OnBoardingScreen() {
   function _renderItem({item}) {
     return (
       <View style={[styles.slide, {backgroundColor: item.backgroundColor}]}>
-        <Text style={item.color}>{item.title}</Text>
+        <Text style={[item.color, styles.title]}>{item.title}</Text>
         <Image style={styles.image} source={item.image} />
         <Text style={styles.text}>{item.text}</Text>
       </View>
@@ -113,5 +115,16 @@ const styles = StyleSheet.create({
   image: {
     height: 320,
     width: 320,
+  },
+  text: {
+    fontSize: 16,
+    color: theme.grey_dark_30,
+    textAlign: 'center',
+    paddingHorizontal: 50,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: theme.primaryColor,
   },
 });
