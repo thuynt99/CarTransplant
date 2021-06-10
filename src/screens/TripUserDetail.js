@@ -34,6 +34,7 @@ import {LIST_MY_RESERVATION} from '../constants';
 import {PARAMS_LIST_TRIP} from '../constants/api';
 import ModalReceivedTrip from '../components/TripPending/ModalReceivedTrip';
 import {getListMyCar} from '../stores/cars/actions';
+import {formatCash} from '../tools/utils';
 
 class TripUserDetail extends Component {
   constructor(props) {
@@ -220,7 +221,7 @@ class TripUserDetail extends Component {
               {item?.distance && (
                 <Right>
                   <Text style={styles.textValue}>
-                    {item?.distance.toLocaleString('it-IT')} km
+                    {formatCash(item?.distance)} km
                   </Text>
                 </Right>
               )}
@@ -248,10 +249,7 @@ class TripUserDetail extends Component {
 
               <Right>
                 <Text style={styles.price}>
-                  {parseFloat(item?.price).toLocaleString('it-IT', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {formatCash(item?.price) + ' VND'}
                 </Text>
               </Right>
             </Item>

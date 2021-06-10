@@ -24,6 +24,7 @@ import {useNavigation} from '@react-navigation/native';
 import {TRIP_USER_DETAIL} from '../../../constants';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {PARAMS_LIST_TRIP} from '../../../constants/api';
+import {formatCash} from '../../../tools/utils';
 
 const ItemUserTrip = props => {
   const navigation = useNavigation();
@@ -67,14 +68,9 @@ const ItemUserTrip = props => {
         <Body />
         <Right>
           <Text style={styles.price}>
-            {item?.price
-              ? item?.price.toLocaleString('it-IT', {
-                  style: 'currency',
-                  currency: 'VND',
-                })
-              : 'Thương lượng'}
+            {item?.price ? formatCash(item?.price) + ' VND' : 'Thương lượng'}
           </Text>
-          <Text style={styles.subTitle}>{item?.distance} km</Text>
+          <Text style={styles.subTitle}>{formatCash(item?.distance)} km</Text>
         </Right>
       </Item>
       <TouchableOpacity onPress={goToDetail}>

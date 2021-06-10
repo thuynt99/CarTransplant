@@ -25,6 +25,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {FORMAT} from '../../../constants/format';
+import {formatCash} from '../../../tools/utils';
 
 export const ItemReservation = props => {
   const navigation = useNavigation();
@@ -91,10 +92,7 @@ export const ItemReservation = props => {
             <Right>
               <Text style={styles.subTitle}>Tổng tiền:</Text>
               <Text style={styles.price}>
-                {item?.totalIncome?.toLocaleString('it-IT', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
+                {formatCash(item?.totalIncome) + ' VND'}
               </Text>
             </Right>
           </Row>
@@ -125,10 +123,7 @@ export const ItemReservation = props => {
               </Left>
               <Right>
                 <Text style={styles.price}>
-                  {item?.priceEachKm.toLocaleString('it-IT', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {formatCash(item?.priceEachKm) + ' VND'}
                   /km
                 </Text>
               </Right>

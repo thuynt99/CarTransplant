@@ -27,6 +27,7 @@ import {FORMAT} from '../constants/format';
 import {map} from 'lodash-es';
 import ItemUserTrip from '../components/MyReservation/ItemReservation/ItemUserTrip';
 import _ from 'lodash';
+import {formatCash} from '../tools/utils';
 
 export default class TripDetail extends Component {
   constructor(props) {
@@ -98,10 +99,7 @@ export default class TripDetail extends Component {
               {item?.priceEachKm && (
                 <Right>
                   <Text style={styles.textValue}>
-                    {item?.priceEachKm.toLocaleString('it-IT', {
-                      style: 'currency',
-                      currency: 'VND',
-                    })}
+                    {formatCash(item?.priceEachKm) + ' VND'}
                     /km
                   </Text>
                 </Right>
@@ -114,10 +112,7 @@ export default class TripDetail extends Component {
               </Left>
               <Right>
                 <Text style={styles.price}>
-                  {item?.totalIncome?.toLocaleString('it-IT', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {formatCash(item?.totalIncome) + ' VND'}
                 </Text>
               </Right>
             </Item>
