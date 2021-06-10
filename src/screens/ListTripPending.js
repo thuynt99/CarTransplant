@@ -45,13 +45,9 @@ class ListTripPending extends Component {
     this.getListTripPending();
   }
   getListTripPending = async body => {
-    await this.props
-      .getListTripPending({
-        body,
-      })
-      .then(res => {
-        console.log(this.props.trip.listTripPending);
-      });
+    await this.props.getListTripPending(body).then(res => {
+      console.log(this.props.trip.listTripPending);
+    });
   };
   showFilter = () => {
     this.setState({isShowFilter: true});
