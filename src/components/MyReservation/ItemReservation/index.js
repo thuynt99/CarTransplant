@@ -26,6 +26,8 @@ import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {FORMAT} from '../../../constants/format';
 import {PARAMS_FIND_TYPE} from '../../../constants/api';
+import {formatCash} from '../../../tools/utils';
+
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
@@ -89,23 +91,26 @@ export const ItemReservation = props => {
         ) : (
           <TouchableOpacity>
             <Item style={styles.vehicleTypeView}>
-              <Left>
-                <Text style={styles.subTitle}>
-                  Mã chuyến đi:
-                  <Text style={styles.value}> {item?.id}</Text>
-                </Text>
-              </Left>
               {item?.type && (
-                <Right>
-                  <Text style={styles.subTitle}>
-                    {item?.type === PARAMS_FIND_TYPE.GO_ALONE
-                      ? 'Đi riêng'
-                      : item?.type === PARAMS_FIND_TYPE.GO_SEND
-                      ? ' Chở hàng'
-                      : 'Đi ghép'}
-                  </Text>
-                </Right>
+                <Left>
+                  <View style={styles.box}>
+                    <Text style={styles.textType}>
+                      {item?.type === PARAMS_FIND_TYPE.GO_ALONE
+                        ? 'Đi riêng'
+                        : item?.type === PARAMS_FIND_TYPE.GO_SEND
+                        ? ' Chở hàng'
+                        : 'Đi ghép'}
+                    </Text>
+                  </View>
+                </Left>
               )}
+              <Right>
+                <Text style={styles.subTitle}>
+                  <Text style={styles.price}>
+                    {formatCash(item?.price) + ' VND'}
+                  </Text>
+                </Text>
+              </Right>
             </Item>
             {!isPending && !isHistory && (
               <Row style={styles.bottom}>
@@ -134,28 +139,25 @@ export const ItemReservation = props => {
                 </Left>
                 <Right>
                   <Row>
-                    {/* <View>
-                      <Text style={styles.subTitle}>Thời gian</Text>
-                      <Text style={styles.value}>
-                        {moment
-                          .duration(Number(item?.duration), 'seconds')
-                          .hours()}{' '}
-                        giờ{' '}
-                        {moment
-                          .duration(Number(item?.duration), 'seconds')
-                          .minutes()}{' '}
-                        phút
-                      </Text>
-                    </View> */}
                     <View>
-                      <Text style={styles.subTitle}>Giá tiền</Text>
+                      <Text style={styles.subTitle}>Thời gian dự kiến</Text>
                       <Text style={styles.value}>
-                        {item?.price?.toLocaleString('it-IT', {
-                          style: 'currency',
-                          currency: 'VND',
-                        })}
+                        {moment
+                          .duration(Number(item?.duration), 'seconds')
+                          .hours()}
+                        {'h'}
+                        {moment
+                          .duration(Number(item?.duration), 'seconds')
+                          .minutes()}
+                        {'p'}
                       </Text>
                     </View>
+                    {/* <View>
+                      <Text style={styles.subTitle}>Giá tiền</Text>
+                      <Text style={styles.value}>
+                        {formatCash(item?.price) + ' VND'}
+                      </Text>
+                    </View> */}
                   </Row>
                 </Right>
               </Row>
@@ -238,6 +240,22 @@ const styles = ScaledSheet.create({
   },
   textVehicleInfo: {
     fontSize: '13@ms',
+  },
+  price: {
+    fontSize: '14@ms',
+    color: theme.subPrimaryColor,
+    paddingHorizontal: '5@s',
+    fontWeight: 'bold',
+  },
+  box: {
+    backgroundColor: theme.grey_dark,
+    borderRadius: 8,
+  },
+  textType: {
+    fontSize: '13@ms',
+    color: theme.white,
+    paddingVertical: '3@vs',
+    paddingHorizontal: '10@s',
   },
 });
 export default ItemReservation;

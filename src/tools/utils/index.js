@@ -69,5 +69,37 @@ const getLocation = () => {
     });
   });
 };
+function formatCash(num) {
+  const str = num + '';
 
-export {getCurrentPermission, requestPermission, checkPermission, getLocation};
+  const arr = str.split('.');
+  const str1 = arr[0];
+  const str2 = arr[1];
+
+  if (str2) {
+    return (
+      str1
+        .split('')
+        .reverse()
+        .reduce((prev, next, index) => {
+          return (index % 3 ? next : next + '.') + prev;
+        }) +
+      ',' +
+      str2
+    );
+  } else {
+    return str1
+      .split('')
+      .reverse()
+      .reduce((prev, next, index) => {
+        return (index % 3 ? next : next + '.') + prev;
+      });
+  }
+}
+export {
+  getCurrentPermission,
+  requestPermission,
+  checkPermission,
+  getLocation,
+  formatCash,
+};
