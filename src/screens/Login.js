@@ -124,7 +124,7 @@ export default function LoginScreen() {
             <View>
               <View style={styles.form}>
                 <View>
-                  <Text style={styles.inputTitle}>Email Address</Text>
+                  <Text style={styles.inputTitle}>Địa chỉ email</Text>
                   <TextInput
                     style={styles.input}
                     onChangeText={handleChange('email')}
@@ -136,7 +136,7 @@ export default function LoginScreen() {
                   ) : null}
                 </View>
                 <View style={{marginTop: 32}}>
-                  <Text style={styles.inputTitle}>Password</Text>
+                  <Text style={styles.inputTitle}>Mật khẩu</Text>
                   <TextInput
                     style={styles.input}
                     onChangeText={handleChange('password')}
@@ -150,7 +150,7 @@ export default function LoginScreen() {
                 </View>
               </View>
               <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>Đăng nhập</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -161,9 +161,9 @@ export default function LoginScreen() {
             alignSelf: 'center',
             marginTop: 32,
           }}>
-          <Text style={{color: '#414959'}}>Don't have an account? </Text>
+          <Text style={{color: '#414959'}}>Bạn chưa có tài khoản? </Text>
           <TouchableOpacity onPress={_navigateRegister}>
-            <Text style={styles.signUpText}>Sign Up</Text>
+            <Text style={styles.signUpText}>Đăng kí</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -173,7 +173,7 @@ export default function LoginScreen() {
             marginTop: 32,
           }}>
           <TouchableOpacity onPress={_navigateForgot}>
-            <Text style={styles.signUpText}>Forgot password?</Text>
+            <Text style={styles.signUpText}>Quên mật khẩu?</Text>
           </TouchableOpacity>
         </View>
       </View>

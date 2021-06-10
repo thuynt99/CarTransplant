@@ -286,7 +286,7 @@ class MapViewScreen extends React.Component {
     } = this.state;
     const {type} = this.props.route.params;
     let body = {};
-    if (itemCarSelected?.driverTripID) {
+    if (itemCarSelected?.driver_trip_id) {
       body = {
         beginLeaveTime: dateStart.unix(),
         endLeaveTime: dateEnd.unix(),

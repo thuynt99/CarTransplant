@@ -25,6 +25,7 @@ import {Formik} from 'formik';
 import {useNavigation} from '@react-navigation/native';
 import {PROFILE} from '../constants';
 import {TYPE_DIALOG} from '../constants/data';
+import _ from 'lodash';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
