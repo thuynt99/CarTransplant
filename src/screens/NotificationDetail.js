@@ -31,7 +31,7 @@ class NotificationDetailScreen extends React.Component {
             </View>
             <View>
               <Text style={styles.time}>
-                {moment(Notification.createdDate).format(FORMAT.TIME_DATE)}
+                {moment(item.createdDate).format(FORMAT.TIME_DATE)}
               </Text>
             </View>
           </View>
