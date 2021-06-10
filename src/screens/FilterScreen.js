@@ -62,9 +62,9 @@ class FilterScreen extends Component {
       date: {},
       seat: 0,
       _markedDates: {},
-      selectedCarId: [],
-      from: 222,
-      to: 222,
+      type: [],
+      from: 0,
+      to: 0,
     };
     this.setValue = this.setValue.bind(this);
   }
@@ -79,6 +79,7 @@ class FilterScreen extends Component {
     this.setState({[key]: value});
   };
   onDaySelect = day => {
+    console.log('day', day);
     this.setState({date: day});
     const _selectedDay = moment(day.dateString).format(FORMAT.YEAR_DATE);
 
@@ -102,7 +103,7 @@ class FilterScreen extends Component {
     this.setState({_markedDates: updatedMarkedDates});
   };
   onCheckBoxPress = id => {
-    let tmp = this.state.selectedCarId;
+    let tmp = this.state.type;
 
     if (tmp.includes(id)) {
       tmp.splice(tmp.indexOf(id), 1);
@@ -110,7 +111,35 @@ class FilterScreen extends Component {
       tmp.push(id);
     }
     this.setState({
-      selectedCarId: tmp,
+      type: tmp,
+    });
+  };
+  onFilter = () => {
+    const {from, to, seat, type, date} = this.state;
+    const fromId = _.find(DEPARTMENT, ['name', from])?.id;
+    const toId = _.find(DEPARTMENT, ['name', to])?.id;
+    const str = moment(date.dateString, FORMAT.YEAR_DATE).unix();
+    const body = _.pickBy(
+      {
+        from: fromId,
+        to: toId,
+        seat,
+        type,
+        date: str,
+      },
+      _.identity,
+    );
+    console.log('body', body);
+    this.props.getListTripPending(body);
+    this.props.hideFilter();
+  };
+  clearData = () => {
+    this.setState({
+      date: {},
+      seat: 0,
+      type: [],
+      from: 0,
+      to: 0,
     });
   };
   componentDidMount() {}
@@ -132,8 +161,8 @@ class FilterScreen extends Component {
                 />
               </TouchableOpacity>
 
-              <TouchableOpacity>
-                <Text>Bỏ lọc</Text>
+              <TouchableOpacity onPress={this.clearData}>
+                <Text style={styles.textPrice}>Bỏ lọc</Text>
               </TouchableOpacity>
             </CardItem>
           </Card>
@@ -172,11 +201,7 @@ class FilterScreen extends Component {
                   return (
                     <View style={styles.row}>
                       <CheckBox
-                        value={
-                          this.state.selectedCarId.includes(item.id)
-                            ? true
-                            : false
-                        }
+                        value={this.state.type.includes(item.id) ? true : false}
                         onChange={() => this.onCheckBoxPress(item.id)}
                       />
                       <Text>{item?.name}</Text>
@@ -252,7 +277,7 @@ class FilterScreen extends Component {
                 markedDates={this.state._markedDates}
               />
             </Card>
-            <Button full danger style={styles.btn}>
+            <Button full danger style={styles.btn} onPress={this.onFilter}>
               <Text style={styles.text}>Áp dụng</Text>
             </Button>
           </ScrollView>
@@ -292,7 +317,7 @@ const styles = ScaledSheet.create({
   },
   textPrice: {
     fontSize: '14@ms',
-    color: theme.grey_dark_30,
+    color: theme.primaryColor,
     fontWeight: 'bold',
   },
   textCar: {

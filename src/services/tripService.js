@@ -18,7 +18,7 @@ export const markDoneTripApi = params => {
   return api.get(markDoneTripUrl, {id: params});
 };
 export const getListPendingApi = params => {
-  return api.get(getListPendingUrl, params);
+  return api.post(getListPendingUrl, JSON.stringify(params));
 };
 export const takeTripUserApi = params => {
   return api.post(takeTripUserUrl, params);

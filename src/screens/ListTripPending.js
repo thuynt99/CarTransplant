@@ -43,10 +43,10 @@ class ListTripPending extends Component {
   componentDidMount() {
     this.getListTripPending();
   }
-  getListTripPending = async () => {
+  getListTripPending = async body => {
     await this.props
       .getListTripPending({
-        seat: 5,
+        body,
       })
       .then(res => {
         console.log(this.props.trip.listTripPending);
@@ -64,7 +64,7 @@ class ListTripPending extends Component {
       <View style={styles.container}>
         <HeaderCustom title="Tìm chuyến có sẵn" withoutBack />
         <LoadingCustom loading={loading} />
-        {listTripPending.length > 0 && (
+        {listTripPending?.length > 0 && (
           <Card style={styles.card}>
             <Icon
               name="local-car-wash"
@@ -109,7 +109,12 @@ class ListTripPending extends Component {
             />
           </TouchableOpacity>
         </View>
-        {isShowFilter && <FilterScreen hideFilter={this.hideFilter} />}
+        {isShowFilter && (
+          <FilterScreen
+            hideFilter={this.hideFilter}
+            getListTripPending={this.getListTripPending}
+          />
+        )}
       </View>
     );
   }
