@@ -444,7 +444,7 @@ class MapViewScreen extends React.Component {
                 </TouchableOpacity>
               </Callout>
               <Callout style={styles.spinner}>
-                {loading && <Spinner color={theme.primaryColor} />}
+                {/* {loading && <Spinner color={theme.primaryColor} />} */}
               </Callout>
             </View>
             <View style={styles.viewInput}>
