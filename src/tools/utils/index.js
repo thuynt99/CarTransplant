@@ -71,12 +71,10 @@ const getLocation = () => {
 };
 function formatCash(num) {
   const str = num + '';
-  console.log(num);
 
   const arr = str.split('.');
   const str1 = arr[0];
   const str2 = arr[1];
-  console.log(arr);
   if (str2) {
     return (
       str1

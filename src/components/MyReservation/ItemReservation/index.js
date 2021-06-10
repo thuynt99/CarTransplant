@@ -92,13 +92,15 @@ export const ItemReservation = props => {
             <Item style={styles.vehicleTypeView}>
               {item?.type && (
                 <Left>
-                  <Text style={styles.subTitle}>
-                    {item?.type === PARAMS_FIND_TYPE.GO_ALONE
-                      ? 'Đi riêng'
-                      : item?.type === PARAMS_FIND_TYPE.GO_SEND
-                      ? ' Chở hàng'
-                      : 'Đi ghép'}
-                  </Text>
+                  <View style={styles.box}>
+                    <Text style={styles.textType}>
+                      {item?.type === PARAMS_FIND_TYPE.GO_ALONE
+                        ? 'Đi riêng'
+                        : item?.type === PARAMS_FIND_TYPE.GO_SEND
+                        ? ' Chở hàng'
+                        : 'Đi ghép'}
+                    </Text>
+                  </View>
                 </Left>
               )}
               <Right>
@@ -136,25 +138,25 @@ export const ItemReservation = props => {
                 </Left>
                 <Right>
                   <Row>
-                    {/* <View>
-                      <Text style={styles.subTitle}>Thời gian</Text>
+                    <View>
+                      <Text style={styles.subTitle}>Thời gian dự kiến</Text>
                       <Text style={styles.value}>
                         {moment
                           .duration(Number(item?.duration), 'seconds')
-                          .hours()}{' '}
-                        giờ{' '}
+                          .hours()}
+                        {'h'}
                         {moment
                           .duration(Number(item?.duration), 'seconds')
-                          .minutes()}{' '}
-                        phút
+                          .minutes()}
+                        {'p'}
                       </Text>
-                    </View> */}
-                    <View>
+                    </View>
+                    {/* <View>
                       <Text style={styles.subTitle}>Giá tiền</Text>
                       <Text style={styles.value}>
                         {formatCash(item?.price) + ' VND'}
                       </Text>
-                    </View>
+                    </View> */}
                   </Row>
                 </Right>
               </Row>
@@ -243,6 +245,16 @@ const styles = ScaledSheet.create({
     color: theme.subPrimaryColor,
     paddingHorizontal: '5@s',
     fontWeight: 'bold',
+  },
+  box: {
+    backgroundColor: theme.grey_dark,
+    borderRadius: 8,
+  },
+  textType: {
+    fontSize: '13@ms',
+    color: theme.white,
+    paddingVertical: '3@vs',
+    paddingHorizontal: '10@s',
   },
 });
 export default ItemReservation;
