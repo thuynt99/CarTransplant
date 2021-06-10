@@ -27,6 +27,7 @@ import moment from 'moment';
 import {FORMAT} from '../../../constants/format';
 import {PARAMS_FIND_TYPE} from '../../../constants/api';
 import {formatCash} from '../../../tools/utils';
+import _ from 'lodash';
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
@@ -62,7 +63,9 @@ export const ItemReservation = props => {
                 />
                 <Text style={styles.subTitle}>Điểm đón:</Text>
               </View>
-              <Text style={styles.textLocation}>{item?.from}</Text>
+              <Text style={styles.textLocation}>
+                {_.take(item?.from?.split(','), 2).join()}
+              </Text>
             </View>
             <View>
               <View style={styles.location}>
@@ -73,7 +76,9 @@ export const ItemReservation = props => {
                 />
                 <Text style={styles.subTitle}>Điểm đến:</Text>
               </View>
-              <Text style={styles.textLocation}>{item?.to}</Text>
+              <Text style={styles.textLocation}>
+                {_.take(item?.to?.split(','), 2).join()}
+              </Text>
             </View>
           </Left>
         </Item>
@@ -106,7 +111,9 @@ export const ItemReservation = props => {
               <Right>
                 <Text style={styles.subTitle}>
                   <Text style={styles.price}>
-                    {formatCash(item?.price) + ' VND'}
+                    {item?.price
+                      ? formatCash(item?.price) + ' VND'
+                      : 'Thương lượng'}
                   </Text>
                 </Text>
               </Right>

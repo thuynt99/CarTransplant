@@ -60,6 +60,7 @@ class TripDetail extends Component {
     });
   };
   openMessage = phoneNumber => {
+    console.log(phoneNumber);
     Linking.openURL(`sms:${phoneNumber}`);
   };
   cancelTrip = async () => {
@@ -88,7 +89,7 @@ class TripDetail extends Component {
         <LoadingCustom loading={this.state.loading} />
         <Content>
           <ScrollView style={styles.view}>
-            {item?.driver?.name && (
+            {item?.driver?.FullName && (
               <>
                 <View style={styles.bottom}>
                   <Row>
@@ -130,12 +131,16 @@ class TripDetail extends Component {
                     />
                     <Text>Gọi tài xế</Text>
                   </Button>
-                  <Button small danger bordered style={styles.btnCall}>
+                  <Button
+                    small
+                    danger
+                    bordered
+                    style={styles.btnCall}
+                    onPress={() => this.openMessage(item?.driver?.Phone)}>
                     <Icon
                       name="message1"
                       type="AntDesign"
                       style={{marginRight: 0}}
-                      onPress={() => this.openMessage(item?.driver?.Phone)}
                     />
                     <Text>Nhắn tin</Text>
                   </Button>
@@ -168,6 +173,16 @@ class TripDetail extends Component {
                       ? ' Chở hàng'
                       : 'Đi ghép'}
                   </Text>
+                </Right>
+              </Item>
+            )}
+            {item?.seat && (
+              <Item style={styles.item}>
+                <Left>
+                  <Text style={styles.name}>Số người:</Text>
+                </Left>
+                <Right>
+                  <Text style={styles.textValue}>{item?.seat}</Text>
                 </Right>
               </Item>
             )}

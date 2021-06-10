@@ -40,7 +40,9 @@ class ItemBookingCar extends Component {
             </View>
           </View>
           <View>
-            <Text style={styles.textPrice}>{price}</Text>
+            <Text style={[styles.textPrice, {color: theme.primaryColor}]}>
+              {price}
+            </Text>
             <Text style={styles.textPriceNormal}>
               {formatCash(2 * item?.price) + ' VND'}
             </Text>

@@ -73,5 +73,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: theme.grey_dark,
     textAlign: 'justify',
+    paddingHorizontal: 16,
   },
 });

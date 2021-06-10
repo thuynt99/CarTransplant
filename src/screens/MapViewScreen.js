@@ -273,6 +273,39 @@ class MapViewScreen extends React.Component {
           });
         }
       });
+    } else {
+      this.setState({
+        myLocation: {
+          latitude: parseFloat(item.latitude),
+          longitude: parseFloat(item.longitude),
+        },
+      });
+      const params = {
+        fromLat: parseFloat(item.latitude),
+        fromLong: parseFloat(item.longitude),
+        toLat: parseFloat(this.state.endStation.latitude),
+        toLong: parseFloat(this.state.endStation.longitude),
+      };
+      this.props.getRouting(params).then(res => {
+        console.log('getRouting', res);
+        if (res.status) {
+          const dataTmp = res.data.routes[0];
+          const arrayObj = dataTmp.steps.map((item, index) => {
+            return {
+              latitude: parseFloat(item.location.latitude),
+              longitude: parseFloat(item.location.longitude),
+              name: item.name,
+              id: index,
+            };
+          });
+          this.setState({
+            coordinates: arrayObj,
+            distance: dataTmp.distance,
+            price: dataTmp.price,
+            duration: dataTmp.duration,
+          });
+        }
+      });
     }
   };
   onClickConfirmTrip = async note => {
@@ -538,8 +571,14 @@ class MapViewScreen extends React.Component {
                       <Input
                         rounded
                         placeholder="Xin vui lòng nhập điểm đi"
-                        defaultValue={map.startLocation?.display_name}
-                        value={startStation?.display_name}
+                        defaultValue={_.take(
+                          startStation?.display_name?.split(','),
+                          2,
+                        ).join()}
+                        value={_.take(
+                          startStation?.display_name?.split(','),
+                          2,
+                        ).join()}
                         onFocus={() => this.goToSearch('startStation')}
                         ellipsizeMode="head"
                       />
@@ -554,7 +593,10 @@ class MapViewScreen extends React.Component {
                       <Input
                         rounded
                         placeholder="Xin vui lòng nhập điểm đến"
-                        value={endStation?.display_name}
+                        value={_.take(
+                          endStation?.display_name?.split(','),
+                          2,
+                        ).join()}
                         onFocus={() => this.goToSearch('endStation')}
                       />
                     </Item>
