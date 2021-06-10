@@ -69,5 +69,19 @@ const getLocation = () => {
     });
   });
 };
-
-export {getCurrentPermission, requestPermission, checkPermission, getLocation};
+function formatCash(num) {
+  const str = num + '';
+  return str
+    .split('')
+    .reverse()
+    .reduce((prev, next, index) => {
+      return ((index % 3 ? next : next + '.') + prev).replace('..', '.');
+    });
+}
+export {
+  getCurrentPermission,
+  requestPermission,
+  checkPermission,
+  getLocation,
+  formatCash,
+};

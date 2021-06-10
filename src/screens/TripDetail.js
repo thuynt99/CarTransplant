@@ -33,6 +33,7 @@ import Dialog from '../components/common/Dialog';
 import _ from 'lodash';
 import {TYPE_DIALOG} from '../constants/data';
 import {LIST_MY_RESERVATION} from '../constants';
+import {formatCash} from '../tools/utils';
 class TripDetail extends Component {
   constructor(props) {
     super(props);
@@ -195,8 +196,7 @@ class TripDetail extends Component {
               </Left>
               <Right>
                 <Text style={styles.textValue}>
-                  {item?.distance.toLocaleString('it-IT') + ' '}
-                  km
+                  {formatCash(item?.distance) + ' km'}
                 </Text>
               </Right>
             </Item>
@@ -243,10 +243,7 @@ class TripDetail extends Component {
               </Left>
               <Right>
                 <Text style={styles.price}>
-                  {item?.price?.toLocaleString('it-IT', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {formatCash(item?.price) + ' VND'}
                 </Text>
               </Right>
             </Item>
@@ -261,6 +258,14 @@ class TripDetail extends Component {
                 phát sinh trong quá trình di chuyển
               </Text>
             </View>
+            <Textarea
+              rowSpan={5}
+              bordered
+              placeholder="Ghi chú cho tài xế..."
+              style={styles.input}
+              value={item?.note}
+              disabled={true}
+            />
           </ScrollView>
           {(item.state === 1 || item.state === 2) && (
             <Button

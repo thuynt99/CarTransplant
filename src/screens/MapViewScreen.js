@@ -275,7 +275,7 @@ class MapViewScreen extends React.Component {
       });
     }
   };
-  onClickConfirmTrip = async () => {
+  onClickConfirmTrip = async note => {
     const {
       startStation,
       endStation,
@@ -306,6 +306,7 @@ class MapViewScreen extends React.Component {
             : seat,
         driverTripID: itemCarSelected.driver_trip_id,
         type,
+        note,
       };
     } else {
       body = {
@@ -326,6 +327,7 @@ class MapViewScreen extends React.Component {
             ? 1
             : seat,
         type,
+        note,
       };
     }
     this.props.takeTrip(JSON.stringify(body)).then(res => {

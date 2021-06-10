@@ -24,6 +24,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import _ from 'lodash';
 import {FORMAT} from '../../../constants/format';
 import {PARAMS_FIND_TYPE} from '../../../constants/api';
+import {formatCash} from '../../../tools/utils';
 export default class ConfirmTrip extends Component {
   render() {
     const {
@@ -149,7 +150,7 @@ export default class ConfirmTrip extends Component {
               </Left>
               <Right>
                 <Text style={styles.textValue}>
-                  {distance.toLocaleString('it-IT') + ' '}
+                  {formatCash(distance) + ' '}
                   km
                 </Text>
               </Right>
@@ -172,14 +173,9 @@ export default class ConfirmTrip extends Component {
               <Right>
                 <Text style={styles.price}>
                   {itemCarSelected?.price
-                    ? itemCarSelected?.price?.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND',
-                      })
-                    : price?.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND',
-                      })}
+                    ? formatCash(itemCarSelected?.price)
+                    : formatCash(price)}{' '}
+                  VND
                 </Text>
               </Right>
             </Item>
@@ -207,7 +203,7 @@ export default class ConfirmTrip extends Component {
             danger
             full
             style={styles.btnConfirm}
-            onPress={onClickConfirmTrip}>
+            onPress={() => onClickConfirmTrip(note)}>
             <Text>Xác nhận đặt xe</Text>
           </Button>
         </Content>

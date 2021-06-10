@@ -26,6 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {FORMAT} from '../../../constants/format';
 import {PARAMS_FIND_TYPE} from '../../../constants/api';
+import {formatCash} from '../../../tools/utils';
 export const ItemReservation = props => {
   const navigation = useNavigation();
   const {navigate} = navigation;
@@ -150,10 +151,7 @@ export const ItemReservation = props => {
                     <View>
                       <Text style={styles.subTitle}>Giá tiền</Text>
                       <Text style={styles.value}>
-                        {item?.price?.toLocaleString('it-IT', {
-                          style: 'currency',
-                          currency: 'VND',
-                        })}
+                        {formatCash(item?.price) + ' VND'}
                       </Text>
                     </View>
                   </Row>
