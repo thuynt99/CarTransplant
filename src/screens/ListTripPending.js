@@ -24,7 +24,7 @@ import LoadingCustom from '../components/common/LoadingCustom';
 import ItemUserTrip from '../components/MyReservation/ItemReservation/ItemUserTrip';
 import {PARAMS_LIST_TRIP} from '../constants/api';
 import {ACTIVE_REGISTRATION} from '../constants';
-
+import FilterScreen from './FilterScreen';
 class ListTripPending extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +33,7 @@ class ListTripPending extends Component {
       listTripPending: [],
       refreshing: false,
       loading: false,
+      isShowFilter: false,
     };
   }
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -42,23 +43,28 @@ class ListTripPending extends Component {
   componentDidMount() {
     this.getListTripPending();
   }
-  getListTripPending = async () => {
+  getListTripPending = async body => {
     await this.props
       .getListTripPending({
-        seat: 5,
+        body,
       })
       .then(res => {
         console.log(this.props.trip.listTripPending);
       });
   };
-
+  showFilter = () => {
+    this.setState({isShowFilter: true});
+  };
+  hideFilter = () => {
+    this.setState({isShowFilter: false});
+  };
   render() {
-    const {listTripPending, refreshing, loading} = this.state;
+    const {listTripPending, refreshing, loading, isShowFilter} = this.state;
     return (
       <View style={styles.container}>
         <HeaderCustom title="Tìm chuyến có sẵn" withoutBack />
         <LoadingCustom loading={loading} />
-        {listTripPending.length > 0 && (
+        {listTripPending?.length > 0 && (
           <Card style={styles.card}>
             <Icon
               name="local-car-wash"
@@ -95,7 +101,7 @@ class ListTripPending extends Component {
               style={{color: theme.white, alignSelf: 'center'}}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btnFilter}>
+          <TouchableOpacity style={styles.btnFilter} onPress={this.showFilter}>
             <Icon
               name="filter-list"
               type="MaterialIcons"
@@ -103,6 +109,12 @@ class ListTripPending extends Component {
             />
           </TouchableOpacity>
         </View>
+        {isShowFilter && (
+          <FilterScreen
+            hideFilter={this.hideFilter}
+            getListTripPending={this.getListTripPending}
+          />
+        )}
       </View>
     );
   }
