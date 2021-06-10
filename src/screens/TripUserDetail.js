@@ -121,6 +121,7 @@ class TripUserDetail extends Component {
   render() {
     const {item, state} = this.props.route.params;
     const {idModal, showModal, listVehicle, showConfirm} = this.state;
+
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Thông tin chở khách" onGoBack={this.onGoBack} />
@@ -247,7 +248,7 @@ class TripUserDetail extends Component {
 
               <Right>
                 <Text style={styles.price}>
-                  {item?.price?.toLocaleString('it-IT', {
+                  {parseFloat(item?.price).toLocaleString('it-IT', {
                     style: 'currency',
                     currency: 'VND',
                   })}
@@ -265,6 +266,14 @@ class TripUserDetail extends Component {
                 nếu có phát sinh trong quá trình di chuyển
               </Text>
             </View>
+            <Textarea
+              rowSpan={5}
+              bordered
+              placeholder="Ghi chú cho tài xế..."
+              style={styles.input}
+              value={item?.note}
+              disabled={true}
+            />
           </ScrollView>
           {(state === PARAMS_LIST_TRIP.UPCOMING ||
             state === PARAMS_LIST_TRIP.PENDING) && (
@@ -319,6 +328,7 @@ const styles = ScaledSheet.create({
   input: {
     paddingHorizontal: '15@s',
     marginHorizontal: '15@s',
+    marginVertical: '15@vs',
     borderRadius: 8,
     marginTop: '16@vs',
   },
