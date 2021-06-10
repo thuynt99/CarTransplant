@@ -44,12 +44,12 @@ export default function HomeScreen() {
       color: theme.blue_dark,
       image: 'https://img.icons8.com/plasticine/100/000000/car-theft.png',
     },
-    {
-      id: 4,
-      title: 'Ưu đãi',
-      color: theme.pinky_light,
-      image: 'https://img.icons8.com/bubbles/100/000000/discount.png',
-    },
+    // {
+    //   id: 4,
+    //   title: 'Ưu đãi',
+    //   color: theme.pinky_light,
+    //   image: 'https://img.icons8.com/bubbles/100/000000/discount.png',
+    // },
   ];
   let unsubscribe = null;
 

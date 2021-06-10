@@ -538,8 +538,14 @@ class MapViewScreen extends React.Component {
                       <Input
                         rounded
                         placeholder="Xin vui lòng nhập điểm đi"
-                        defaultValue={map.startLocation?.display_name}
-                        value={startStation?.display_name}
+                        defaultValue={_.take(
+                          startStation?.display_name?.split(','),
+                          2,
+                        ).join()}
+                        value={_.take(
+                          startStation?.display_name?.split(','),
+                          2,
+                        ).join()}
                         onFocus={() => this.goToSearch('startStation')}
                         ellipsizeMode="head"
                       />
@@ -554,7 +560,10 @@ class MapViewScreen extends React.Component {
                       <Input
                         rounded
                         placeholder="Xin vui lòng nhập điểm đến"
-                        value={endStation?.display_name}
+                        value={_.take(
+                          endStation?.display_name?.split(','),
+                          2,
+                        ).join()}
                         onFocus={() => this.goToSearch('endStation')}
                       />
                     </Item>
