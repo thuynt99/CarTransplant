@@ -43,7 +43,9 @@ export default function LoginScreen() {
       .then(async () => {
         await checkToken();
       })
-      .catch(error => setErrorMessage(error.message));
+      .catch(error =>
+        setErrorMessage('Email hoặc mật khẩu không chính xác. Hãy thử lại!'),
+      );
 
     // NOTE: context
     // if (email === 'trinhchinchin@gmail.com' && password === '123') {
