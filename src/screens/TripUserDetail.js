@@ -61,6 +61,9 @@ class TripUserDetail extends Component {
       }
     });
   };
+  openMessage = phoneNumber => {
+    Linking.openURL(`sms:${phoneNumber}`);
+  };
   maskDoneTrip = () => {
     const {item} = this.props.route.params;
     this.props.maskDoneTrip(item.id).then(res => {
@@ -166,6 +169,7 @@ class TripUserDetail extends Component {
                     name="message1"
                     type="AntDesign"
                     style={{marginRight: 0}}
+                    onPress={() => this.openMessage(item?.user?.Phone)}
                   />
                   <Text>Nhắn tin</Text>
                 </Button>
