@@ -169,7 +169,9 @@ class FilterScreen extends Component {
           <ScrollView style={styles.scroll}>
             <Card style={styles.card}>
               <Text style={styles.textTitleCar}>Tỉnh thành</Text>
-              <Text>Chọn tỉnh và tỉnh đến để tìm khách theo vị trí</Text>
+              <Text style={styles.subTitle}>
+                Chọn tỉnh và tỉnh đến để tìm khách theo vị trí
+              </Text>
               <View style={styles.inLine}>
                 <ModalDropdown
                   style={styles.dropdown_6}
@@ -344,10 +346,9 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
   },
   subTitle: {
-    fontSize: '14@ms',
+    fontSize: '13@ms',
     color: theme.grey_dark_30,
-    paddingHorizontal: '5@s',
-    fontWeight: 'bold',
+    paddingVertical: '5@s',
   },
   dropdown_6: {
     width: 120,
@@ -398,6 +399,7 @@ const styles = ScaledSheet.create({
   text: {
     color: theme.white,
     fontSize: '14@ms',
+    paddingRight: '16@s',
   },
 });
 
