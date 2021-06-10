@@ -7,6 +7,7 @@ import {
   Icon,
   Left,
   Right,
+  Row,
   Spinner,
   View,
 } from 'native-base';
@@ -44,13 +45,9 @@ class ListTripPending extends Component {
     this.getListTripPending();
   }
   getListTripPending = async body => {
-    await this.props
-      .getListTripPending({
-        body,
-      })
-      .then(res => {
-        console.log(this.props.trip.listTripPending);
-      });
+    await this.props.getListTripPending(body ? body : {}).then(res => {
+      console.log(this.props.trip.listTripPending);
+    });
   };
   showFilter = () => {
     this.setState({isShowFilter: true});
@@ -65,7 +62,7 @@ class ListTripPending extends Component {
         <HeaderCustom title="Tìm chuyến có sẵn" withoutBack />
         <LoadingCustom loading={loading} />
         {listTripPending?.length > 0 && (
-          <Card style={styles.card}>
+          <CardItem style={styles.card}>
             <Icon
               name="local-car-wash"
               type="MaterialIcons"
@@ -74,9 +71,8 @@ class ListTripPending extends Component {
             <Text style={styles.textReq}>
               Bạn có {listTripPending.length} yêu cầu mới.
             </Text>
-          </Card>
+          </CardItem>
         )}
-
         <FlatList
           style={styles.list}
           data={listTripPending}
