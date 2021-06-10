@@ -23,6 +23,7 @@ import theme from '../../../theme';
 import {ScrollView} from 'react-native-gesture-handler';
 import _ from 'lodash';
 import {FORMAT} from '../../../constants/format';
+import {formatCash} from '../../../tools/utils';
 export default class ConfirmTrip extends Component {
   render() {
     const {
@@ -144,10 +145,7 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Khoảng cách:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>
-                  {distance.toLocaleString('it-IT') + ' '}
-                  km
-                </Text>
+                <Text style={styles.textValue}>{formatCash(distance)} km</Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -166,7 +164,9 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Khoảng cách đón tối đa:</Text>
               </Left>
               <Right>
-                <Text style={styles.textValue}>{max_distance} km</Text>
+                <Text style={styles.textValue}>
+                  {formatCash(max_distance)} km
+                </Text>
               </Right>
             </Item>
             <Item style={styles.item}>
@@ -174,7 +174,9 @@ export default class ConfirmTrip extends Component {
                 <Text style={styles.subTitle}>Giá tiền:</Text>
               </Left>
               <Right>
-                <Text style={styles.price}>{price}/km</Text>
+                <Text style={styles.price}>
+                  {formatCash(price) + ' VND'}/km
+                </Text>
               </Right>
             </Item>
             <View style={styles.note}>

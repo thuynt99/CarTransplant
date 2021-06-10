@@ -34,6 +34,7 @@ import {LIST_MY_RESERVATION} from '../constants';
 import {PARAMS_LIST_TRIP} from '../constants/api';
 import ModalReceivedTrip from '../components/TripPending/ModalReceivedTrip';
 import {getListMyCar} from '../stores/cars/actions';
+import {formatCash} from '../tools/utils';
 
 class TripUserDetail extends Component {
   constructor(props) {
@@ -121,6 +122,7 @@ class TripUserDetail extends Component {
   render() {
     const {item, state} = this.props.route.params;
     const {idModal, showModal, listVehicle, showConfirm} = this.state;
+
     return (
       <Container style={styles.container}>
         <HeaderCustom title="Thông tin chở khách" onGoBack={this.onGoBack} />
@@ -219,7 +221,7 @@ class TripUserDetail extends Component {
               {item?.distance && (
                 <Right>
                   <Text style={styles.textValue}>
-                    {item?.distance.toLocaleString('it-IT')} km
+                    {formatCash(item?.distance)} km
                   </Text>
                 </Right>
               )}
@@ -247,10 +249,7 @@ class TripUserDetail extends Component {
 
               <Right>
                 <Text style={styles.price}>
-                  {item?.price?.toLocaleString('it-IT', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {formatCash(item?.price) + ' VND'}
                 </Text>
               </Right>
             </Item>
@@ -265,6 +264,14 @@ class TripUserDetail extends Component {
                 nếu có phát sinh trong quá trình di chuyển
               </Text>
             </View>
+            <Textarea
+              rowSpan={5}
+              bordered
+              placeholder="Ghi chú cho tài xế..."
+              style={styles.input}
+              value={item?.note}
+              disabled={true}
+            />
           </ScrollView>
           {(state === PARAMS_LIST_TRIP.UPCOMING ||
             state === PARAMS_LIST_TRIP.PENDING) && (
@@ -319,6 +326,7 @@ const styles = ScaledSheet.create({
   input: {
     paddingHorizontal: '15@s',
     marginHorizontal: '15@s',
+    marginVertical: '15@vs',
     borderRadius: 8,
     marginTop: '16@vs',
   },
