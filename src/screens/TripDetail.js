@@ -59,6 +59,9 @@ class TripDetail extends Component {
       }
     });
   };
+  openMessage = phoneNumber => {
+    Linking.openURL(`sms:${phoneNumber}`);
+  };
   cancelTrip = async () => {
     const {item} = this.props.route.params;
     this.closeModal();
@@ -132,6 +135,7 @@ class TripDetail extends Component {
                       name="message1"
                       type="AntDesign"
                       style={{marginRight: 0}}
+                      onPress={() => this.openMessage(item?.driver?.Phone)}
                     />
                     <Text>Nhắn tin</Text>
                   </Button>
