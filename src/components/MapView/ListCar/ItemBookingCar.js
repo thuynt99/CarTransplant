@@ -5,6 +5,7 @@ import {ScaledSheet} from 'react-native-size-matters';
 import moment from 'moment';
 import theme from '../../../theme';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {formatCash} from '../../../tools/utils';
 
 class ItemBookingCar extends Component {
   constructor(props) {
@@ -12,10 +13,7 @@ class ItemBookingCar extends Component {
   }
   render() {
     const {onSelectCar, item, itemCarSelected} = this.props;
-    const price = item?.price?.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'VND',
-    });
+    const price = formatCash(item?.price) + ' VND';
     const selected = item?.car?.id === itemCarSelected?.car?.id;
     return (
       <Card>
@@ -44,10 +42,7 @@ class ItemBookingCar extends Component {
           <View>
             <Text style={styles.textPrice}>{price}</Text>
             <Text style={styles.textPriceNormal}>
-              {(2 * item?.price).toLocaleString('it-IT', {
-                style: 'currency',
-                currency: 'VND',
-              })}
+              {formatCash(2 * item?.price) + ' VND'}
             </Text>
           </View>
         </TouchableOpacity>
