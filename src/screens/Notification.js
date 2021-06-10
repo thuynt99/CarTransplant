@@ -96,7 +96,9 @@ class Notifications extends Component {
                           ellipsizeMode={'tail'}>
                           {Notification.title}
                         </Text>
-                        <Text>{Notification.message}</Text>
+                        <Text numberOfLines={5} style={styles.message}>
+                          {Notification.message}
+                        </Text>
                       </View>
                       <Text style={styles.timeAgo}>
                         {moment(Notification.createdDate).format(
@@ -168,6 +170,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.primaryColor,
     width: '80%',
+  },
+  message: {
+    flexWrap: 'wrap',
+    width: '90%',
   },
 });
 const mapStateToProps = state => ({

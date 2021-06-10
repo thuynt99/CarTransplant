@@ -107,11 +107,6 @@ export default function HomeScreen() {
         subTitle="Nội dung mới nhất"
       />
       <MyCarousel />
-      <TitleCustom
-        title="Tin tức nổi bật từ Car Transplant"
-        subTitle="Nội dung mới nhất"
-      />
-      <MyCarousel />
     </ScrollView>
   );
 }
