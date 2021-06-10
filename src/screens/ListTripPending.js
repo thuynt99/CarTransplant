@@ -109,7 +109,7 @@ class ListTripPending extends Component {
             />
           </TouchableOpacity>
         </View>
-        <FilterScreen />
+        {isShowFilter && <FilterScreen hideFilter={this.hideFilter} />}
       </View>
     );
   }
