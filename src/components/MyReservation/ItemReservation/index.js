@@ -90,14 +90,8 @@ export const ItemReservation = props => {
         ) : (
           <TouchableOpacity>
             <Item style={styles.vehicleTypeView}>
-              <Left>
-                <Text style={styles.subTitle}>
-                  Mã chuyến đi:
-                  <Text style={styles.value}> {item?.id}</Text>
-                </Text>
-              </Left>
               {item?.type && (
-                <Right>
+                <Left>
                   <Text style={styles.subTitle}>
                     {item?.type === PARAMS_FIND_TYPE.GO_ALONE
                       ? 'Đi riêng'
@@ -105,8 +99,15 @@ export const ItemReservation = props => {
                       ? ' Chở hàng'
                       : 'Đi ghép'}
                   </Text>
-                </Right>
+                </Left>
               )}
+              <Right>
+                <Text style={styles.subTitle}>
+                  <Text style={styles.price}>
+                    {formatCash(item?.price) + ' VND'}
+                  </Text>
+                </Text>
+              </Right>
             </Item>
             {!isPending && !isHistory && (
               <Row style={styles.bottom}>
@@ -236,6 +237,12 @@ const styles = ScaledSheet.create({
   },
   textVehicleInfo: {
     fontSize: '13@ms',
+  },
+  price: {
+    fontSize: '14@ms',
+    color: theme.subPrimaryColor,
+    paddingHorizontal: '5@s',
+    fontWeight: 'bold',
   },
 });
 export default ItemReservation;
