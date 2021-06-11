@@ -262,7 +262,9 @@ class TripDetail extends Component {
               </Left>
               <Right>
                 <Text style={styles.price}>
-                  {formatCash(item?.price) + ' VND'}
+                  {item?.price
+                    ? formatCash(item?.price) + ' VND'
+                    : 'Thương lượng'}
                 </Text>
               </Right>
             </Item>
