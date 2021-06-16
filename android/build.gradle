@@ -17,7 +17,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.4.2")
+        classpath("com.android.tools.build:gradle:3.4.3")
         classpath 'com.google.gms:google-services:+'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion" 
 
@@ -37,7 +37,7 @@ allprojects {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
         }
-
+         maven { url "https://maven.google.com" }
         google()
         jcenter()
         maven { url 'https://jitpack.io' }

@@ -11,6 +11,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 
 import androidx.core.app.NotificationCompat;
@@ -22,7 +24,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
+import io.intercom.android.sdk.push.IntercomPushClient;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+	private final IntercomPushClient intercomPushClient = new IntercomPushClient();
 	/**
 	 * Called when message is received.
 	 *
@@ -37,7 +42,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 		// message, here is where that should be initiated. See sendNotification method below.
 		RemoteMessage.Notification notification = remoteMessage.getNotification();
 		Map<String, String> data = remoteMessage.getData();
-
+		if (intercomPushClient.isIntercomPush(data)) {
+			Log.d("TOMOE", "Intercom message received");
+			intercomPushClient.handlePush(getApplication(), data);
+		} else {
+			super.onMessageReceived(remoteMessage);
+		}
 		sendNotification(notification, data);
 	}
 

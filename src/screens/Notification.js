@@ -1,4 +1,4 @@
-import {Container, Spinner} from 'native-base';
+import {Button, Container, Spinner} from 'native-base';
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -14,6 +14,7 @@ import {getListNoti} from '../stores/notify/actions';
 import theme from '../theme';
 import moment from 'moment';
 import {FORMAT} from '../constants/format';
+import Intercom from 'react-native-intercom';
 
 class Notifications extends Component {
   constructor(props) {
@@ -25,20 +26,39 @@ class Notifications extends Component {
     };
   }
   componentDidMount() {
-    this.getListNoti();
+    // this.getListNoti();
   }
   getListNoti = async () => {
     await this.props.getListNoti();
     this.setState({data: this.props.notify.listNoti});
   };
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {notify} = nextProps;
-    return {loading: notify.loading, data: notify.listNoti};
-  }
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   const {notify} = nextProps;
+  //   return {loading: notify.loading, data: notify.listNoti};
+  // }
+  onPress = () => {
+    console.log('ahihihihi');
+    Intercom.registerIdentifiedUser({userId: 'Thuy Tomoe'});
+    Intercom.logEvent('viewed_screen', {extra: 'metadata'});
+    Intercom.displayConversationsList();
+  };
+
+  onPress2 = () => {
+    console.log('ahihihihi');
+    Intercom.registerIdentifiedUser({userId: 'Thuy Tomoe'});
+    Intercom.logEvent('viewed_screen', {extra: 'metadata'});
+    Intercom.displayMessenger();
+  };
   render() {
     return (
       <Container>
         <HeaderCustom title="Thông báo" withoutBack />
+        <Button onPress={this.onPress}>
+          <Text> click me</Text>
+        </Button>
+        <Button onPress={this.onPress2}>
+          <Text> click me 2</Text>
+        </Button>
         {this.state.loading && (
           <Spinner
             color={theme.primaryColor}
