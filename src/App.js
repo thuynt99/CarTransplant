@@ -19,6 +19,7 @@ import {Provider} from 'react-redux';
 import store from './stores/configureStore';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
+import {Freshchat, FreshchatConfig} from 'react-native-freshchat-sdk';
 
 function App() {
   useEffect(() => {
@@ -26,6 +27,11 @@ function App() {
 
     requestUserPermission();
     checkToken();
+    var freshchatConfig = new FreshchatConfig(
+      'daccc9d0-7565-4005-a7c6-82f15079faea',
+      '1a989808-03fc-4768-b529-b2f17ae6ab6f',
+    );
+    Freshchat.init(freshchatConfig);
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {

@@ -43,6 +43,7 @@
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-app-intro-slider": "^3.0.0",
+    "react-native-freshchat-sdk": "^3.3.2",
     "react-native-geocoding": "^0.5.0",
     "react-native-gesture-handler": "^1.5.3",
     "react-native-get-location": "^2.0.0",

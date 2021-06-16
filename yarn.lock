@@ -6595,6 +6595,11 @@ react-native-easy-grid@0.2.2:
   dependencies:
     lodash "^4.17.15"
 
+react-native-freshchat-sdk@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-freshchat-sdk/-/react-native-freshchat-sdk-3.3.2.tgz#5ae21586e5e496bba064560db966228a0a47504c"
+  integrity sha512-cntRWVNK1c0oxQIR4j8dg+y13p3m09dIm4Rrmb0wuiHFikL6Tl//x9o9vxV+AJ0JD/9SIKfi/WmeQvAfG5RJXw==
+
 react-native-geocoding@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/react-native-geocoding/-/react-native-geocoding-0.5.0.tgz#69748f896047a63d1c3c1d55255f9d67c8e275c2"

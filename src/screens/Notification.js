@@ -1,4 +1,4 @@
-import {Container, Spinner} from 'native-base';
+import {Button, Container, Spinner} from 'native-base';
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -14,7 +14,7 @@ import {getListNoti} from '../stores/notify/actions';
 import theme from '../theme';
 import moment from 'moment';
 import {FORMAT} from '../constants/format';
-
+import {Freshchat, FreshchatUser} from 'react-native-freshchat-sdk';
 class Notifications extends Component {
   constructor(props) {
     super(props);
@@ -28,17 +28,39 @@ class Notifications extends Component {
     this.getListNoti();
   }
   getListNoti = async () => {
-    await this.props.getListNoti();
+    // await this.props.getListNoti();
     this.setState({data: this.props.notify.listNoti});
   };
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {notify} = nextProps;
-    return {loading: notify.loading, data: notify.listNoti};
-  }
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   const {notify} = nextProps;
+  //   return {loading: notify.loading, data: notify.listNoti};
+  // }
+  onPress = () => {
+    var freshchatUser = new FreshchatUser();
+    freshchatUser.firstName = 'Thuy';
+    freshchatUser.lastName = 'Tomoe';
+    freshchatUser.email = 'johndoe@dead.man';
+    freshchatUser.phoneCountryCode = '+91';
+    freshchatUser.phone = '1234234123';
+    Freshchat.setUser(freshchatUser, error => {
+      console.log(error);
+    });
+  };
   render() {
     return (
       <Container>
         <HeaderCustom title="Thông báo" withoutBack />
+        <Button onPress={this.onPress}>
+          <Text>Fresh channel</Text>
+        </Button>
+
+        <Button
+          onPress={() => {
+            // Freshchat.showConversations();
+            Freshchat.showFAQs();
+          }}>
+          <Text>Show chat</Text>
+        </Button>
         {this.state.loading && (
           <Spinner
             color={theme.primaryColor}
