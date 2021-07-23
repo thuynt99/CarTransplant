@@ -3,7 +3,7 @@
 - Use master_driver for driver and master_user for user.
 - User book car and take trip.
 - Driver register car and register trip.
-- When use you should change host url in api because my backend die now.
+- When use you should change host url in api because Server is crashing now :))
 
 ### Navigator structure
 
