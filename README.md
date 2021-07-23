@@ -1,6 +1,6 @@
 <!-- <img src="src/assets/demo/sample1.gif" alt="React Native Best Practice" width="250"/> -->
 ### How to use this
-- We use master_driver for driver and master_user for user.
+- Use master_driver for driver and master_user for user.
 - User book car and take trip.
 - Driver register car and register trip.
 - When use you should change host url in api because my backend die now.
