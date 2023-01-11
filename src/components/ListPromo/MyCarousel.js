@@ -32,14 +32,11 @@ export default class MyCarousel extends Component {
   }
 
   render() {
-    console.log('test demo');
-    console.log('scanner');
-    let a = 'test'
     return (
       <Carousel
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
-        itemWidth={screenWidth - 60}
+        itemWidth={screenWidth - 60}1
         data={ENTRIES_PROMO_HOME}
         renderItem={this._renderItem}
         hasParallaxImages={true}
