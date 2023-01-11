@@ -34,6 +34,7 @@ export default class MyCarousel extends Component {
   render() {
     console.log('test demo');
     console.log('scanner');
+    let a = 'test'
     return (
       <Carousel
         sliderWidth={screenWidth}
